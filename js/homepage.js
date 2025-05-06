@@ -1,3 +1,8 @@
+window.addEventListener("DOMContentLoaded", () => {
+	showupload();
+	showdroptdown();
+});
+
 document.getElementById("thesisForm").addEventListener("submit", uploadfun);
 
 async function uploadfun(e) {
@@ -40,9 +45,25 @@ async function showupload() {
             `;
 		}
 
-		document.getElementById("userTableBody").innerHTML = rows;
+		document.getElementById("PDFFILE").innerHTML = rows;
 	} catch (error) {
 		console.error("Error fetching uploads:", error);
 	}
 }
-showupload();
+async function showdroptdown() {
+	const res = await fetch("../php/showreviewer.php");
+	const data = await res.json();
+
+	let options = `<option value="">Select Reviewer</option>`;
+	for (const u of data) {
+		options += `<option value="${u.reviewer_id}">${u.reviewer_name}</option>`;
+	}
+
+	document.getElementById("reviewerDropdown").innerHTML = options;
+}
+const logout = document.querySelector("#logout");
+logout.onclick = function (e) {
+	console.log("run");
+	e.preventDefault();
+	window.location.href = "../php/logout.php";
+};
