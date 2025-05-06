@@ -1,11 +1,3 @@
-<?php
-// session_start();
-// if (!isset($_SESSION['userid'])) {
-//     header("location:login.php");
-//     exit();
-// }
-// header("Access-Control-Allow-Origin: *");
-?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
