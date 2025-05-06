@@ -1,3 +1,7 @@
+<?php
+session_start();
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
@@ -12,37 +16,53 @@
 			<a href="#">Views</a>
 			<a href="#">Settings</a>
 		</header>
-		<form
-			action="#"
-			class="postfeed"
-			id="postfeed"
-			enctype="multipart/form-data">
-			<div class="container">
-				<input
-					required=""
-					type="text"
-					name="cappost"
-					class="input"
-					id="captadd" />
-				<label class="label">UPLOADED THESIS</label>
-			</div>
-			<div class="container">
-				<input
-					required
-					type="file"
-					name="docfile"
-					id="docfile"
-					class="input"
-					accept=".doc,.docx,.pdf" />
-			</div>
-			<div class="divbutton">
-				<button type="submit" id="captbtn" class="btn">
-					<i class="animation"></i>UPLOAD<i class="animation"></i>
-				</button>
-			</div>
+
+		<form action="#" id="thesisForm" enctype="multipart/form-data">
+			<input type="text" name="title" placeholder="Enter a title">
+			<textarea
+				required=""
+				name="abstract"
+				class="input"
+				id="captadd"
+				rows="4"
+				placeholder="Enter the abstract"></textarea>
+
+			<label for="docfile" class="label">UPLOADED THESIS</label>
+			<input
+				required
+				type="file"
+				name="docfile"
+				id="docfile"
+				class="input"
+				accept=".doc,.docx,.pdf" />
+			<!-- Hidden Inputs for session data -->
+			<input
+				type="hidden"
+				name="student_id"
+				value="<?php echo $_SESSION['student_id']; ?>" />
+			<input
+				type="hidden"
+				name="fname"
+				value="<?php echo $_SESSION['fname']; ?>" />
+			<input
+				type="hidden"
+				name="lname"
+				value="<?php echo $_SESSION['lname']; ?>" />
+			<input
+				type="hidden"
+				name="profileImg"
+				value="<?php echo $_SESSION['profileImg']; ?>" />
+
+			<button type="submit" id="captbtn" class="btn">UPLOAD</button>
 		</form>
+
 		<main>
-			<!-- all thesis approve thesis here  -->
+			<!-- All thesis and approved thesis will appear here -->
+			<div id="userTableBody">
+				<!-- Uploaded PDFs will be displayed here -->
+			</div>
 		</main>
 	</body>
+
+	<script src="../js/homepage.js"></script>
 </html>
