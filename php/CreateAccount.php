@@ -7,7 +7,6 @@ include "Database.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Get and sanitize form data
 $fname = mysqli_real_escape_string($connect, $_POST['fname']);
 $lname = mysqli_real_escape_string($connect, $_POST['lname']);
 $email = mysqli_real_escape_string($connect, $_POST['email']);
@@ -47,5 +46,6 @@ if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !
 
 
     echo json_encode(["status" => "success", "message"=>"succesfuly Create account"]);
+    
 };
 ?>

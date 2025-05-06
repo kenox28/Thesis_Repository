@@ -12,9 +12,10 @@ session_start();
 	<body>
 		<header>
 			<a href="#">Home</a>
-			<a href="#">Request</a>
-			<a href="#">Views</a>
-			<a href="#">Settings</a>
+			<a href="#">Approve</a>
+			<a href="#">Revise</a>
+			<a href="#">Rejected</a>
+			<a href="#" id="logout">logout</a>
 		</header>
 
 		<form action="#" id="thesisForm" enctype="multipart/form-data">
@@ -35,7 +36,6 @@ session_start();
 				id="docfile"
 				class="input"
 				accept=".doc,.docx,.pdf" />
-			<!-- Hidden Inputs for session data -->
 			<input
 				type="hidden"
 				name="student_id"
@@ -51,15 +51,18 @@ session_start();
 			<input
 				type="hidden"
 				name="profileImg"
-				value="<?php echo $_SESSION['profileImg']; ?>" />
+				value="<?php echo $_SESSION['profileImg'];?>"/>
+				
+				<select id="reviewerDropdown" name="reviewer_id">
+					<option value="">Select Reviewer</option>
+				</select>
+
 
 			<button type="submit" id="captbtn" class="btn">UPLOAD</button>
 		</form>
 
 		<main>
-			<!-- All thesis and approved thesis will appear here -->
-			<div id="userTableBody">
-				<!-- Uploaded PDFs will be displayed here -->
+			<div id="PDFFILE">
 			</div>
 		</main>
 	</body>
