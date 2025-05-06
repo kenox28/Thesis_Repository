@@ -2,7 +2,7 @@
 $localhost = "localhost";
 $username = "root";
 $password = "";
-$database = "ThesisRep_db";
+$database = "thesisRep_db";
 
 // Connect to database
 $connect = mysqli_connect($localhost, $username, $password, $database);
@@ -20,13 +20,15 @@ $student = "CREATE TABLE IF NOT EXISTS Student (
     email VARCHAR(50),
     passw VARCHAR(50),
     profileImg VARCHAR(255),
+    gender VARCHAR(255),
+    bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
 
-$instructor = "CREATE TABLE IF NOT EXISTS instructor (
+$reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    inst_id VARCHAR(255),
+    reviewer_id VARCHAR(255),
     fname VARCHAR(50),
     lname VARCHAR(50),
     email VARCHAR(50),
@@ -34,7 +36,10 @@ $instructor = "CREATE TABLE IF NOT EXISTS instructor (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
-$repo = "CREATE TABLE IF NOT EXISTS table_repo(
+
+
+
+$thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(50),
     fname VARCHAR(50),
@@ -42,12 +47,19 @@ $repo = "CREATE TABLE IF NOT EXISTS table_repo(
     title VARCHAR(255),
     abstract VARCHAR(50),
     ThesisFile VARCHAR(50),
+    reviewer_id VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
+
+
+
+mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
-mysqli_query($connect, $instructor);
-mysqli_query($connect, $repo);
 
-
+if(mysqli_query($connect, $thesisrepo)){
+    // echo "success";
+};
 ?>
+
+
