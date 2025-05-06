@@ -32,6 +32,7 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     fname VARCHAR(50),
     lname VARCHAR(50),
     email VARCHAR(50),
+    profileImg VARCHAR(255),
     pass VARCHAR(50),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -51,7 +52,6 @@ $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
-
 
 
 mysqli_query($connect, $reviewer);
