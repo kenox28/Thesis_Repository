@@ -7,6 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $student_id = $_POST['student_id'];
         $fname = $_POST['fname'];
         $lname = $_POST['lname'];
+        $reviewer_id = $_POST['reviewer_id'];
+
         $abstract = mysqli_real_escape_string($connect, $_POST['abstract']);
         $title = mysqli_real_escape_string($connect, $_POST['title']);
 
@@ -32,8 +34,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             // Move file to the uploads folder
             if (move_uploaded_file($fileTmpName, $destinationPath)) {
                 // Insert data into the database
-                $sql = "INSERT INTO repoTable (student_id, fname, lname, title, abstract, ThesisFile, reviewer_id) 
-                        VALUES ('$student_id', '$fname', '$lname', '$title', '$abstract', '$uniqueName', '')";
+                $sql = "INSERT INTO repoTable (student_id, fname, lname, title, abstract, ThesisFile, reviewer_id, status) 
+                        VALUES ('$student_id', '$fname', '$lname', '$title', '$abstract', '$uniqueName', '$reviewer_id', 'Pending')";
                 if (mysqli_query($connect, $sql)) {
                     echo json_encode(["status" => "success", "message" => "Thesis uploaded successfully!"]);
                 } else {

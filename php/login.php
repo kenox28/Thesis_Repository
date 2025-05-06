@@ -7,6 +7,9 @@ $pass = $_POST['passw'];
 
 if (!empty($email) && !empty($pass)) {
     $sql = "SELECT * FROM student WHERE email ='{$email}'";
+
+
+
     $result = mysqli_query($connect, $sql);
 
     if ($result && mysqli_num_rows($result) > 0) {
@@ -22,6 +25,24 @@ if (!empty($email) && !empty($pass)) {
             $_SESSION['profileImg'] = $row['profileImg'];
 
             exit();
+        }
+    }else{
+        $sql1 = "SELECT * FROM reviewer WHERE email ='{$email}'";
+        $result1 = mysqli_query($connect, $sql1);
+        if ($result1 && mysqli_num_rows($result1) > 0) {
+            $row = mysqli_fetch_assoc($result1);
+            if (md5($pass) === $row['pass']) { 
+    
+                echo json_encode(["status" => "reviewer", "message" => "log success"]);
+    
+                $_SESSION['reviewer_id'] = $row['reviewer_id'];
+                $_SESSION['fname'] = $row['fname'];
+                $_SESSION['lname'] = $row['lname'];
+                $_SESSION['email'] = $row['email'];
+                // $_SESSION['profileImg'] = $row['profileImg'];
+    
+                exit();
+            }
         }
     }
 
