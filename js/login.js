@@ -13,6 +13,8 @@ async function loginfun(e) {
 
 	if (result.status === "success") {
 		window.location.href = "../views/homepage.php";
+	} else if (result.status === "reviewer") {
+		window.location.href = "../views/View_thesis.php";
 	} else {
 		alert(result.message);
 	}
