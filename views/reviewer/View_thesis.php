@@ -18,7 +18,7 @@ session_start();
     <h1>reviewer</h1>
     <a href="view_Revise.php">view revised</a>
     <h3><?php echo $_SESSION['fname'] ?></h3>
-    <a href="#" id="logout">logout</a>
+    <a href="../../php/logout.php">logout</a>
     <main>
         <div id="userTableBody">
 
@@ -26,7 +26,7 @@ session_start();
     </main>
 
     <!-- Modal Structure -->
-    <div id="reviseModal" style="display:block; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
+    <div id="reviseModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
       <div style="background:#fff; padding:20px; border-radius:8px; width:850px; max-width:95vw; max-height:95vh; overflow:auto; position:relative;">
         <button onclick="closeReviseModal()" style="position:absolute; top:10px; right:10px;">&times;</button>
         <h2>Revise Thesis</h2>
