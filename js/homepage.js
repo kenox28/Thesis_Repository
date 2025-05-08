@@ -40,6 +40,7 @@ async function showupload() {
                 <div class="upload-item">
                     <h3>${u.title}</h3>
                     <p>${u.abstract}</p>
+					<p>${u.lname}, ${u.fname}</p>
                     <embed src="${filePath}" width="450" height="300" type="application/pdf">
                 </div>
             `;
