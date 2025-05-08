@@ -12,9 +12,9 @@ async function loginfun(e) {
 	const result = await res.json();
 
 	if (result.status === "success") {
-		window.location.href = "../views/homepage.php";
+		window.location.href = "../views/student/homepage.php";
 	} else if (result.status === "reviewer") {
-		window.location.href = "../views/View_thesis.php";
+		window.location.href = "../views/reviewer/View_thesis.php";
 	} else {
 		alert(result.message);
 	}

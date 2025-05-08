@@ -21,7 +21,6 @@
 
         <label for="password" style="user-select: none;">Password: </label>
         <input type="password" name="password" id="password" required>
-
         <button type="submit">Submit</button>
     </form>
 
