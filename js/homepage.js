@@ -11,7 +11,7 @@ async function uploadfun(e) {
 	const form = document.getElementById("thesisForm");
 	const formdata = new FormData(form);
 
-	const res = await fetch("../php/upload_thesis.php", {
+	const res = await fetch("../../php/student/upload_thesis.php", {
 		method: "POST",
 		body: formdata,
 	});
@@ -28,13 +28,13 @@ async function uploadfun(e) {
 }
 async function showupload() {
 	try {
-		const res = await fetch("../php/showupload.php");
+		const res = await fetch("../../php/student/showupload.php");
 		const data = await res.json();
 		console.log("runnnnnnnnnnnnnnn");
 
 		let rows = "";
 		for (const u of data) {
-			const filePath = "../assets/thesisfile/" + u.ThesisFile;
+			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 			// Add an entry for each uploaded PDF
 			rows += `
                 <div class="upload-item">
@@ -51,7 +51,7 @@ async function showupload() {
 	}
 }
 async function showdroptdown() {
-	const res = await fetch("../php/showreviewer.php");
+	const res = await fetch("../../php/student/showreviewer.php");
 	const data = await res.json();
 
 	let options = `<option value="">Select Reviewer</option>`;
@@ -65,5 +65,5 @@ const logout = document.querySelector("#logout");
 logout.onclick = function (e) {
 	console.log("run");
 	e.preventDefault();
-	window.location.href = "../php/logout.php";
+	window.location.href = "../../php/logout.php";
 };
