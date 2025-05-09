@@ -17,7 +17,7 @@ session_start();
 			<a href="/views/student/revisepage.php">Revise</a>
 			<a href="approve.php?id=<?php echo $_SESSION['student_id']; ?>">Approve</a>
 			<a href="/views/student/rejectpage.php">Rejected</a>
-			<a href="#" id="logout">logout</a>
+			<a href="#" id="logout">Logout</a>
 		</aside>
 		<header>
 			<h1>Upload Thesis</h1>
