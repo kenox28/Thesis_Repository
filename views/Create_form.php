@@ -16,12 +16,12 @@
         <form action="../php/CreateAccount.php" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>CREATE ACCOUNT</h1>
             
-           
+<!--            
             <input type="radio" id="radio1" name="role" value="Reviewer" required />
             <label for="radio1">Reviewer</label>
             
             <input type="radio" id="radio2" name="role" value="Student" required />
-            <label for="radio2">Student</label>
+            <label for="radio2">Student</label> -->
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
