@@ -1,49 +1,59 @@
+<!-- filepath: c:\xampp\htdocs\Thesis_Repository\views\Create_form.php -->
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
-	</head>
-	<body>
-		<form action="#" id="CreateForm" enctype="multipart/form-data">
-			<h1>CREATE ACCOUNT</h1>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Create Account</title>
+        <link rel="stylesheet" href="../assets/css/Create_Form.css" />
+    </head>
+    <body>
+	<!-- <header>
+        <a href="landingpage.php" >
+        <img src="../assets/icons/home.png" alt="Home Icon">
+        </a>
+    </header> -->
+        <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
+            <h1>Create Account</h1>
+           
+            <input type="radio" id="radio1" name="role" value="Reviewer" required />
+            <label for="radio1">Reviewer</label>
+            
+            <input type="radio" id="radio2" name="role" value="Student" required />
+            <label for="radio2">Student</label>
 
-			<input
-				required=""
-				type="text"
-				name="fname"
-				class="input"
-				id="firstname" />
-			<label class="label">First name</label>
+            <label class="label" for="firstname">First Name</label>
+            <input required type="text" name="fname" class="input" id="firstname" />
+            
 
-			<input required="" type="text" name="lname" class="input" id="lastname" />
-			<label class="label">Last name</label>
+            <label class="label" for="lastname">Last Name</label>
+            <input required type="text" name="lname" class="input" id="lastname" />
+            
 
-			<input required="" type="email" name="email" class="input" id="email" />
-			<label class="label">Email</label>
+            <label class="label" for="email">Email</label>
+            <input required type="email" name="email" class="input" id="email" />
+            
 
-			<input
-				required=""
-				type="password"
-				name="passw"
-				class="input"
-				id="password" />
-			<label class="label">Password</label>
+            <label class="label" for="password">Password</label>
+            <input required type="password" name="passw" class="input" id="password" />
+            
+			<label class="label" for="dateb">Birthdate</label>
+            <input required type="date" name="bday" class="input" id="dateb" />
+            
 
-			<input required="" type="date" name="bday" class="input" id="dateb" />
+            <input type="radio" id="radio3" name="gender" value="Male" required />
+            <label for="radio3">Male</label>
 
-			<input type="radio" id="radio1" name="gender" value="Male" required />
-			<label for="radio1">MALE</label>
+            <input type="radio" id="radio4" name="gender" value="Female" />
+            <label for="radio4">Female</label>
+            
+            <button class="btn" id="login" type="submit">Create Account</button>
 
-			<input type="radio" id="radio2" name="gender" value="Female" />
-			<label for="radio2">FEMALE</label>
-
-			<input type="file" id="idimage" name="img" class="input" hidden />
-
-			<button class="btn" id="login" type="submit">Create new account</button>
-		</form>
-		<a href="student_login.php">login</a>
-	</body>
-	<script src="../js/CreateAccount.js"></script>
+            <div>
+            <a href="student_login.php">Already have an account?</a>
+            </div>
+            <a href="landingpage.php">Back to home</a>
+        </form>
+    </body>
+    <script src="../js/CreateAccount.js"></script>
 </html>
