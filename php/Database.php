@@ -45,9 +45,25 @@ $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
     fname VARCHAR(50),
     lname VARCHAR(50),
     title VARCHAR(255),
-    abstract VARCHAR(50),
-    ThesisFile VARCHAR(50),
+    abstract VARCHAR(255),
+    ThesisFile VARCHAR(255),
     reviewer_id VARCHAR(255),
+    status VARCHAR(50),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+
+
+$revise_table = "CREATE TABLE IF NOT EXISTS revise_table(
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    student_id VARCHAR(50),
+    fname VARCHAR(50),
+    lname VARCHAR(50),
+    title VARCHAR(255),
+    abstract VARCHAR(255),
+    ThesisFile VARCHAR(255),
+    reviewer_id VARCHAR(255),
+    status VARCHAR(50),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
@@ -58,16 +74,33 @@ $publicRepo = "CREATE TABLE IF NOT EXISTS publicRepo(
     fname VARCHAR(50),
     lname VARCHAR(50),
     title VARCHAR(255),
-    abstract VARCHAR(50),
-    ThesisFile VARCHAR(50),
+    abstract VARCHAR(255),
+    ThesisFile VARCHAR(255),
     reviewer_id VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+
+
 )";
+
+$thesis_history = "CREATE TABLE IF NOT EXISTS thesis_history (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    thesis_id INT NOT NULL,
+    student_id VARCHAR(50),
+    revision_num INT NOT NULL,
+    file_name VARCHAR(255),
+    revised_by VARCHAR(255),
+    revised_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50),
+    notes TEXT
+)";
+
 mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
-
+mysqli_query($connect, $revise_table);
+mysqli_query($connect, $thesis_history);
 
 if(mysqli_query($connect, $thesisrepo)){
     // echo "success";

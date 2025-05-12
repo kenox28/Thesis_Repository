@@ -14,7 +14,6 @@ async function CreateFun(e) {
 	if (result.status === "success") {
 		console.log("success", result.message);
 		swal("Success!", result.message, "success");
-		showpost();
 	} else {
 		console.log("failed", result.message);
 		swal("Error!", result.message, "error");
