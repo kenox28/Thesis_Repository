@@ -33,6 +33,9 @@ session_start();
         <div id="toolbar">
           <button onclick="enableHighlightMode()">Highlight</button>
           <button onclick="enableTextMode()">Text</button>
+          <button onclick="prevPage()">Previous</button>
+          <span id="pageIndicator"></span>
+          <button onclick="nextPage()">Next</button>
         </div>
         <div id="pdf-container" style="position: relative; width: 800px; height: 800px; border: 1px solid #ccc;">
           <canvas id="highlight-canvas" style="position: absolute; left: 0; top: 0; z-index: 10; pointer-events: none;"></canvas>

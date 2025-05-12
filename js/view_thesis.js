@@ -6,6 +6,21 @@ let pdfOffsetY = 0;
 let pdfPageWidth = 0;
 let pdfPageHeight = 0;
 
+// --- Highlight Tool Logic ---
+let isHighlighting = false;
+let highlightStart = null;
+let highlights = [];
+let isTextMode = false;
+let textAnnotations = []; // Store {x, y, text}
+
+let pdfDoc = null;
+let currentPageNum = 1;
+let totalPageCount = 1;
+
+// Store highlights and textAnnotations per page
+let highlightsByPage = {};
+let textAnnotationsByPage = {};
+
 async function showupload() {
 	try {
 		const res = await fetch("../../php/reviewer/reView_thesis.php");
@@ -30,6 +45,7 @@ async function showupload() {
                     <button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
                     <button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
                     <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
+                    <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
                 </div>
             `;
 		}
@@ -104,63 +120,15 @@ function openReviseModal(thesisId, thesisFile) {
 		highlightCanvas.style.height = "800px";
 	}
 
-	pdfjsLib
-		.getDocument(url)
-		.promise.then(function (pdf) {
-			console.log("PDF loaded, num pages:", pdf.numPages);
-			pdf
-				.getPage(1)
-				.then(function (page) {
-					// Calculate scale to fit 800x800
-					const originalViewport = page.getViewport({ scale: 1 });
-					const scale = Math.min(
-						800 / originalViewport.width,
-						800 / originalViewport.height
-					);
-					const viewport = page.getViewport({ scale: scale });
-
-					var canvas = document.createElement("canvas");
-					var context = canvas.getContext("2d");
-					canvas.width = 800;
-					canvas.height = 800;
-					canvas.style.width = "800px";
-					canvas.style.height = "800px";
-					container.appendChild(canvas);
-
-					// Center the PDF page in the 800x800 canvas
-					context.save();
-					context.clearRect(0, 0, 800, 800);
-					const offsetX = (800 - viewport.width) / 2;
-					const offsetY = (800 - viewport.height) / 2;
-					context.translate(offsetX, offsetY);
-
-					var renderContext = {
-						canvasContext: context,
-						viewport: viewport,
-					};
-					page.render(renderContext).promise.then(() => {
-						context.restore();
-					});
-
-					pdfViewport = viewport;
-					pdfOffsetX = offsetX;
-					pdfOffsetY = offsetY;
-					pdfPageWidth = originalViewport.width;
-					pdfPageHeight = originalViewport.height;
-				})
-				.catch(function (err) {
-					console.error("Error getting page 1:", err);
-					container.innerHTML =
-						"<p style='color:red;'>Failed to get page 1: " +
-						err.message +
-						"</p>";
-				});
-		})
-		.catch(function (error) {
-			console.error("PDF loading error:", error);
-			container.innerHTML =
-				"<p style='color:red;'>Failed to load PDF: " + error.message + "</p>";
-		});
+	pdfjsLib.getDocument(url).promise.then(function (pdf) {
+		pdfDoc = pdf;
+		totalPageCount = pdf.numPages;
+		currentPageNum = 1;
+		highlightsByPage = {};
+		textAnnotationsByPage = {};
+		renderPage(currentPageNum);
+		updatePageIndicator();
+	});
 }
 function closeReviseModal() {
 	document.getElementById("reviseModal").style.display = "none";
@@ -168,11 +136,6 @@ function closeReviseModal() {
 }
 
 // Optional: You can add a function to download the annotated PDF and set it as the file input value
-
-// --- Highlight Tool Logic ---
-let isHighlighting = false;
-let highlightStart = null;
-let highlights = [];
 
 function enableHighlightMode() {
 	const highlightCanvas = document.getElementById("highlight-canvas");
@@ -240,53 +203,80 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 async function saveHighlightedPDF() {
+	// Store current page's annotations
+	saveCurrentPageAnnotations();
+
 	// 1. Fetch the original PDF as bytes
 	const url = "../../assets/thesisfile/" + currentThesisFile;
 	const existingPdfBytes = await fetch(url).then((res) => res.arrayBuffer());
 
 	// 2. Load PDF with PDF-lib
-	const pdfDoc = await PDFLib.PDFDocument.load(existingPdfBytes);
+	const pdfDocLib = await PDFLib.PDFDocument.load(existingPdfBytes);
 
-	// 3. Get the first page (for multi-page, loop through pages)
-	const page = pdfDoc.getPage(0);
+	// 3. For each page, apply highlights and text
+	for (let pageNum = 1; pageNum <= totalPageCount; pageNum++) {
+		const page = pdfDocLib.getPage(pageNum - 1); // PDF-lib is 0-based
 
-	// 4. Draw highlights (convert canvas coords to PDF coords)
-	highlights.forEach((h) => {
-		// Top-left and size in canvas
-		const start = canvasToPdfCoords(h.x, h.y);
-		const end = canvasToPdfCoords(h.x + h.w, h.y + h.h);
-		const rectX = start.x;
-		const rectY = pdfPageHeight - end.y; // PDF-lib origin is bottom-left
-		const rectW = end.x - start.x;
-		const rectH = end.y - start.y;
+		// You need to recalculate the page size/offset for each page
+		// We'll use the same logic as in renderPage
+		const originalViewport = await pdfDoc
+			.getPage(pageNum)
+			.then((p) => p.getViewport({ scale: 1 }));
+		const scale = Math.min(
+			800 / originalViewport.width,
+			800 / originalViewport.height
+		);
+		const viewport = originalViewport.clone({ scale: scale });
+		const offsetX = (800 - viewport.width) / 2;
+		const offsetY = (800 - viewport.height) / 2;
+		const pageWidth = originalViewport.width;
+		const pageHeight = originalViewport.height;
 
-		page.drawRectangle({
-			x: rectX,
-			y: rectY,
-			width: rectW,
-			height: rectH,
-			color: PDFLib.rgb(1, 1, 0),
-			opacity: 0.4,
-			borderColor: PDFLib.rgb(1, 1, 0),
+		// Helper for coordinate conversion
+		function pageCanvasToPdfCoords(x, y) {
+			const pdfX = ((x - offsetX) / viewport.width) * pageWidth;
+			const pdfY = ((y - offsetY) / viewport.height) * pageHeight;
+			return { x: pdfX, y: pdfY };
+		}
+
+		const pageHighlights = highlightsByPage[pageNum] || [];
+		const pageTexts = textAnnotationsByPage[pageNum] || [];
+
+		pageHighlights.forEach((h) => {
+			const start = pageCanvasToPdfCoords(h.x, h.y);
+			const end = pageCanvasToPdfCoords(h.x + h.w, h.y + h.h);
+			const rectX = start.x;
+			const rectY = pageHeight - end.y;
+			const rectW = end.x - start.x;
+			const rectH = end.y - start.y;
+
+			page.drawRectangle({
+				x: rectX,
+				y: rectY,
+				width: rectW,
+				height: rectH,
+				color: PDFLib.rgb(1, 1, 0),
+				opacity: 0.4,
+				borderColor: PDFLib.rgb(1, 1, 0),
+			});
 		});
-	});
 
-	// 5. Draw text annotations
-	textAnnotations.forEach((t) => {
-		const pos = canvasToPdfCoords(t.x, t.y);
-		page.drawText(t.text, {
-			x: pos.x,
-			y: pdfPageHeight - pos.y, // PDF-lib origin is bottom-left
-			size: 20,
-			color: PDFLib.rgb(0, 0, 0),
+		pageTexts.forEach((t) => {
+			const pos = pageCanvasToPdfCoords(t.x, t.y);
+			page.drawText(t.text, {
+				x: pos.x,
+				y: pageHeight - pos.y,
+				size: 20,
+				color: PDFLib.rgb(0, 0, 0),
+			});
 		});
-	});
+	}
 
-	// 6. Save the PDF as a Blob
-	const pdfBytes = await pdfDoc.save();
+	// 4. Save the PDF as a Blob
+	const pdfBytes = await pdfDocLib.save();
 	const blob = new Blob([pdfBytes], { type: "application/pdf" });
 
-	// 7. Upload the Blob using FormData
+	// 5. Upload the Blob using FormData
 	const formData = new FormData();
 	formData.append("thesis_id", currentThesisId);
 	formData.append("revised_pdf", blob, "revised.pdf");
@@ -302,9 +292,6 @@ async function saveHighlightedPDF() {
 		showupload();
 	}
 }
-
-let isTextMode = false;
-let textAnnotations = []; // Store {x, y, text}
 
 function enableTextMode() {
 	isTextMode = true;
@@ -335,4 +322,96 @@ function canvasToPdfCoords(x, y) {
 	const pdfX = ((x - pdfOffsetX) / pdfViewport.width) * pdfPageWidth;
 	const pdfY = ((y - pdfOffsetY) / pdfViewport.height) * pdfPageHeight;
 	return { x: pdfX, y: pdfY };
+}
+
+function renderPage(pageNum) {
+	var container = document.getElementById("pdf-container");
+	// Remove only the PDF canvas, not the highlight canvas
+	const pdfCanvas = container.querySelector("canvas:not(#highlight-canvas)");
+	if (pdfCanvas) container.removeChild(pdfCanvas);
+
+	pdfDoc.getPage(pageNum).then(function (page) {
+		const originalViewport = page.getViewport({ scale: 1 });
+		const scale = Math.min(
+			800 / originalViewport.width,
+			800 / originalViewport.height
+		);
+		const viewport = page.getViewport({ scale: scale });
+
+		var canvas = document.createElement("canvas");
+		var context = canvas.getContext("2d");
+		canvas.width = 800;
+		canvas.height = 800;
+		canvas.style.width = "800px";
+		canvas.style.height = "800px";
+		container.appendChild(canvas);
+
+		// Center the PDF page in the 800x800 canvas
+		context.save();
+		context.clearRect(0, 0, 800, 800);
+		const offsetX = (800 - viewport.width) / 2;
+		const offsetY = (800 - viewport.height) / 2;
+		context.translate(offsetX, offsetY);
+
+		var renderContext = {
+			canvasContext: context,
+			viewport: viewport,
+		};
+		page.render(renderContext).promise.then(() => {
+			context.restore();
+		});
+
+		pdfViewport = viewport;
+		pdfOffsetX = offsetX;
+		pdfOffsetY = offsetY;
+		pdfPageWidth = originalViewport.width;
+		pdfPageHeight = originalViewport.height;
+
+		// Restore highlights and text for this page
+		highlights = highlightsByPage[pageNum] || [];
+		textAnnotations = textAnnotationsByPage[pageNum] || [];
+		redrawHighlightsAndText();
+	});
+}
+
+function prevPage() {
+	if (currentPageNum <= 1) return;
+	saveCurrentPageAnnotations();
+	currentPageNum--;
+	renderPage(currentPageNum);
+	updatePageIndicator();
+}
+
+function nextPage() {
+	if (currentPageNum >= totalPageCount) return;
+	saveCurrentPageAnnotations();
+	currentPageNum++;
+	renderPage(currentPageNum);
+	updatePageIndicator();
+}
+
+function updatePageIndicator() {
+	document.getElementById(
+		"pageIndicator"
+	).textContent = `Page ${currentPageNum} of ${totalPageCount}`;
+}
+
+function saveCurrentPageAnnotations() {
+	highlightsByPage[currentPageNum] = highlights.slice();
+	textAnnotationsByPage[currentPageNum] = textAnnotations.slice();
+}
+
+function redrawHighlightsAndText() {
+	const highlightCanvas = document.getElementById("highlight-canvas");
+	const ctx = highlightCanvas.getContext("2d");
+	ctx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
+	for (const h of highlights) {
+		ctx.fillStyle = "rgba(255,255,0,0.4)";
+		ctx.fillRect(h.x, h.y, h.w, h.h);
+	}
+	for (const t of textAnnotations) {
+		ctx.font = "12px Arial";
+		ctx.fillStyle = "rgba(0,0,0,0.8)";
+		ctx.fillText(t.text, t.x, t.y);
+	}
 }
