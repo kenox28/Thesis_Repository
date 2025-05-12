@@ -83,10 +83,24 @@ $publicRepo = "CREATE TABLE IF NOT EXISTS publicRepo(
 
 
 )";
+
+$thesis_history = "CREATE TABLE IF NOT EXISTS thesis_history (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    thesis_id INT NOT NULL,
+    student_id VARCHAR(50),
+    revision_num INT NOT NULL,
+    file_name VARCHAR(255),
+    revised_by VARCHAR(255),
+    revised_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(50),
+    notes TEXT
+)";
+
 mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
 mysqli_query($connect, $revise_table);
+mysqli_query($connect, $thesis_history);
 
 if(mysqli_query($connect, $thesisrepo)){
     // echo "success";

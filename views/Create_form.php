@@ -8,20 +8,19 @@
         <link rel="stylesheet" href="../assets/css/Create_Form.css" />
     </head>
     <body>
-	<header>
+	<!-- <header>
         <a href="landingpage.php" >
         <img src="../assets/icons/home.png" alt="Home Icon">
         </a>
-    </header>
-        <form action="../php/CreateAccount.php" method="POST" id="CreateForm" enctype="multipart/form-data">
-            <h1>CREATE ACCOUNT</h1>
-            
-<!--            
+    </header> -->
+        <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
+            <h1>Create Account</h1>
+           
             <input type="radio" id="radio1" name="role" value="Reviewer" required />
             <label for="radio1">Reviewer</label>
             
             <input type="radio" id="radio2" name="role" value="Student" required />
-            <label for="radio2">Student</label> -->
+            <label for="radio2">Student</label>
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
@@ -48,12 +47,12 @@
             <input type="radio" id="radio4" name="gender" value="Female" />
             <label for="radio4">Female</label>
             
-       
-            
-            <button class="btn" id="login" type="submit">Create New Account</button>
-            
-            
-            <a href="student_login.php">Login Account</a>
+            <button class="btn" id="login" type="submit">Create Account</button>
+
+            <div>
+            <a href="student_login.php">Already have an account?</a>
+            </div>
+            <a href="landingpage.php">Back to home</a>
         </form>
     </body>
     <script src="../js/CreateAccount.js"></script>
