@@ -27,16 +27,15 @@ async function uploadfun(e) {
 	}
 }
 async function showupload() {
-	try {
-		const res = await fetch("../../php/student/showupload.php");
-		const data = await res.json();
-		console.log("runnnnnnnnnnnnnnn");
+	const res = await fetch("../../php/student/showupload.php");
+	const data = await res.json();
+	console.log("runnnnnnnnnnnnnnn");
 
-		let rows = "";
-		for (const u of data) {
-			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-			// Add an entry for each uploaded PDF
-			rows += `
+	let rows = "";
+	for (const u of data) {
+		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+		// Add an entry for each uploaded PDF
+		rows += `
                 <div class="upload-item">
                     <h3>${u.title}</h3>
                     <p>${u.abstract}</p>
@@ -46,12 +45,9 @@ async function showupload() {
 
                 </div>
             `;
-		}
-
-		document.getElementById("PDFFILE").innerHTML = rows;
-	} catch (error) {
-		console.error("Error fetching uploads:", error);
 	}
+
+	document.getElementById("PDFFILE").innerHTML = rows;
 }
 async function showdroptdown() {
 	const res = await fetch("../../php/student/showreviewer.php");

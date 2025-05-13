@@ -1,6 +1,5 @@
 <?php
 session_start();
-// Assuming you are fetching the uploaded thesis data from the database
 include_once '../Database.php';
 if (!isset($_SESSION['student_id'])) {
     echo json_encode(["error" => "Student not logged in"]);
