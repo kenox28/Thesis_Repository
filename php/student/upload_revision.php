@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $row = mysqli_fetch_assoc($result);
     $next_revision = ($row && $row['max_rev'] !== null) ? $row['max_rev'] + 1 : 1;
 
-    // Insert into thesis_history
     $status = 'Student Revised';
     $notes = '';
     $sql2 = "INSERT INTO thesis_history (thesis_id, student_id, revision_num, file_name, revised_by, status, notes)
