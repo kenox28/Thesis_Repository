@@ -11,7 +11,7 @@ session_start();
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
 	<body>
-		<aside>
+		<aside></aside>
 			<a href="homepage.php">Home</a>
 			<a href="public_repo.php">Public</a>
 			<a href="/views/student/revisepage.php">Revise</a>
@@ -42,7 +42,7 @@ session_start();
 				name="docfile"
 				id="docfile"
 				class="input"
-				accept=".doc,.docx,.pdf" />
+				accept="application/pdf" />
 			<input
 				type="hidden"
 				name="student_id"

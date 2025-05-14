@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileError = $file['error'];
         $fileType = $file['type'];
 
-        $allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        $allowedTypes = ['application/pdf'];
 
         if (in_array($fileType, $allowedTypes)) {
             // Set upload directory
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 echo json_encode(["status" => "failed", "message" => "Faile upload"]);
             }
         } else {
-            echo json_encode(["status" => "failed", "message" => "Only PDF, DOC, DOCX."]);
+            echo json_encode(["status" => "failed", "message" => "Only PDF files are allowed."]);
         }
     } else {
         echo json_encode(["status" => "failed", "message" => "Please fill in all the  input."]);
