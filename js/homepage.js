@@ -8,6 +8,13 @@ document.getElementById("thesisForm").addEventListener("submit", uploadfun);
 async function uploadfun(e) {
 	e.preventDefault();
 
+	const fileInput = document.getElementById("docfile");
+	const file = fileInput.files[0];
+	if (!file || file.type !== "application/pdf") {
+		alert("Please upload a PDF file only.");
+		return;
+	}
+
 	const form = document.getElementById("thesisForm");
 	const formdata = new FormData(form);
 
