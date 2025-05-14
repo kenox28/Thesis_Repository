@@ -266,7 +266,7 @@ async function saveHighlightedPDF() {
 			page.drawText(t.text, {
 				x: pos.x,
 				y: pageHeight - pos.y,
-				size: 20,
+				size: 12,
 				color: PDFLib.rgb(0, 0, 0),
 			});
 		});

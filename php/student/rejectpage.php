@@ -1,5 +1,5 @@
 <?php
-session_start();
+session_start();    
 include_once '../Database.php';
 if (!isset($_SESSION['student_id'])) {
     echo json_encode(["error" => "Student not logged in"]);
@@ -7,14 +7,18 @@ if (!isset($_SESSION['student_id'])) {
 }
 
 $student_id = $_SESSION['student_id'];
-// Select the data of uploaded thesis
-$sql = "SELECT * FROM repoTable WHERE status = 'rejected'";
+$sql = "SELECT * FROM repoTable WHERE status = 'rejected' and student_id = '$student_id'";
 $result = mysqli_query($connect, $sql);
 
 $uploads = [];
 while ($row = mysqli_fetch_assoc($result)) {
-    $uploads[] = $row;  // Add each row to the uploads array
+    $uploads[] = $row;  
 }
 
 echo json_encode($uploads);
+
+
+
+
+
 ?>

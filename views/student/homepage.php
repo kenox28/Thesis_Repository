@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -14,10 +14,12 @@ session_start();
 		<aside></aside>
 			<a href="homepage.php">Home</a>
 			<a href="public_repo.php">Public</a>
-			<a href="/views/student/revisepage.php">Revise</a>
-			<a href="approve.php?id=<?php echo $_SESSION['student_id']; ?>">Approve</a>
-			<a href="/views/student/rejectpage.php">Rejected</a>
-			<a href="#" id="logout">logout</a>
+			<a href="approve_thesis.php">Approve</a>
+			<a href="rejectpage.php">Rejected</a>
+			<a href="request.php">Request</a>
+			<a href="revisepage.php">Revised</a>
+			<a href="profilemanage.php">Profile Management</a>
+			<a href="../../php/logout.php">logout</a>
 		</aside>
 		<header>
 			<h1>Upload Thesis</h1>
@@ -71,6 +73,7 @@ session_start();
 		<main>
 			<div id="PDFFILE">
 			</div>
+			
 		</main>
 	</body>
 

@@ -10,7 +10,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <title>Document</title>
 </head>
 <body>
-    <h1>rejected</h1>
+    <h1>revised</h1>
     <a href="homepage.php">Home</a>
     <a href="public_repo.php">Public</a>
     <a href="approve_thesis.php">Approve</a>
@@ -32,7 +32,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </body>
 <script>
 async function showupload() {
-    const res = await fetch("../../php/student/rejectpage.php");
+    const res = await fetch("../../php/student/revisepage.php");
     const data = await res.json();
     console.log("runnnnnnnnnnnnnnn");
 
@@ -50,6 +50,7 @@ async function showupload() {
                 <p>${u.abstract}</p>
                 <p>${u.lname}, ${u.fname}</p>
                 <embed src="${filePath}" width="450" height="300" type="application/pdf">
+                <button onclick="window.location.href='revise_history.php?title=${u.title}'">Revision History</button>
             </div>
         `;
     }
