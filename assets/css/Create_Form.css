@@ -193,3 +193,32 @@ a:hover {
         font-size: 1.5rem;
     }
 }
+
+#password-strength-bar-container {
+    width: 85%;
+    margin: 0 auto 10px auto;
+    height: 18px;
+    background: #e0e0e0;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 2px 8px;
+    box-sizing: border-box;
+}
+
+#password-strength-bar {
+    height: 12px;
+    border-radius: 6px;
+    transition: width 0.3s, background 0.3s;
+    width: 0%;
+    background: red;
+}
+
+#password-strength-label {
+    position: absolute;
+    right: 16px;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: #00246B;
+}
