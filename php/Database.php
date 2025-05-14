@@ -33,6 +33,9 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     lname VARCHAR(50),
     email VARCHAR(50),
     pass VARCHAR(50),
+    profileImg VARCHAR(255),
+    gender VARCHAR(255),
+    bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";

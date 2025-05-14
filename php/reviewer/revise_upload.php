@@ -75,6 +75,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         );
                         mysqli_stmt_execute($stmt_insert_history);
 
+                        // Update the status in repoTable to 'Revised'
+                        $sql_update_repo = "UPDATE repoTable SET status = 'Revised' WHERE id = ?";
+                        $stmt_update_repo = mysqli_prepare($connect, $sql_update_repo);
+                        mysqli_stmt_bind_param($stmt_update_repo, "i", $thesis_id);
+                        mysqli_stmt_execute($stmt_update_repo);
+
                         echo json_encode(["status" => "success", "message" => "Revised thesis uploaded successfully!"]);
                     } else {
                         echo json_encode(["status" => "failed", "message" => "Database insertion failed."]);

@@ -1,3 +1,7 @@
+<?php
+session_start();
+$profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +11,20 @@
     <title>Revision History</title>
 </head>
 <body>
-<div id="userTableBody">
+    <a href="homepage.php">Home</a>
+    <a href="public_repo.php">Public</a>
+    <a href="approve_thesis.php">Approve</a>
+    <a href="rejectpage.php">Rejected</a>
+    <a href="request.php">Request</a>
+    <a href="revisepage.php">Revised</a>
+    <a href="profilemanage.php">Profile Management</a>
+    <a href="../../php/logout.php">logout</a>
+    <h3><?php echo $_SESSION['fname'] ?></h3>
+    <h3><?php echo $_SESSION['lname'] ?></h3>
+    <h3><?php echo $_SESSION['email'] ?></h3>
+    <h3><?php echo $_SESSION['student_id'] ?></h3>
+    <img src="../../assets/imageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="">
+<div id="modalforhistory">
 
 </div>
 </body>
@@ -15,13 +32,13 @@
 const urlParams = new URLSearchParams(window.location.search);
 const title = urlParams.get('title');
 
-async function showupload() {
+async function modalfuntion() {
     try {
         const res = await fetch(`../../php/student/get_thesis_history.php?title=${encodeURIComponent(title)}`);
         const data = await res.json();
 
         if (data.error) {
-            document.getElementById("userTableBody").innerHTML = `<p>${data.error}</p>`;
+            document.getElementById("modalforhistory").innerHTML = `<p>${data.error}</p>`;
             return;
         }
 
@@ -37,12 +54,12 @@ async function showupload() {
             `;
         });
 
-        document.getElementById("userTableBody").innerHTML = rows;
+        document.getElementById("modalforhistory").innerHTML = rows;
     } catch (error) {
         console.error("Error fetching uploads:", error);
-        document.getElementById("userTableBody").innerHTML = `<p>Something went wrong.</p>`;
+        document.getElementById("modalforhistory").innerHTML = `<p>Something went wrong.</p>`;
     }
 }
-showupload();
+modalfuntion();
 </script>
 </html> 
