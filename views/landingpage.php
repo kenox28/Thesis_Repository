@@ -15,7 +15,7 @@
                 <span class="search-icon">🔍</span>
             </div>
             <div class="nav-links">
-                <a href="landingpage.php">Home</a>
+                <a href="#">Home</a>
                 <a href="#about">About</a>
                 <a href="#features">Features</a>
                 <a href="#contact">Contact</a>

@@ -6,16 +6,22 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Create Account</title>
         <link rel="stylesheet" href="../assets/css/Create_Form.css" />
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     </head>
     <body>
+	<!-- <header>
+        <a href="landingpage.php" >
+        <img src="../assets/icons/home.png" alt="Home Icon">
+        </a>
+    </header> -->
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
-            <h1>Create a New Account</h1>
-            <input type="radio" id="radio3" name="Role" value="Student" required />
-            <label for="radio3">Student</label>
-
-            <input type="radio" id="radio4" name="Role" value="Reviewer" />
-            <label for="radio4">Reviewer</label>
-
+            <h1>Create Account</h1>
+           
+            <input type="radio" id="radio1" name="role" value="Reviewer" required />
+            <label for="radio1">Reviewer</label>
+            
+            <input type="radio" id="radio2" name="role" value="Student" required />
+            <label for="radio2">Student</label>
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
@@ -31,6 +37,10 @@
 
             <label class="label" for="password">Password</label>
             <input required type="password" name="passw" class="input" id="password" />
+            <div id="password-strength-bar-container">
+              <div id="password-strength-bar"></div>
+              <span id="password-strength-label"></span>
+            </div>
             
 			<label class="label" for="dateb">Birthdate</label>
             <input required type="date" name="bday" class="input" id="dateb" />
