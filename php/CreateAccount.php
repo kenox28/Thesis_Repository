@@ -5,7 +5,7 @@ include "Database.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-$role = mysqli_real_escape_string($connect, $_POST['role']);
+$role = mysqli_real_escape_string($connect, $_POST['Role']);
 $fname = mysqli_real_escape_string($connect, $_POST['fname']);
 $lname = mysqli_real_escape_string($connect, $_POST['lname']);
 $email = mysqli_real_escape_string($connect, $_POST['email']);
@@ -26,10 +26,11 @@ if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !
         move_uploaded_file($tempimage, $folder);
     }
 
-    // Check if email already exists in the appropriate table
-    $table = ($role === 'Reviewer') ? 'reviewer' : 'Student';
-    $sql2 = mysqli_query($connect, "SELECT * FROM $table WHERE email = '{$email}'");
-    if (mysqli_num_rows($sql2) > 0) {
+    // Check if email exists in both tables
+    $check_student = mysqli_query($connect, "SELECT * FROM Student WHERE email = '{$email}'");
+    $check_reviewer = mysqli_query($connect, "SELECT * FROM reviewer WHERE email = '{$email}'");
+    
+    if (mysqli_num_rows($check_student) > 0 || mysqli_num_rows($check_reviewer) > 0) {
         echo json_encode(array(
             'status' => 'failed',
             'message' => 'Email already exists'
@@ -41,17 +42,28 @@ if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !
     if ($role === 'Reviewer') {
         $sql1 = "INSERT INTO reviewer (reviewer_id, fname, lname, email, pass) 
                 VALUES ('$userid', '$fname', '$lname', '$email', '$password')";
+        $result = mysqli_query($connect, $sql1);
+        
+        if ($result) {
+            echo json_encode(["status" => "success", "message" => "Successfully created account"]);
+        } else {
+            echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
+        }
     } else {
         $sql1 = "INSERT INTO Student (student_id, fname, lname, email, passw, profileImg, gender, bdate) 
                 VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";
+        $result = mysqli_query($connect, $sql1);
+        
+        if ($result) {
+            echo json_encode(["status" => "success", "message" => "Successfully created account"]);
+        } else {
+            echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
+        }
     }
-
-    $result = mysqli_query($connect, $sql1);
-
-    if ($result) {
-        echo json_encode(["status" => "success", "message" => "Successfully created account"]);
-    } else {
-        echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
-    }
+} else {
+    echo json_encode([
+        "status" => "failed",
+        "message" => "Please fill in all required fields"
+    ]);
 }
 ?>

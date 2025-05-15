@@ -10,8 +10,15 @@ session_start();
 </head>
 <body>
 <h1>Revise</h1>
+<aside>
+    <a href="homepage.php">Home</a>
+    <a href="public_repo.php">Public</a>
+    <a href="/views/student/revisepage.php">Revise</a>
+    <a href="approve.php?id=<?php echo $_SESSION['student_id']; ?>">Approve</a>
+    <a href="/views/student/rejectpage.php">Rejected</a>
+    <a href="#" id="logout">Logout</a>
+</aside>
 <h3><?php echo $_SESSION['fname']; ?></h3>
-<a href="logout.php">logout</a>
 
 
 <div id="userTableBody">

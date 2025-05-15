@@ -8,13 +8,14 @@
         <link rel="stylesheet" href="../assets/css/Create_Form.css" />
     </head>
     <body>
-	<!-- <header>
-        <a href="landingpage.php" >
-        <img src="../assets/icons/home.png" alt="Home Icon">
-        </a>
-    </header> -->
-        <form action="../php/CreateAccount.php" method="POST" id="CreateForm" enctype="multipart/form-data">
-            <h1>Create Account</h1>
+        <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
+            <h1>Create a New Account</h1>
+            <input type="radio" id="radio3" name="Role" value="Student" required />
+            <label for="radio3">Student</label>
+
+            <input type="radio" id="radio4" name="Role" value="Reviewer" />
+            <label for="radio4">Reviewer</label>
+
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
@@ -41,7 +42,7 @@
             <input type="radio" id="radio4" name="gender" value="Female" />
             <label for="radio4">Female</label>
             
-            <button class="btn" id="login" type="submit">Create Account</button>
+            <button class="btn" id="login" type="submit">Sign Up</button>
 
             <div>
             <a href="student_login.php">Already have an account?</a>
