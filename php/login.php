@@ -39,7 +39,7 @@ if (!empty($email) && !empty($pass)) {
                 $_SESSION['fname'] = $row['fname'];
                 $_SESSION['lname'] = $row['lname'];
                 $_SESSION['email'] = $row['email'];
-                // $_SESSION['profileImg'] = $row['profileImg'];
+                $_SESSION['profileImg'] = $row['profileImg'];
     
                 exit();
             }
