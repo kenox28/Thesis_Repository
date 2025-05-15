@@ -18,14 +18,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
 				</div>
 				<div class="nav-links">
-					<a href="public_repo.php">Home</a>
-					<a href="upload.php">Upload Thesis</a>
-					<a href="homepage.php">Pending</a>
+                    <a href="public_repo.php">Home</a>
+                    <a href="upload.php">Upload Thesis</a>
+                    <a href="homepage.php">Pending</a>  
 					<a href="approve_thesis.php">Approve</a>
 					<a href="rejectpage.php">Rejected</a>
 					<a href="request.php">Request</a>
 					<a href="revisepage.php">Revised</a>
-					
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -41,7 +40,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					</div>
 				</div>
 			</nav>
-			<!-- <main class="main-content">
+			<main class="main-content">
 				<section class="upload-card">
 					<header>
 						<h1 class="section-title">Upload Thesis</h1>
@@ -89,10 +88,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
 						<button type="submit" id="captbtn" class="btn">UPLOAD</button>
 					</form>
-				</section> -->
-				<section>
-					<div id="PDFFILE">
-					</div>
 				</section>
 			</main>
 		</div>
@@ -127,7 +122,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/homepage.js?v=1.0.4"></script>
+		<script src="../../js/upload.js?v=1.0.5"></script>
 		<script>
 
 		</script>
