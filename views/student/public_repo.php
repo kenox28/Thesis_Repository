@@ -21,7 +21,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			<a href="../../php/logout.php">logout</a>
 		</header>
 
-		<form action="#" id="thesisForm" enctype="multipart/form-data">
+		<!-- <form action="#" id="thesisForm" enctype="multipart/form-data">
 			<input type="text" name="title" placeholder="Enter a title">
 			<textarea
 				required=""
@@ -62,7 +62,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
 
 			<button type="submit" id="captbtn" class="btn">UPLOAD</button>
-		</form>
+		</form> -->
 
 		<main>
 			<div id="PDFFILE">
