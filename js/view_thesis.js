@@ -6,7 +6,6 @@ let pdfOffsetY = 0;
 let pdfPageWidth = 0;
 let pdfPageHeight = 0;
 
-// --- Highlight Tool Logic ---
 let isHighlighting = false;
 let highlightStart = null;
 let highlights = [];
@@ -406,7 +405,7 @@ function redrawHighlightsAndText() {
 	const ctx = highlightCanvas.getContext("2d");
 	ctx.clearRect(0, 0, highlightCanvas.width, highlightCanvas.height);
 	for (const h of highlights) {
-		ctx.fillStyle = "rgba(255,255,0,0.4)";
+		ctx.fillStyle = "rgba(255, 255, 0, 0.63)";
 		ctx.fillRect(h.x, h.y, h.w, h.h);
 	}
 	for (const t of textAnnotations) {

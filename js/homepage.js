@@ -47,6 +47,7 @@ async function showupload() {
                     <h3>${u.title}</h3>
                     <p>${u.abstract}</p>
 					<p>${u.lname}, ${u.fname}</p>
+                    <p>${u.status}</p>
                     <embed src="${filePath}" width="450" height="300" type="application/pdf">
 					<button onclick="window.location.href='revise_history.php?title=${u.title}'">Revision History</button>
 
