@@ -38,21 +38,19 @@ async function showupload() {
 	const data = await res.json();
 	console.log("runnnnnnnnnnnnnnn");
 
-	let rows = "";
+	let rows = "<div class='thesis-cards'>";
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-		// Add an entry for each uploaded PDF
 		rows += `
-                <div class="upload-item">
-                    <h3>${u.title}</h3>
-                    <p>${u.abstract}</p>
-					<p>${u.lname}, ${u.fname}</p>
-                    <embed src="${filePath}" width="450" height="300" type="application/pdf">
-					<button onclick="window.location.href='revise_history.php?title=${u.title}'">Revision History</button>
-
-                </div>
-            `;
+			<div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
+				<div class="thesis-card-title">${u.title}</div>
+				<div class="thesis-card-abstract">${u.abstract}</div>
+				<div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
+				<div class="thesis-card-status">${u.status || 'Pending'}</div>
+			</div>
+		`;
 	}
+	rows += "</div>";
 
 	document.getElementById("PDFFILE").innerHTML = rows;
 }
@@ -73,3 +71,26 @@ logout.onclick = function (e) {
 	e.preventDefault();
 	window.location.href = "../../php/logout.php";
 };
+
+function openModal(filePath, title, abstract, owner, status) {
+	const modal = document.createElement("div");
+	modal.className = "modal";
+	modal.innerHTML = `
+		<div class="modal-content large-modal">
+			<span class="close-button">&times;</span>
+			<h2>${title}</h2>
+			<div class="thesis-card-status" style="margin-bottom:12px;">${status || 'Pending'}</div>
+			<p>${abstract}</p>
+			<p>Owner: ${owner}</p>
+			${status && status.toLowerCase() !== 'pending' ? `<a href="${filePath}" download class="custom-download-btn">Download PDF</a>` : ''}
+			<iframe src="${filePath}#toolbar=0" width="100%" height="85vh" style="border-radius:8px;box-shadow:0 2px 12px #1976a522;margin-top:12px;"></iframe>
+		</div>
+	`;
+
+	const closeButton = modal.querySelector(".close-button");
+	closeButton.onclick = function() {
+		document.body.removeChild(modal);
+	};
+
+	document.body.appendChild(modal);
+}
