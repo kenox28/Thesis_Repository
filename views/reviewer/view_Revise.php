@@ -1,3 +1,6 @@
+<?php
+$thesis_id = isset($_GET['thesis_id']) ? $_GET['thesis_id'] : null;
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,16 +9,22 @@
     <title>Document</title>
 </head>
 <body>
+	<header>
+		<h1>Revision History</h1>
+		<a href="view_thesis.php">Back to Thesis</a>
+	</header>
 <div id="userTableBody">
 
 </div>
 </body>
 <script src="../../js/revise_upload.js"></script>
 <script>
-    
+const urlParams = new URLSearchParams(window.location.search);
+const thesis_id = urlParams.get('thesis_id');
+
 async function showupload() {
 	try {
-		const res = await fetch("../../php/reviewer/showUploaded_revise.php");
+		const res = await fetch(`../../php/reviewer/get_thesis_history.php?thesis_id=${thesis_id}`);
 		const data = await res.json();
 
 		if (data.error) {
@@ -26,20 +35,16 @@ async function showupload() {
 		}
 
 		let rows = "";
-		for (const u of data) {
-			const filePath = "../../assets/revised/" + u.ThesisFile;
-
+		data.forEach(u => {
+			const filePath = "../../assets/revised/" + u.file_name;
 			rows += `
                 <div class="upload-item" style="margin-bottom: 20px;">
-                    <h3>${u.title}</h3>
-                    <p>${u.abstract}</p>
-                    <embed src="${filePath}" width="600" height="400" type="application/pdf">
-                    <button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
-                    <button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
-                    <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
+                    <b>Revision #${u.revision_num}</b> (${u.status}) by ${u.reviewer_name || u.revised_by} at ${u.revised_at}<br>
+                    <a href="${filePath}" target="_blank">View PDF</a>
+                    ${u.notes ? `<br>Notes: ${u.notes}` : ""}
                 </div>
             `;
-		}
+		});
 
 		document.getElementById("userTableBody").innerHTML = rows;
 	} catch (error) {

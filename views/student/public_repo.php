@@ -1,6 +1,6 @@
 <?php
 session_start();
-
+$profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -11,12 +11,14 @@ session_start();
 	</head>
 	<body>
 		<header>
-			<a href="homepage.php">Home</a>
+		<a href="homepage.php">Home</a>
 			<a href="public_repo.php">Public</a>
-			<a href="view_Revise.php">Revise</a>
-			<a href="view_thesis.php">Approve</a>
-			<a href="view_thesis.php">Rejected</a>
-			<a href="#" id="logout">logout</a>
+			<a href="approve_thesis.php">Approve</a>
+			<a href="rejectpage.php">Rejected</a>
+			<a href="request.php">Request</a>
+			<a href="revisepage.php">Revised</a>
+			<a href="profilemanage.php">Profile Management</a>
+			<a href="../../php/logout.php">logout</a>
 		</header>
 
 		<form action="#" id="thesisForm" enctype="multipart/form-data">

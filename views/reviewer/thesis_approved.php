@@ -7,22 +7,18 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Document</title>
 </head>
 <body>
-    <h1>rejected</h1>
-    <a href="homepage.php">Home</a>
-    <a href="public_repo.php">Public</a>
-    <a href="approve_thesis.php">Approve</a>
-    <a href="rejectpage.php">Rejected</a>
-    <a href="request.php">Request</a>
-    <a href="revisepage.php">Revised</a>
-    <a href="profilemanage.php">Profile Management</a>
+    <h1>approved</h1>
+    <a href="view_thesis.php">View Thesis</a>
+    <a href="thesis_rejected.php">Rejected</a>
     <a href="../../php/logout.php">logout</a>
     <h3><?php echo $_SESSION['fname'] ?></h3>
     <h3><?php echo $_SESSION['lname'] ?></h3>
     <h3><?php echo $_SESSION['email'] ?></h3>
-    <h3><?php echo $_SESSION['student_id'] ?></h3>
+    <h3><?php echo $_SESSION['reviewer_id'] ?></h3>
     <img src="../../assets/imageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="">
     <main>
         <div id="PDFFILE">
@@ -32,7 +28,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </body>
 <script>
 async function showupload() {
-    const res = await fetch("../../php/student/rejectpage.php");
+    const res = await fetch("../../php/reviewer/approve_thesis.php");
     const data = await res.json();
     console.log("runnnnnnnnnnnnnnn");
 

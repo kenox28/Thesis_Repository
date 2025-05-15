@@ -16,7 +16,7 @@ $dateb = mysqli_real_escape_string($connect, $_POST['bday']);
 
 if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !empty($gender) && !empty($dateb)) {
     // Set default image
-    $img = 'noprofile.jpg';
+    $img = 'noprofile.png';
     $userid = rand(time(), 1000);
     
     if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
@@ -40,15 +40,8 @@ if (!empty($fname) && !empty($lname) && !empty($email) && !empty($password) && !
 
     // Insert new account into the appropriate table
     if ($role === 'Reviewer') {
-        $sql1 = "INSERT INTO reviewer (reviewer_id, fname, lname, email, pass) 
-                VALUES ('$userid', '$fname', '$lname', '$email', '$password')";
-        $result = mysqli_query($connect, $sql1);
-        
-        if ($result) {
-            echo json_encode(["status" => "success", "message" => "Successfully created account"]);
-        } else {
-            echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
-        }
+        $sql1 = "INSERT INTO reviewer (reviewer_id, fname, lname, email, pass, profileImg, gender, bdate) 
+                VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";
     } else {
         $sql1 = "INSERT INTO Student (student_id, fname, lname, email, passw, profileImg, gender, bdate) 
                 VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";

@@ -8,6 +8,13 @@ document.getElementById("thesisForm").addEventListener("submit", uploadfun);
 async function uploadfun(e) {
   e.preventDefault();
 
+  const fileInput = document.getElementById("docfile");
+  const file = fileInput.files[0];
+  if (!file || file.type !== "application/pdf") {
+    alert("Please upload a PDF file only.");
+    return;
+  }
+
   const form = document.getElementById("thesisForm");
   const formdata = new FormData(form);
 
@@ -27,29 +34,27 @@ async function uploadfun(e) {
   }
 }
 async function showupload() {
-  try {
-    const res = await fetch("../../php/student/showupload.php");
-    const data = await res.json();
-    console.log("runnnnnnnnnnnnnnn");
+  const res = await fetch("../../php/student/showupload.php");
+  const data = await res.json();
+  console.log("runnnnnnnnnnnnnnn");
 
-    let rows = "";
-    for (const u of data) {
-      const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-      // Add an entry for each uploaded PDF
-      rows += `
+  let rows = "";
+  for (const u of data) {
+    const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+    // Add an entry for each uploaded PDF
+    rows += `
                 <div class="upload-item">
                     <h3>${u.title}</h3>
                     <p>${u.abstract}</p>
 					<p>${u.lname}, ${u.fname}</p>
-                    <embed src="${filePath}" width="800" height="300" type="application/pdf">
+                    <embed src="${filePath}" width="450" height="300" type="application/pdf">
+					<button onclick="window.location.href='revise_history.php?title=${u.title}'">Revision History</button>
+
                 </div>
             `;
-    }
-
-    document.getElementById("PDFFILE").innerHTML = rows;
-  } catch (error) {
-    console.error("Error fetching uploads:", error);
   }
+
+  document.getElementById("PDFFILE").innerHTML = rows;
 }
 async function showdroptdown() {
   const res = await fetch("../../php/student/showreviewer.php");
