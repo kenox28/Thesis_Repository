@@ -37,6 +37,18 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
 
+$result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
+
+if (mysqli_num_rows($result) == 0) {
+    // Add the 'Approve' column if it doesn't exist
+    $add_column = "ALTER TABLE reviewer ADD COLUMN Approve BOOLEAN DEFAULT 0";
+    
+    if (mysqli_query($connect, $add_column)) {
+        echo "Column 'Approve' added successfully.";
+    } else {
+        echo "Error adding column: " . mysqli_error($connect);
+    }
+} 
 
 
 $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
@@ -95,7 +107,28 @@ $thesis_history = "CREATE TABLE IF NOT EXISTS thesis_history (
     status VARCHAR(50),
     notes TEXT
 )";
+$admin = "CREATE TABLE IF NOT EXISTS admin (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    admin_id VARCHAR(255) NOT NULL UNIQUE,
+    fname VARCHAR(50) NOT NULL,
+    lname VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    pass VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+mysqli_query($connect, $admin);
 
+// Check if the default admin already exists
+$check_admin = "SELECT * FROM admin WHERE admin_id = 'ADM001'";
+$result = mysqli_query($connect, $check_admin);
+
+if ($result && mysqli_num_rows($result) === 0) {
+    // Insert default admin if it doesn't exist
+    $default_admin = "INSERT INTO admin (admin_id, fname, lname, email, pass) 
+                      VALUES ('ADM001', 'Default', 'Admin', 'admin@gmail.com', '" .md5("admin123456")."')";
+    mysqli_query($connect, $default_admin);
+}
 mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
