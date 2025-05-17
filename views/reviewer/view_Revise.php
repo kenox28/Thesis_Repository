@@ -6,15 +6,15 @@ $thesis_id = isset($_GET['thesis_id']) ? $_GET['thesis_id'] : null;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Revision History</title>
 </head>
 <body>
-	<header>
-		<h1>Revision History</h1>
-		<a href="view_thesis.php">Back to Thesis</a>
-	</header>
+    <header>
+        <h1>Revision History</h1>
+        <a href="view_thesis.php">Back to Thesis</a>
+    </header>
 <div id="userTableBody">
-
+    <p>Loading...</p>
 </div>
 </body>
 <script src="../../js/revise_upload.js"></script>
@@ -22,38 +22,60 @@ $thesis_id = isset($_GET['thesis_id']) ? $_GET['thesis_id'] : null;
 const urlParams = new URLSearchParams(window.location.search);
 const thesis_id = urlParams.get('thesis_id');
 
+async function checkApprovalStatus() {
+    try {
+        const res = await fetch("../../php/reviewer/check_reviewer_status.php");
+        const data = await res.json();
+
+        if (data.status === "success") {
+            if (data.approve == 0) {
+                document.getElementById("userTableBody").innerHTML = `<p>Wait for approval</p>`;
+            } else {
+                showupload();
+            }
+        } else {
+            document.getElementById("userTableBody").innerHTML = `<p>${data.message}</p>`;
+        }
+    } catch (error) {
+        console.error("Error checking approval status:", error);
+        document.getElementById("userTableBody").innerHTML = `<p>Something went wrong.</p>`;
+    }
+}
+
 async function showupload() {
-	try {
-		const res = await fetch(`../../php/reviewer/get_thesis_history.php?thesis_id=${thesis_id}`);
-		const data = await res.json();
+    try {
+        const res = await fetch(`../../php/reviewer/get_thesis_history.php?thesis_id=${thesis_id}`);
+        const data = await res.json();
 
-		if (data.error) {
-			document.getElementById(
-				"userTableBody"
-			).innerHTML = `<p>${data.error}</p>`;
-			return;
-		}
+        if (data.error) {
+            document.getElementById(
+                "userTableBody"
+            ).innerHTML = `<p>${data.error}</p>`;
+            return;
+        }
 
-		let rows = "";
-		data.forEach(u => {
-			const filePath = "../../assets/revised/" + u.file_name;
-			rows += `
+        let rows = "";
+        data.forEach(u => {
+            const filePath = "../../assets/revised/" + u.file_name;
+            rows += `
                 <div class="upload-item" style="margin-bottom: 20px;">
                     <b>Revision #${u.revision_num}</b> (${u.status}) by ${u.reviewer_name || u.revised_by} at ${u.revised_at}<br>
                     <a href="${filePath}" target="_blank">View PDF</a>
                     ${u.notes ? `<br>Notes: ${u.notes}` : ""}
                 </div>
             `;
-		});
+        });
 
-		document.getElementById("userTableBody").innerHTML = rows;
-	} catch (error) {
-		console.error("Error fetching uploads:", error);
-		document.getElementById(
-			"userTableBody"
-		).innerHTML = `<p>Something went wrong.</p>`;
-	}
+        document.getElementById("userTableBody").innerHTML = rows;
+    } catch (error) {
+        console.error("Error fetching uploads:", error);
+        document.getElementById(
+            "userTableBody"
+        ).innerHTML = `<p>Something went wrong.</p>`;
+    }
 }
-showupload();
+
+// Check approval status on page load
+checkApprovalStatus();
 </script>
 </html>

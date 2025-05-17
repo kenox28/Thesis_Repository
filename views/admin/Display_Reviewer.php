@@ -12,31 +12,36 @@ if (!isset($_SESSION['admin_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
+    <title>Manage Reviewers</title>
     <link href="../../assets/css/Admin_Page.css" rel="stylesheet">
-
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <div class="container">
-            <h1>Admin Dashboard</h1>
+            <h1>Manage Reviewers</h1>
             <nav>
                 <a href="admin_dashboard.php">Home</a>
                 <a href="Display_Reviewer.php">Manage Reviewers</a>
-                <a href="view_reports.php">Book Request</a>
+                <a href="view_reports.php">Reports</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
             </nav>
         </div>
     </header>
 
+    <!-- Main Content -->
     <div class="container">
-        
-        <h1>All Students</h1>
-        <div class="student-container" id="studentContainer">
-            <!-- Student tiles will be dynamically added here -->
+        <h2>Approved Reviewers</h2>
+        <div class="reviewer-container" id="approvedReviewers">
+            <!-- Approved reviewer tiles will be dynamically added here -->
+        </div>
+
+        <h2>Pending Reviewers</h2>
+        <div class="reviewer-container" id="pendingReviewers">
+            <!-- Pending reviewer tiles will be dynamically added here -->
         </div>
     </div>
-<script src="../../js/admin_dashboard.js"></script>
+
+    <script src="../../js/admin_dashboard.js"></script>
 </body>
 </html>
