@@ -47,6 +47,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             position: relative;
             margin-bottom: 36px;
             padding-left: 36px;
+            display: flex;
+            justify-content: space-between;
         }
         .revision-dot {
             position: absolute;
@@ -71,6 +73,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             width: 100%;
             margin-left: 16px;
             position: relative;
+            display: flex;
+            justify-content: space-between;
         }
         .revision-card b {
             color: #1976a5;
