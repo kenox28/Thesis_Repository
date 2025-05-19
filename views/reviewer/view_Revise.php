@@ -22,25 +22,7 @@ $thesis_id = isset($_GET['thesis_id']) ? $_GET['thesis_id'] : null;
 const urlParams = new URLSearchParams(window.location.search);
 const thesis_id = urlParams.get('thesis_id');
 
-async function checkApprovalStatus() {
-    try {
-        const res = await fetch("../../php/reviewer/check_reviewer_status.php");
-        const data = await res.json();
 
-        if (data.status === "success") {
-            if (data.approve == 0) {
-                document.getElementById("userTableBody").innerHTML = `<p>Wait for approval</p>`;
-            } else {
-                showupload();
-            }
-        } else {
-            document.getElementById("userTableBody").innerHTML = `<p>${data.message}</p>`;
-        }
-    } catch (error) {
-        console.error("Error checking approval status:", error);
-        document.getElementById("userTableBody").innerHTML = `<p>Something went wrong.</p>`;
-    }
-}
 
 async function showupload() {
     try {
@@ -74,8 +56,6 @@ async function showupload() {
         ).innerHTML = `<p>Something went wrong.</p>`;
     }
 }
-
-// Check approval status on page load
-checkApprovalStatus();
+showupload()
 </script>
 </html>

@@ -15,7 +15,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			<a href="public_repo.php">Public</a>
 			<a href="approve_thesis.php">Approve</a>
 			<a href="rejectpage.php">Rejected</a>
-			<a href="request.php">Request</a>
 			<a href="revisepage.php">Revised</a>
 			<a href="profilemanage.php">Profile Management</a>
 			<a href="../../php/logout.php">logout</a>
