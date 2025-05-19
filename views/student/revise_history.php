@@ -12,7 +12,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
     <style>
         .history-container {
-            max-width: 1000px;
+            width: 90%;
             margin: 40px auto;
             background: #fff;
             border-radius: 12px;
@@ -28,67 +28,73 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             text-align: center;
         }
         .revision-timeline {
-            display: flex;
-            flex-direction: row;
-            align-items: flex-start;
-            gap: 32px;
-            overflow-x: auto;
-            padding-bottom: 16px;
-            margin-top: 30px;
             position: relative;
+            margin: 40px auto 0 auto;
+            padding-left: 40px;
+            width: 80%;
+        }
+        .revision-timeline::before {
+            content: '';
+            position: absolute;
+            left: 22px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #e3eaf2;
+            border-radius: 2px;
         }
         .revision-item {
             position: relative;
-            background: #f5f7fa;
-            border-radius: 8px;
-            padding: 18px 20px 18px 20px;
-            min-width: 220px;
-            max-width: 260px;
-            box-shadow: 0 1px 6px #1976a511;
-            border-top: 4px solid #1976a5;
-            flex-shrink: 0;
-            text-align: left;
-            margin-bottom: 0;
+            margin-bottom: 36px;
+            padding-left: 36px;
+            display: flex;
+            justify-content: space-between;
         }
-        .revision-item .dot {
+        .revision-dot {
             position: absolute;
-            top: -18px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 16px;
-            background: #1976a5;
+            left: 8px;
+            top: 12px;
+            width: 28px;
+            height: 28px;
+            background: #fff;
             border-radius: 50%;
-            border: 3px solid #fff;
+            border: 4px solid #1976a5;
             box-shadow: 0 0 0 2px #e3eaf2;
             z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
-        .revision-item .connector {
-            position: absolute;
-            top: -10px;
-            left: 100%;
-            width: 32px;
-            height: 4px;
-            background: #e3eaf2;
-            z-index: 1;
+        .revision-card {
+            background: #f5f7fa;
+            border-radius: 8px;
+            box-shadow: 0 1px 6px #1976a511;
+            padding: 18px 22px;
+            width: 100%;
+            margin-left: 16px;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
         }
-        .revision-item:last-child .connector {
-            display: none;
-        }
-        .revision-item b {
+        .revision-card b {
             color: #1976a5;
             font-size: 1.1rem;
         }
-        .revision-item a {
-            color: #1976a5;
-            text-decoration: underline;
-            font-weight: 500;
+        .revision-card .meta {
+            color: #888;
+            font-size: 0.95rem;
+            margin-bottom: 6px;
         }
-        .revision-item .notes {
+        .revision-card .notes {
             display: block;
             margin-top: 8px;
             color: #444;
             font-style: italic;
+        }
+        .revision-card a {
+            color: #1976a5;
+            text-decoration: underline;
+            font-weight: 500;
         }
         .no-revisions {
             text-align: center;
@@ -120,7 +126,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="homepage.php">Pending</a>
                 <a href="approve_thesis.php">Approve</a>
                 <a href="rejectpage.php">Rejected</a>
-                <a href="request.php">Request</a>
                 <a href="revisepage.php">Revised</a>
             </div>
             <div class="nav-avatar dropdown">
@@ -192,12 +197,15 @@ async function modalfuntion() {
                 const filePath = "../../assets/revised/" + u.file_name;
                 rows += `
                     <div class="revision-item">
-                        <div class="dot"></div>
-                        ${idx < data.length - 1 ? '<div class="connector"></div>' : ''}
-                        <b>Revision #${u.revision_num}</b> <span style="color:#888;">(${u.status})</span><br>
-                        <span>by ${u.revised_by} at ${u.revised_at}</span><br>
-                        <a href="${filePath}" target="_blank">View PDF</a>
-                        ${u.notes ? `<span class="notes">Notes: ${u.notes}</span>` : ""}
+                        <div class="revision-dot"></div>
+                        <div class="revision-card">
+                            <b>Revision #${u.revision_num}</b>
+                            <div class="meta">
+                                (${u.status}) by ${u.revised_by} at ${u.revised_at}
+                            </div>
+                            <a href="${filePath}" target="_blank">View PDF</a>
+                            ${u.notes ? `<div class="notes">Notes: ${u.notes}</div>` : ""}
+                        </div>
                     </div>
                 `;
             });
