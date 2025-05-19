@@ -22,7 +22,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="homepage.php">Pending</a>
                 <a href="approve_thesis.php">Approve</a>
                 <a href="rejectpage.php">Rejected</a>
-                <a href="request.php">Request</a>
                 <a href="revisepage.php">Revised</a>
 
             </div>
@@ -102,6 +101,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         <div class="thesis-card-abstract">${u.abstract}</div>
                         <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
                         <div class="thesis-card-status">${u.status || "Approved"}</div>
+                        <button class="thesis-card-public-private">Public</button>
+                        <button class="thesis-card-public-private">Private</button>
                     </div>
                 `;
             }
