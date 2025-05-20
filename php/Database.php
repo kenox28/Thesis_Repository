@@ -92,6 +92,7 @@ $publicRepo = "CREATE TABLE IF NOT EXISTS publicRepo(
     abstract VARCHAR(255),
     ThesisFile VARCHAR(255),
     reviewer_id VARCHAR(255),
+    Privacy VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP

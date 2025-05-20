@@ -51,6 +51,6 @@ session_start();
       </div>
     </div>
 </body>
-<script src="../../js/view_thesis.js?v=1.0.3"></script>
+<script src="../../js/view_thesis.js?v=1.0.4"></script>
 
 </html>
