@@ -7,7 +7,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Public Repositories</title>
+		<link rel="stylesheet" href="../../assets/css/publicRepo.css">
+
 	</head>
 	<body>
 		<header>
@@ -21,7 +23,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			<a href="../../php/logout.php">logout</a>
 		</header>
 
-		<form action="#" id="thesisForm" enctype="multipart/form-data">
+		<!-- <form action="#" id="thesisForm" enctype="multipart/form-data">
 			<input type="text" name="title" placeholder="Enter a title">
 			<textarea
 				required=""
@@ -62,7 +64,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
 
 			<button type="submit" id="captbtn" class="btn">UPLOAD</button>
-		</form>
+		</form> -->
 
 		<main>
 			<div id="PDFFILE">

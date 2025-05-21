@@ -662,3 +662,169 @@ body, html {
 .sidebar-profile-trash:active {
   transform: scale(0.95);
 }
+.thesis-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+  margin-top: 24px;
+}
+.thesis-card, .upload-item {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,36,107,0.10);
+  padding: 28px 24px 18px 24px;
+  min-width: 320px;
+  max-width: 400px;
+  margin: 0 0 24px 0;
+  transition: box-shadow 0.18s, transform 0.18s;
+  cursor: pointer;
+  position: relative;
+  border: 1.5px solid #e9f0ff;
+}
+.thesis-card:hover, .upload-item:hover {
+  box-shadow: 0 8px 32px #1976a522;
+  transform: translateY(-4px) scale(1.01);
+}
+.thesis-card-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1976a5;
+  margin-bottom: 8px;
+}
+.thesis-card-abstract {
+  color: #444;
+  font-size: 1.01rem;
+  margin-bottom: 10px;
+}
+.thesis-card-owner {
+  color: #6a7ba2;
+  font-size: 0.98rem;
+  margin-bottom: 8px;
+}
+.thesis-card-status {
+  display: inline-block;
+  background: #ffe082;
+  color: #b28704;
+  font-weight: 700;
+  font-size: 0.95rem;
+  border-radius: 8px;
+  padding: 3px 14px;
+  margin-bottom: 10px;
+}
+.thesis-card button {
+  background: #1976a5;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 18px;
+  font-size: 1rem;
+  font-weight: 600;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: background 0.18s;
+}
+.thesis-card button:hover {
+  background: #2893c7;
+}
+.modal {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(0,36,107,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3000;
+}
+.modal-content {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px #1976a522;
+  padding: 32px 32px 24px 32px;
+  min-width: 340px;
+  max-width: 90vw;
+  width: 90vw;
+  max-height: 90vh;
+  height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  animation: fadeInUp 0.3s cubic-bezier(.23,1.01,.32,1);
+  display: flex;
+  flex-direction: column;
+}
+.modal-content h2 {
+  margin-top: 0;
+}
+.modal-content embed {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 70vh;
+  border-radius: 8px;
+  margin-top: 12px;
+  box-shadow: 0 2px 12px #1976a522;
+}
+.close-button {
+  position: absolute;
+  top: 16px;
+  right: 22px;
+  font-size: 2rem;
+  color: #1976a5;
+  cursor: pointer;
+  font-weight: 700;
+  transition: color 0.18s;
+}
+.close-button:hover {
+  color: #e74c3c;
+}
+@media (max-width: 900px) {
+  .modal-content {
+    width: 98vw;
+    max-width: 98vw;
+    height: 95vh;
+    max-height: 95vh;
+    padding: 10px 2vw 8px 2vw;
+  }
+  .modal-content embed {
+    height: 55vh;
+  }
+}
+.custom-download-btn {
+  display: inline-block;
+  background: #1976a5;
+  color: #fff;
+  border-radius: 6px;
+  padding: 8px 22px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  margin-top: 8px;
+  text-decoration: none;
+  transition: background 0.18s, box-shadow 0.18s;
+  box-shadow: 0 2px 8px #1976a522;
+}
+.custom-download-btn:hover {
+  background: #2893c7;
+  color: #fff;
+}
+.large-modal {
+  width: 98vw !important;
+  max-width: 98vw !important;
+  height: 98vh !important;
+  max-height: 98vh !important;
+  padding: 18px 1vw 12px 1vw !important;
+}
+.large-modal iframe {
+  height: 85vh !important;
+}
+@media (max-width: 900px) {
+  .large-modal {
+    width: 99vw !important;
+    max-width: 99vw !important;
+    height: 99vh !important;
+    max-height: 99vh !important;
+    padding: 6px 1vw 6px 1vw !important;
+  }
+  .large-modal iframe {
+    height: 60vh !important;
+  }
+}

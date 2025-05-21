@@ -18,9 +18,10 @@ session_start();
     <h1>reviewer</h1>
     <a href="view_Revise.php">view revised</a>
     <h3><?php echo $_SESSION['fname'] ?></h3>
-    <a href="dashboard.php">dashboard</a>
-    <a href="thesis_approved.php">Approved</a>
-    <a href="thesis_rejected.php">Rejected</a>
+    <a href="dashboard.php" class="active">Dashboard</a>
+      <a href="View_thesis.php">Review</a>
+      <a href="thesis_approved.php">Approved</a>
+      <a href="thesis_rejected.php">Rejected</a>
     <a href="../../php/logout.php">logout</a>
     <main>
         <div id="userTableBody">
