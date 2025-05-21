@@ -181,8 +181,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <div class="sidebar-profile-name"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?></div>
     <div class="sidebar-profile-role">REVIEWER</div>
     <nav class="sidebar-nav">
-      <a href="#" class="active">Dashboard</a>
-      <a href="View_thesis.php">Review Requests</a>
+      <a href="dashboard.php" class="active">Dashboard</a>
+      <a href="View_thesis.php">Review</a>
       <a href="thesis_approved.php">Approved</a>
       <a href="thesis_rejected.php">Rejected</a>
     </nav>

@@ -3,56 +3,26 @@ window.addEventListener("DOMContentLoaded", () => {
   showdroptdown();
 });
 
-document.getElementById("thesisForm").addEventListener("submit", uploadfun);
-
-async function uploadfun(e) {
-  e.preventDefault();
-
-  const fileInput = document.getElementById("docfile");
-  const file = fileInput.files[0];
-  if (!file || file.type !== "application/pdf") {
-    alert("Please upload a PDF file only.");
-    return;
-  }
-
-  const form = document.getElementById("thesisForm");
-  const formdata = new FormData(form);
-
-  const res = await fetch("../../php/student/upload_thesis.php", {
-    method: "POST",
-    body: formdata,
-  });
-
-  const result = await res.json();
-
-  if (result.status === "success") {
-    alert(result.message);
-    // window.location.href = "../views/home.html";
-    showupload();
-  } else {
-    alert(result.message);
-  }
-}
 async function showupload() {
   const res = await fetch("../../php/student/showupload.php");
   const data = await res.json();
   console.log("runnnnnnnnnnnnnnn");
 
-  let rows = "";
+  let rows = "<div class='thesis-cards'>";
   for (const u of data) {
     const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-    // Add an entry for each uploaded PDF
     rows += `
-                <div class="upload-item">
-                    <h3>${u.title}</h3>
-                    <p>${u.abstract}</p>
-					<p>${u.lname}, ${u.fname}</p>
-                    <embed src="${filePath}" width="450" height="300" type="application/pdf">
-					<button onclick="window.location.href='revise_history.php?title=${u.title}'">Revision History</button>
-
-                </div>
-            `;
+			<div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${
+      u.abstract
+    }', '${u.lname}, ${u.fname}', '${u.status}')">
+				<div class="thesis-card-title">${u.title}</div>
+				<div class="thesis-card-abstract">${u.abstract}</div>
+				<div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
+				<div class="thesis-card-status">${u.status || "Pending"}</div>
+			</div>
+		`;
   }
+  rows += "</div>";
 
   document.getElementById("PDFFILE").innerHTML = rows;
 }
@@ -73,3 +43,99 @@ logout.onclick = function (e) {
   e.preventDefault();
   window.location.href = "../../php/logout.php";
 };
+
+function openModal(filePath, title, abstract, owner, status) {
+  const modal = document.createElement("div");
+  modal.className = "modal";
+  modal.innerHTML = `
+		<div class="modal-content large-modal">
+			<span class="close-button">&times;</span>
+			<h2>${title}</h2>
+			<div class="thesis-card-status" style="margin-bottom:12px;">${
+        status || "Pending"
+      }</div>
+			<p>${abstract}</p>
+			<p>Owner: ${owner}</p>
+			${
+        status && status.toLowerCase() !== "pending"
+          ? `<a href="${filePath}" download class="custom-download-btn">Download PDF</a>`
+          : ""
+      }
+			<iframe src="${filePath}#toolbar=0" width="100%" height="85vh" style="border-radius:8px;box-shadow:0 2px 12px #1976a522;margin-top:12px;"></iframe>
+		</div>
+	`;
+
+  const closeButton = modal.querySelector(".close-button");
+  closeButton.onclick = function () {
+    document.body.removeChild(modal);
+  };
+
+  document.body.appendChild(modal);
+}
+
+////////////////////////////////////////////////////
+
+// Dropdown toggle for avatar
+const avatar = document.querySelector(".nav-avatar");
+if (avatar) {
+  avatar.addEventListener("click", function (e) {
+    e.stopPropagation();
+    this.classList.toggle("open");
+  });
+  document.addEventListener("click", function () {
+    avatar.classList.remove("open");
+  });
+}
+// Profile modal logic
+const profileLink = document.getElementById("profile-link");
+const profileModal = document.getElementById("profile-modal");
+const closeProfileModal = document.getElementById("closeProfileModal");
+if (profileLink && profileModal && closeProfileModal) {
+  profileLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    profileModal.style.display = "flex";
+    avatar.classList.remove("open");
+  });
+  closeProfileModal.addEventListener("click", function () {
+    profileModal.style.display = "none";
+  });
+  window.addEventListener("click", function (event) {
+    if (event.target === profileModal) {
+      profileModal.style.display = "none";
+    }
+  });
+}
+// Logout confirmation modal logic
+const logoutLink = document.getElementById("logout-link");
+const logoutModal = document.getElementById("logout-modal");
+const closeLogoutModal = document.getElementById("closeLogoutModal");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
+if (
+  logoutLink &&
+  logoutModal &&
+  closeLogoutModal &&
+  confirmLogoutBtn &&
+  cancelLogoutBtn
+) {
+  logoutLink.addEventListener("click", function (e) {
+    e.preventDefault();
+    logoutModal.style.display = "flex";
+    avatar.classList.remove("open");
+  });
+  closeLogoutModal.addEventListener("click", function () {
+    logoutModal.style.display = "none";
+  });
+  cancelLogoutBtn.addEventListener("click", function (e) {
+    e.preventDefault();
+    logoutModal.style.display = "none";
+  });
+  confirmLogoutBtn.addEventListener("click", function () {
+    window.location.href = "../../php/logout.php";
+  });
+  window.addEventListener("click", function (event) {
+    if (event.target === logoutModal) {
+      logoutModal.style.display = "none";
+    }
+  });
+}
