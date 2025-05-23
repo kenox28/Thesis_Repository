@@ -7,6 +7,7 @@ $thesis_id = isset($_GET['thesis_id']) ? $_GET['thesis_id'] : null;
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Revision History</title>
+    <link rel="stylesheet" href="../../assets/css/view_Revised.css">
 </head>
 <body>
     <header>
