@@ -42,7 +42,14 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
 
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
 
-if (mysqli_num_rows($result) == 0) {
+if ($result === false) {
+    // If query failed, create the table first
+    mysqli_query($connect, $reviewer);
+    // Try the query again
+    $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
+}
+
+if ($result && mysqli_num_rows($result) == 0) {
     // Add the 'Approve' column if it doesn't exist
     $add_column = "ALTER TABLE reviewer ADD COLUMN Approve BOOLEAN DEFAULT 0";
     
