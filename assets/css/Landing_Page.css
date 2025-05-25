@@ -95,10 +95,27 @@ body {
     color: var(--primary);
     text-decoration: none;
     transition: color 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
     color: var(--primary-light);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 .auth-buttons {

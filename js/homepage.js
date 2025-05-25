@@ -37,12 +37,12 @@ async function showdroptdown() {
 
   document.getElementById("reviewerDropdown").innerHTML = options;
 }
-const logout = document.querySelector("#logout");
-logout.onclick = function (e) {
-  console.log("run");
-  e.preventDefault();
-  window.location.href = "../../php/logout.php";
-};
+// const logout = document.querySelector("#logout");
+// logout.onclick = function (e) {
+// 	console.log("run");
+// 	e.preventDefault();
+// 	window.location.href = "../../php/logout.php";
+// };
 
 function openModal(filePath, title, abstract, owner, status) {
   const modal = document.createElement("div");
@@ -86,7 +86,7 @@ if (avatar) {
     avatar.classList.remove("open");
   });
 }
-// Profile modal logic
+
 const profileLink = document.getElementById("profile-link");
 const profileModal = document.getElementById("profile-modal");
 const closeProfileModal = document.getElementById("closeProfileModal");

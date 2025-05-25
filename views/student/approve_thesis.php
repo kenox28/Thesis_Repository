@@ -22,7 +22,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="homepage.php">Pending</a>
                 <a href="approve_thesis.php">Approve</a>
                 <a href="rejectpage.php">Rejected</a>
-                <a href="request.php">Request</a>
                 <a href="revisepage.php">Revised</a>
 
             </div>
@@ -102,6 +101,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         <div class="thesis-card-abstract">${u.abstract}</div>
                         <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
                         <div class="thesis-card-status">${u.status || "Approved"}</div>
+                        <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
+                        <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
                     </div>
                 `;
             }
@@ -187,6 +188,34 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 logoutModal.style.display = 'none';
             }
         });
+    }
+    async function privacyfunction(thesisId, title, privacy) {
+        try {
+            const res = await fetch("../../php/student/update_privacy.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ id: thesisId, title: title, privacy: privacy })
+            });
+            const text = await res.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                // alert("Server error:\n" + text);
+                console.log(text)
+                return;
+            }
+            if (data.status === "success") {
+                alert("Privacy updated to " + privacy + "!");
+                showupload(); // Refresh the list if you want
+            } else {
+                alert(data.message || "Failed to update privacy.");
+            }
+        } catch (error) {
+            alert("Error updating privacy: " + error);
+        }
     }
     </script>
 </body>

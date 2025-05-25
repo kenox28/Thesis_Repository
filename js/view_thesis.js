@@ -60,24 +60,20 @@ async function showupload() {
 showupload();
 
 async function updateStatus(thesisId, status) {
-	try {
-		// Create a FormData object to send the data
-		const formData = new FormData();
-		formData.append("thesis_id", thesisId);
-		formData.append("status", status);
+	// Create a FormData object to send the data
+	const formData = new FormData();
+	formData.append("thesis_id", thesisId);
+	formData.append("status", status);
 
-		const res = await fetch("../../php/reviewer/updatethesis_status.php", {
-			method: "POST",
-			body: formData,
-		});
+	const res = await fetch("../../php/reviewer/updatethesis_status.php", {
+		method: "POST",
+		body: formData,
+	});
 
-		const result = await res.json();
-		alert(result.message);
-		if (result.status === "success") {
-			showupload(); // Refresh the list
-		}
-	} catch (error) {
-		console.error("Error updating status:", error);
+	const result = await res.json();
+	alert(result.message);
+	if (result.status === "success") {
+		showupload(); // Refresh the list
 	}
 }
 
