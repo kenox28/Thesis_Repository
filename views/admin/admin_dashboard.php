@@ -32,7 +32,7 @@ if (!isset($_SESSION['admin_id'])) {
 
     <div class="container">
         
-        <h1>All Students</h1>
+        <h1>All Registered Students</h1>
         <div class="student-container" id="studentContainer">
             <!-- Student tiles will be dynamically added here -->
         </div>

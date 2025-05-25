@@ -7,7 +7,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Pending Thesis</title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
 	<body>
@@ -128,7 +128,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		</div>
 		<script src="../../js/homepage.js?v=1.0.4"></script>
 		<script>
-
+			
 		</script>
 	</body>
 </html>

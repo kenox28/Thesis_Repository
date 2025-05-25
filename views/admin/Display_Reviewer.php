@@ -31,12 +31,12 @@ if (!isset($_SESSION['admin_id'])) {
 
     <!-- Main Content -->
     <div class="container">
-        <h2>Approved Reviewers</h2>
+        <h1>Approved Reviewers</h1>
         <div class="reviewer-container" id="approvedReviewers">
             <!-- Approved reviewer tiles will be dynamically added here -->
         </div>
 
-        <h2>Pending Reviewers</h2>
+        <h1>Pending Reviewers</h1>
         <div class="reviewer-container" id="pendingReviewers">
             <!-- Pending reviewer tiles will be dynamically added here -->
         </div>
