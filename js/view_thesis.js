@@ -46,6 +46,7 @@ async function showupload() {
                     <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
                     <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
                 </div>
+				
             `;
 		}
 
