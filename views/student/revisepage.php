@@ -22,7 +22,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="homepage.php">Pending</a>  
                 <a href="approve_thesis.php">Approve</a>
                 <a href="rejectpage.php">Rejected</a>
-                <a href="request.php">Request</a>
                 <a href="revisepage.php">Revised</a>
             </div>
             <div class="nav-avatar dropdown">
@@ -117,7 +116,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <div class="thesis-card-status" style="margin-bottom:12px;">${status || "Revised"}</div>
                 <p>${abstract}</p>
                 <p>Owner: ${owner}</p>
-                <button onclick=\"window.location.href='revise_history.php?title=${title}'\" class='custom-download-btn'>Revision History</button>
+                <button onclick="window.location.href='revise_history.php?title=${title}'" class='custom-download-btn'>Revision History</button>
+                <form id="updateForm" enctype="multipart/form-data" style="margin: 16px 0;">
+                    <input type="hidden" name="title" value="${title}">
+                    <input type="file" name="revised_file" accept="application/pdf" required style="margin-bottom:8px;">
+                    <button type="submit" class="custom-upload-btn">Update File</button>
+                </form>
                 <iframe src="${filePath}#toolbar=0" width="100%" height="85vh" style="border-radius:8px;box-shadow:0 2px 12px #1976a522;margin-top:12px;"></iframe>
             </div>
         `;
@@ -185,6 +189,25 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             }
         });
     }
+    document.addEventListener('submit', async function(e) {
+        if (e.target && e.target.id === 'updateForm') {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const res = await fetch('../../php/student/updated_revised_file.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if (result.status === 'success') {
+                alert('File updated successfully!');
+                document.body.querySelector('.modal .close-button').click();
+                showupload(); // Refresh the list
+            } else {
+                alert(result.message || 'Failed to update file.');
+            }
+        }
+    });
     </script>
 </body>
 </html>

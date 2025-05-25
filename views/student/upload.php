@@ -23,7 +23,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                     <a href="homepage.php">Pending</a>  
 					<a href="approve_thesis.php">Approve</a>
 					<a href="rejectpage.php">Rejected</a>
-					<a href="request.php">Request</a>
 					<a href="revisepage.php">Revised</a>
 				</div>
 				<div class="nav-avatar dropdown">
@@ -123,8 +122,5 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			</div>
 		</div>
 		<script src="../../js/upload.js?v=1.0.5"></script>
-		<script>
-
-		</script>
 	</body>
 </html>
