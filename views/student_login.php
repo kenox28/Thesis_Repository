@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Student Login - Thesis Repository System">
     <meta name="theme-color" content="#174D38">
-    <title>Student Login - Thesis Repository</title>
+    <title>Login - Thesis Repository</title>
     <link rel="stylesheet" href="../assets/css/Landing_Page.css">
     <link rel="stylesheet" href="../assets/css/Login_Form.css">
     <!-- Favicon -->
@@ -20,7 +20,6 @@
 
     <main>
         <form action="#" id="loginForm" method="POST" autocomplete="off">
-            <h1>Student Login</h1>
             <div class="form-group">
                 <input 
                     type="email" 
@@ -56,11 +55,6 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </main>
-
-    <footer>
-        <p>&copy; <?php echo date('Y'); ?> Thesis Repository</p>
-    </footer>
-
     <script src="../js/login.js?v=1.0.5"></script>
 </body>
 </html>
