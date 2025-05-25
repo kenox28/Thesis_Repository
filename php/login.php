@@ -9,6 +9,23 @@ if (!empty($email) && !empty($pass)) {
     // Check if the user is an admin
     $sql_admin = "SELECT * FROM admin WHERE email = '{$email}'";
     $result_admin = mysqli_query($connect, $sql_admin);
+    
+    // if ($result_admin && mysqli_num_rows($result_admin) > 0) {
+    //     $row = mysqli_fetch_assoc($result_admin);
+    //     if (md5($pass) === $row['pass']) {
+    //         $_SESSION['admin_id'] = $row['admin_id'];
+    //         $_SESSION['fname'] = $row['fname'];
+    //         $_SESSION['lname'] = $row['lname'];
+    //         $_SESSION['email'] = $row['email'];
+
+    //         // Redirect to admin dashboard
+    //         echo json_encode([
+    //             "status" => "admin",
+    //             "message" => "Admin login successful",
+    //         ]);
+    //         exit();
+    //     }
+    // }
 
     if ($result_admin && mysqli_num_rows($result_admin) > 0) {
         $row = mysqli_fetch_assoc($result_admin);
@@ -73,6 +90,9 @@ if (!empty($email) && !empty($pass)) {
                 sleep($interval);
                 $waited += $interval;
             }
+
+
+
 
             // If not approved after 5 minutes
             echo json_encode([
