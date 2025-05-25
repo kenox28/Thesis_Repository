@@ -18,10 +18,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
 				</div>
 				<div class="nav-links">
-                    <a href="public_repo.php">Home</a>
+                    <a href="homepage.php">Home</a>
+					<a href="public_repo.php">Public</a>
                     <a href="upload.php">Upload Thesis</a>
-                    <a href="homepage.php">Pending</a>  
-					<a href="approve_thesis.php">Approve</a>
+                    <a href="approve_thesis.php">Approve</a>
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 				</div>

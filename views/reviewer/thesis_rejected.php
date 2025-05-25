@@ -203,8 +203,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     </div>
 
     <div class="nav-links">
-        <a href="view_thesis.php"><i class="fas fa-file-alt"></i> View Thesis</a>
+        <a href="dashboard.php" ><i class="fas fa-home"></i> Dashboard</a>
+        <a href="View_thesis.php" ><i class="fas fa-file-alt"></i> Review</a>
         <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
+        <a href="thesis_rejected.php" class="active"><i class="fas fa-times-circle"></i> Rejected</a>
         <a href="../../php/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 

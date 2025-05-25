@@ -1,5 +1,7 @@
 <?php
 session_start();
+$profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,10 +20,12 @@ session_start();
     <style>
         :root {
             --primary-color: #2c3e50;
-            --secondary-color: #3498db;
+            --secondary-color: #27ae60;
             --accent-color: #e74c3c;
             --background-color: #f5f6fa;
             --text-color: #2c3e50;
+            --card-bg: #ffffff;
+            --success-color: #2ecc71;
         }
 
         body {
@@ -39,6 +43,29 @@ session_start();
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .profile-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--success-color);
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .user-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
         .nav-links {
             display: flex;
             gap: 1rem;
@@ -168,7 +195,14 @@ session_start();
             background-color: #c0392b;
             transform: translateY(-2px);
         }
+        #userTableBody {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+        }
 
+        
         @media (max-width: 768px) {
             .nav-links {
                 flex-direction: column;
@@ -188,20 +222,93 @@ session_start();
                 height: 50vh;
             }
         }
+        .upload-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .upload-item h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .upload-item p {
+            color: #666;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .upload-item embed {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+                align-items: center;
+            }
+
+
+        #PDFFILE {
+            grid-template-columns: 1fr;
+            padding: 1rem;
+        }
+
+        .upload-item {
+            margin-bottom: 1rem;
+        }
+        }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-user-tie"></i> Reviewer Dashboard</h1>
-        <h3>Welcome, <?php echo $_SESSION['fname']?>!</h3>
+        <h1><i class="fas fa-check-circle"></i> Review Theses</h1>
+        <div class="profile-section">
+            <img src="../../assets/imageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-image">
+            <div class="user-info">
+                <h3><i class="fas fa-user"></i> <?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname'] ?></h3>
+                <h3><i class="fas fa-envelope"></i> <?php echo $_SESSION['email'] ?></h3>
+            </div>
+        </div>
     </div>
 
     <div class="nav-links">
-        <a href="dashboard.php" class="active"><i class="fas fa-home"></i> Dashboard</a>
-        <a href="View_thesis.php"><i class="fas fa-file-alt"></i> Review</a>
+        <a href="dashboard.php" ><i class="fas fa-home"></i> Dashboard</a>
+        <a href="View_thesis.php" class="active"><i class="fas fa-file-alt"></i> Review</a>
         <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
         <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
-        <a href="view_Revise.php"><i class="fas fa-edit"></i> View Revised</a>
         <a href="../../php/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 
@@ -210,27 +317,32 @@ session_start();
     </main>
 
     <!-- Modal Structure -->
-    <div id="reviseModal">
-        <div class="modal-content">
-            <button class="close-button" onclick="closeReviseModal()"><i class="fas fa-times"></i></button>
-            <h2><i class="fas fa-edit"></i> Revise Thesis</h2>
-            <div id="toolbar">
-                <button onclick="enableHighlightMode()"><i class="fas fa-highlighter"></i> Highlight</button>
-                <button onclick="enableTextMode()"><i class="fas fa-font"></i> Text</button>
-                <button onclick="prevPage()"><i class="fas fa-chevron-left"></i> Previous</button>
-                <span id="pageIndicator"></span>
-                <button onclick="nextPage()">Next <i class="fas fa-chevron-right"></i></button>
-            </div>
-            <div id="pdf-container">
-                <canvas id="highlight-canvas"></canvas>
-            </div>
-            <form id="reviseForm">
-                <input type="hidden" name="thesis_id" id="modal_thesis_id">
-                <button type="button" onclick="saveHighlightedPDF()">
-                    <i class="fas fa-save"></i> Save & Upload Highlighted PDF
-                </button>
-            </form>
+<div id="reviseModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
+      <div style="background:#fff; padding:20px; border-radius:8px; width:850px; max-width:95vw; max-height:95vh; overflow:auto; position:relative;">
+        <button onclick="closeReviseModal()" style="position:absolute; top:10px; right:10px;">&times;</button>
+        <h2>Revise Thesis</h2>
+        <div id="toolbar">
+          <button onclick="enableHighlightMode()">Highlight</button>
+          <button onclick="enableTextMode()">Text</button>
+          <button onclick="prevPage()">Previous</button>
+          <span id="pageIndicator"></span>
+          <button onclick="nextPage()">Next</button>
         </div>
+        <div id="pdf-container" style="position: relative; width: 800px; height: 800px; border: 1px solid #ccc;">
+          <canvas id="highlight-canvas" style="position: absolute; left: 0; top: 0; z-index: 10; pointer-events: none;"></canvas>
+
+
+
+
+
+
+
+        </div>
+        <form id="reviseForm">
+            <input type="hidden" name="thesis_id" id="modal_thesis_id">
+            <button type="button" onclick="saveHighlightedPDF()">Save & Upload Highlighted PDF</button>
+        </form>
+      </div>
     </div>
 </body>
 <script src="../../js/view_thesis.js?v=1.0.4"></script>

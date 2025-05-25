@@ -1,0 +1,39 @@
+Array
+(
+    [data] => Array
+        (
+            [admin_id] => ADM001
+            [email] => admin@gmail.com
+            [login_time] => 2025-05-23T17:58:58+02:00
+            [status] => success
+        )
+
+    [httpcode] => 400
+    [response] => {"code":"22P02","details":null,"hint":null,"message":"invalid input syntax for type bigint: \"ADM001\""}
+)
+Array
+(
+    [data] => Array
+        (
+            [admin_id] => ADM001
+            [email] => admin@gmail.com
+            [login_time] => 2025-05-23T17:59:19+02:00
+            [status] => success
+        )
+
+    [httpcode] => 400
+    [response] => {"code":"22P02","details":null,"hint":null,"message":"invalid input syntax for type bigint: \"ADM001\""}
+)
+Array
+(
+    [data] => Array
+        (
+            [admin_id] => ADM001
+            [email] => admin@gmail.com
+            [login_time] => 2025-05-23T18:02:33+02:00
+            [status] => success
+        )
+
+    [httpcode] => 201
+    [response] => 
+)
