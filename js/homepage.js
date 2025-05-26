@@ -12,13 +12,23 @@ async function showupload() {
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		rows += `
-			<div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${
+			<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${
 			u.abstract
 		}', '${u.lname}, ${u.fname}', '${u.status}')">
-				<div class="thesis-card-title">${u.title}</div>
-				<div class="thesis-card-abstract">${u.abstract}</div>
-				<div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
-				<div class="thesis-card-status">${u.status || "Pending"}</div>
+				<h3><i class='fas fa-book'></i> ${u.title}</h3>
+				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+				<div class="author-info">
+					<i class="fas fa-user-graduate"></i>
+					<span>${u.lname}, ${u.fname}</span>
+				</div>
+				<embed src="${filePath}" type="application/pdf">
+
+				<button onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
+					<i class="fas fa-trash"></i> Delete
+				</button>
+				<div class="status-badge">
+					<i class="fas fa-clock"></i> ${u.status || "Pending"}
+				</div>
 			</div>
 		`;
 	}
@@ -138,4 +148,23 @@ if (
 			logoutModal.style.display = "none";
 		}
 	});
+}
+
+async function deleteThesis(thesisId, title) {
+	if (
+		!confirm(
+			`Are you sure you want to delete "${title}"? This action cannot be undone.`
+		)
+	)
+		return;
+	const res = await fetch("../../php/student/delete_thesis.php", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ id: thesisId }),
+	});
+	const result = await res.json();
+	alert(result.message);
+	if (result.status === "success") {
+		showupload(); // Refresh the list
+	}
 }
