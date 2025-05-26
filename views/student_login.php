@@ -167,21 +167,32 @@
     document.getElementById('forgotPassForm').onsubmit = async function(e) {
         e.preventDefault();
         const email = document.getElementById('forgotEmail').value;
-        document.getElementById('forgotPassMsg').innerHTML = "<span style='color:#1976a5;'>Processing...</span>";
-        const token = Math.random().toString(36).substr(2, 10) + Date.now();
-        const resetUrl = `${window.location.origin}/reset_password.php?token=${token}`;
-        const qrDataUrl = await QRCode.toDataURL(resetUrl);
-
-        const res = await fetch('../php/send_forgotpass_qr.php', {
+        // 1. Check if email exists and get student_id
+        const res = await fetch('../php/check_email.php', {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({ email, token, qrDataUrl, resetUrl })
+            body: JSON.stringify({ email })
         });
         const result = await res.json();
-        if(result.status === 'success') {
-            document.getElementById('forgotPassMsg').innerHTML = "<span style='color:#1976a5;'>A QR code has been sent to your email!</span>";
+        if(result.status !== 'success') {
+            document.getElementById('forgotPassMsg').innerHTML = result.message;
+            return;
+        }
+        const student_id = result.student_id;
+        // 2. Generate QR code with student_id
+        const resetUrl = `${window.location.origin}/reset_password.php?id=${student_id}`;
+        const qrDataUrl = await QRCode.toDataURL(resetUrl);
+        // 3. Send QR code to email
+        const res2 = await fetch('../php/send_forgotpass_qr.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email, qrDataUrl })
+        });
+        const result2 = await res2.json();
+        if(result2.status === 'success') {
+            document.getElementById('forgotPassMsg').innerHTML = "A QR code has been sent to your email!";
         } else {
-            document.getElementById('forgotPassMsg').innerHTML = "<span style='color:#e74c3c;'>" + (result.message || "Failed to send email.") + "</span>";
+            document.getElementById('forgotPassMsg').innerHTML = result2.message || "Failed to send email.";
         }
     };
     </script>
