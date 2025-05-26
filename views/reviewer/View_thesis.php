@@ -19,13 +19,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #27ae60;
-            --accent-color: #e74c3c;
-            --background-color: #f5f6fa;
-            --text-color: #2c3e50;
+            --primary-color: #00246B;
+            --secondary-color: #1a3a8f;
+            --accent-color: #CADCFC;
+            --background-color: #CADCFC;
+            --text-color: #00246B;
             --card-bg: #ffffff;
-            --success-color: #2ecc71;
+            --success-color: #00246B;
         }
 
         body {
