@@ -96,6 +96,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                     <div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
                         <div class="thesis-card-title">${u.title}</div>
                         <div class="thesis-card-abstract">${u.abstract}</div>
+                        <embed src="${filePath}" type="application/pdf" width="300" height="250">
+    
                         <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
                         <div class="thesis-card-status">${u.status || "Revised"}</div>
                     </div>

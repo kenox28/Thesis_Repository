@@ -10,6 +10,59 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<title>Public Repository</title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
+	<style>
+            .upload-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .upload-item h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .upload-item p {
+            color: #666;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .upload-item embed {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+</style>
 	<body>
 		<div class="main-bg">
 			<nav class="main-nav">
@@ -17,13 +70,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
 				</div>
 				<div class="nav-links">
-					<a href="homepage.php">Home</a>
-					<a href="public_repo.php">Public</a>
+		<a href="homepage.php">Home</a>
+			<a href="public_repo.php">Public</a>
 					<a href="upload.php">Upload Thesis</a>
 
-					<a href="approve_thesis.php">Approve</a>
-					<a href="rejectpage.php">Rejected</a>
-					<a href="revisepage.php">Revised</a>
+			<a href="approve_thesis.php">Approve</a>
+			<a href="rejectpage.php">Rejected</a>
+			<a href="revisepage.php">Revised</a>
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -42,7 +95,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			<main class="main-content">
 				<header>
 					<h1 class="section-title">Public Theses Repository</h1>
-				</header>
+		</header>
 				<section>
 					<div id="PDFFILE"></div>
 				</section>
@@ -91,11 +144,18 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			for (const u of data) {
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 				rows += `
-					<div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.Privacy}')">
-						<div class="thesis-card-title">${u.title}</div>
-						<div class="thesis-card-abstract">${u.abstract}</div>
-						<div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
-						<div class="thesis-card-status">${u.Privacy || "Public"}</div>
+					<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.Privacy}')">
+						<h3><i class='fas fa-book'></i> ${u.title}</h3>
+						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+						<div class="author-info">
+							<i class="fas fa-user-graduate"></i>
+							<span>${u.lname}, ${u.fname}</span>
+						</div>
+						<embed src="${filePath}" type="application/pdf" width="300" height="250">
+
+						<div class="status-badge">
+							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
+						</div>
 					</div>
 				`;
 			}
