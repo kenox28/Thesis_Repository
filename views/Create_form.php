@@ -52,7 +52,7 @@
             <input type="radio" id="radio4" name="gender" value="Female" />
             <label for="radio4">Female</label>
             
-            <button class="btn" id="login" type="submit">Create Account</button>
+            <button class="btn" id="login" type="submit">Sign Up</button>
 
             <div>
             <a href="student_login.php">Already have an account?</a>

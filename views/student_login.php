@@ -5,11 +5,88 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Student Login - Thesis Repository System">
     <meta name="theme-color" content="#174D38">
-    <title>Student Login - Thesis Repository</title>
-    <link rel="stylesheet" href="../assets/css/Landing_Page.css">
-    <link rel="stylesheet" href="../assets/css/Login_Form.css">
+    <title>Login - Thesis Repository</title>
+    <!-- <link rel="stylesheet" href="../assets/css/Landing_Page.css"> -->
+    <link rel="stylesheet" href="../assets/css/Login_Form.css?v=1.0.1">
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="../assets/icons/favicon.ico">
+    <style>
+    /* Modal Overlay */
+    .modal-fp {
+      display: none; 
+      position: fixed; 
+      z-index: 9999; 
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.45);
+      align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+
+    /* Modal Content */
+    .modal-fp-content {
+      background: #fff;
+      padding: 2.2rem 1.5rem 1.5rem 1.5rem;
+      border-radius: 12px;
+      max-width: 350px;
+      width: 92vw;
+      box-shadow: 0 8px 32px rgba(25, 118, 165, 0.18);
+      position: relative;
+      animation: modalFadeIn 0.25s;
+    }
+    @keyframes modalFadeIn {
+      from { transform: translateY(40px) scale(0.98); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+    .modal-fp-close {
+      position: absolute; top: 12px; right: 18px;
+      font-size: 1.6rem; color: #1976a5; cursor: pointer;
+      font-weight: bold; transition: color 0.2s;
+    }
+    .modal-fp-close:hover { color: #e74c3c; }
+    .modal-fp-content h2 {
+      margin: 0 0 18px 0; color: #1976a5; font-size: 1.4rem; font-weight: 700;
+      text-align: center;
+    }
+    .modal-fp-label {
+      display: block; margin-bottom: 8px; color: #333; font-weight: 500;
+    }
+    .modal-fp-input {
+      width: 90%; padding: 10px 12px; border: 1.5px solid #1976a5;
+      border-radius: 6px; margin-bottom: 18px; font-size: 1rem;
+      transition: border 0.2s;
+    }
+    .modal-fp-input:focus { border-color: #174D38; outline: none; }
+    .modal-fp-btn {
+      width: 100%; background: #1976a5; color: #fff; padding: 10px 0;
+      border: none; border-radius: 6px; font-weight: 600; font-size: 1rem;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .modal-fp-btn:hover { background: #174D38; }
+    .modal-fp-msg {
+      margin-top: 16px; text-align: center; font-size: 1rem;
+      min-height: 24px;
+    }
+    @media (max-width: 500px) {
+      .modal-fp-content { padding: 1.2rem 0.5rem 1rem 0.5rem; }
+    }
+    /* Style for Forgot Password Form */
+    #forgotPassForm {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    #forgotPassForm .modal-fp-label {
+      margin-bottom: 0.25rem;
+    }
+    #forgotPassForm .modal-fp-input {
+    }
+    #forgotPassForm .modal-fp-btn {
+    }
+    #forgotPassForm #forgotPassMsg {
+    }
+    </style>
 </head>
 <body>
     <!-- <header>
@@ -18,9 +95,8 @@
         </a>
     </header> -->
 
-    <main>
+    <main id="main">
         <form action="#" id="loginForm" method="POST" autocomplete="off">
-            <h1>Student Login</h1>
             <div class="form-group">
                 <input 
                     type="email" 
@@ -56,11 +132,57 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </main>
-
-    <footer>
-        <p>&copy; <?php echo date('Y'); ?> Thesis Repository</p>
-    </footer>
-
     <script src="../js/login.js?v=1.0.5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    
+
+    <!-- Forgot Password Modal -->
+    <div id="forgotPassModal" class="modal-fp">
+      <div class="modal-fp-content">
+        <span id="closeForgotModal" class="modal-fp-close">&times;</span>
+        <h2>Forgot Password</h2>
+        <form id="forgotPassForm" autocomplete="off">
+          <label for="forgotEmail" class="modal-fp-label">Enter your email address:</label>
+          <input type="email" id="forgotEmail" name="forgotEmail" required class="modal-fp-input" placeholder="you@email.com">
+          <button type="submit" class="modal-fp-btn">Send QR Code</button>
+        </form>
+        <div id="forgotPassMsg" class="modal-fp-msg"></div>
+      </div>
+    </div>
 </body>
+<script>
+    document.querySelector('.forgot-password').addEventListener('click', function(e) {
+        e.preventDefault();
+        document.getElementById('forgotPassModal').style.display = 'flex';
+    });
+    document.getElementById('closeForgotModal').onclick = function() {
+        document.getElementById('forgotPassModal').style.display = 'none';
+    };
+    window.onclick = function(event) {
+        if (event.target === document.getElementById('forgotPassModal')) {
+            document.getElementById('forgotPassModal').style.display = 'none';
+        }
+    };
+
+    document.getElementById('forgotPassForm').onsubmit = async function(e) {
+        e.preventDefault();
+        const email = document.getElementById('forgotEmail').value;
+        document.getElementById('forgotPassMsg').innerHTML = "<span style='color:#1976a5;'>Processing...</span>";
+        const token = Math.random().toString(36).substr(2, 10) + Date.now();
+        const resetUrl = `${window.location.origin}/reset_password.php?token=${token}`;
+        const qrDataUrl = await QRCode.toDataURL(resetUrl);
+
+        const res = await fetch('../php/send_forgotpass_qr.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ email, token, qrDataUrl, resetUrl })
+        });
+        const result = await res.json();
+        if(result.status === 'success') {
+            document.getElementById('forgotPassMsg').innerHTML = "<span style='color:#1976a5;'>A QR code has been sent to your email!</span>";
+        } else {
+            document.getElementById('forgotPassMsg').innerHTML = "<span style='color:#e74c3c;'>" + (result.message || "Failed to send email.") + "</span>";
+        }
+    };
+    </script>
 </html>
