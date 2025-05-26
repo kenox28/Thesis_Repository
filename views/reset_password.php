@@ -9,14 +9,17 @@ $success = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = $_POST['student_id'] ?? '';
-    $password = $_POST['password'] ?? '';
-    $confirm = $_POST['confirm'] ?? '';
+    $password_raw = $_POST['password'] ?? '';
+    $confirm_raw = $_POST['confirm'] ?? '';
+    $password = md5($password_raw);
+    $confirm = md5($confirm_raw);
+    
 
-    if (!$student_id || !$password || !$confirm) {
+    if (!$student_id || !$password_raw || !$confirm_raw) {
         $error = "All fields are required.";
     } elseif ($password !== $confirm) {
         $error = "Passwords do not match.";
-    } elseif (strlen($password) < 8) {
+    } elseif (strlen($password_raw) < 8) {
         $error = "Password must be at least 8 characters.";
     } else {
         // Check if student exists
@@ -28,9 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = "Invalid student ID.";
         } else {
             // Update password
-            $hashed = password_hash($password, PASSWORD_DEFAULT);
             $stmt2 = $connect->prepare("UPDATE Student SET passw=? WHERE student_id=?");
-            $stmt2->bind_param("ss", $hashed, $student_id);
+            $stmt2->bind_param("ss", $password, $student_id);
             if ($stmt2->execute()) {
                 $success = "Password updated successfully! You can now <a href='student_login.php'>login</a>.";
             } else {
@@ -72,23 +74,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .reset-container .msg { text-align: center; margin-bottom: 12px; color: #e74c3c; }
         .reset-container .success { color: #1976a5; }
     </style>
+    <!-- SweetAlert2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="reset-container">
         <h2>Reset Password</h2>
-        <?php if ($error): ?>
-            <div class="msg"><?= $error ?></div>
-        <?php endif; ?>
-        <?php if ($success): ?>
-            <div class="msg success"><?= $success ?></div>
-        <?php elseif ($showForm): ?>
         <form method="POST">
             <input type="hidden" name="student_id" value="<?= htmlspecialchars($student_id) ?>">
             <input type="password" name="password" placeholder="New Password" required minlength="8">
             <input type="password" name="confirm" placeholder="Confirm Password" required minlength="8">
             <button type="submit">Change Password</button>
         </form>
-        <?php endif; ?>
     </div>
+    <script>
+    <?php if ($error): ?>
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            html: <?= json_encode($error) ?>,
+            confirmButtonColor: '#1976a5'
+        });
+    <?php endif; ?>
+    <?php if ($success): ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Success',
+            html: <?= json_encode($success) ?>,
+            confirmButtonColor: '#1976a5'
+        });
+    <?php endif; ?>
+    </script>
 </body>
 </html>
