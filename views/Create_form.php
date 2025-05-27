@@ -17,10 +17,10 @@
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>Create Account</h1>
            
-            <input type="radio" id="radio1" name="role" value="Reviewer" required />
+            <input type="radio" id="radio1" name="Role" value="Reviewer" required />
             <label for="radio1">Reviewer</label>
             
-            <input type="radio" id="radio2" name="role" value="Student" required />
+            <input type="radio" id="radio2" name="Role" value="Student" required />
             <label for="radio2">Student</label>
 
             <label class="label" for="firstname">First Name</label>
@@ -60,5 +60,5 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </body>
-    <script src="../js/CreateAccount.js"></script>
+    <script src="../js/CreateAccount.js?v=1.0.1"></script>
 </html>
