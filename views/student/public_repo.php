@@ -70,11 +70,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
 				</div>
 				<div class="nav-links">
-		<a href="homepage.php">Home</a>
-			<a href="public_repo.php">Public</a>
+					<a href="public_repo.php">Home</a>
+					<a href="homepage.php">Pending</a>
 					<a href="upload.php">Upload Thesis</a>
-
-			<a href="approve_thesis.php">Approve</a>
+					<a href="approve_thesis.php">Approve</a>
 			<a href="rejectpage.php">Rejected</a>
 			<a href="revisepage.php">Revised</a>
 				</div>
@@ -93,9 +92,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 			</nav>
 			<main class="main-content">
-				<header>
-					<h1 class="section-title">Public Theses Repository</h1>
-		</header>
+				<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; flex-direction: column;">
+					<h1 class="section-title" style="margin-bottom: 0;">Public Theses Repository</h1>
+					<input type="text" id="searchInput" placeholder="Search by title, author, or abstract..." 
+						style="padding: 8px 14px; border-radius: 6px; border: 1.5px solid #1976a5; width: 320px; max-width: 90%; font-size: 1rem; margin-top: 12px;">
+				</header>
 				<section>
 					<div id="PDFFILE"></div>
 				</section>
@@ -133,13 +134,17 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			</div>
 		</div>
 		<script>
+		// Store all theses for filtering
+		let allPublicTheses = [];
+
 		async function showPublicRepo() {
 			const res = await fetch("../../php/student/get_public_repo.php");
 			const data = await res.json();
-			if (data.error) {
-				document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
-				return;
-			}
+			allPublicTheses = data;
+			renderPublicRepo(data);
+		}
+
+		function renderPublicRepo(data) {
 			let rows = "<div class='thesis-cards'>";
 			for (const u of data) {
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
@@ -152,7 +157,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							<span>${u.lname}, ${u.fname}</span>
 						</div>
 						<embed src="${filePath}" type="application/pdf" width="300" height="250">
-
 						<div class="status-badge">
 							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
 						</div>
@@ -161,9 +165,21 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			}
 			rows += "</div>";
 			document.getElementById("PDFFILE").innerHTML = rows;
-			console.log("run")
 		}
-		showPublicRepo();
+
+		// Search functionality
+		const searchInput = document.getElementById('searchInput');
+		if (searchInput) {
+			searchInput.addEventListener('input', function() {
+				const query = this.value.toLowerCase();
+				const filtered = (allPublicTheses || []).filter(u =>
+					(u.title && u.title.toLowerCase().includes(query)) ||
+					(u.abstract && u.abstract.toLowerCase().includes(query)) ||
+					((u.lname + ', ' + u.fname).toLowerCase().includes(query))
+				);
+				renderPublicRepo(filtered);
+			});
+		}
 
 		function openModal(filePath, title, abstract, owner, privacy) {
 			const modal = document.createElement("div");
@@ -242,6 +258,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				}
 			});
 		}
+		showPublicRepo();
 		</script>
 	</body>
 </html>

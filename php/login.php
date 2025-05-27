@@ -114,7 +114,7 @@ if (!empty($email) && !empty($pass)) {
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            $maxWait = 10; // 5 minutes in seconds
+            $maxWait = 60; // 5 minutes in seconds
             $interval = 3; // poll every 3 seconds
             $waited = 0;
 
