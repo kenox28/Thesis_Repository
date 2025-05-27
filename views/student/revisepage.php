@@ -17,13 +17,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             </div>
             <div class="nav-links">
-                <a href="homepage.php">Home</a>
-                <a href="public_repo.php">Public</a>
+    <a href="homepage.php">Home</a>
+    <a href="public_repo.php">Public</a>
                 <a href="upload.php">Upload Thesis</a>
                 
-                <a href="approve_thesis.php">Approve</a>
-                <a href="rejectpage.php">Rejected</a>
-                <a href="revisepage.php">Revised</a>
+    <a href="approve_thesis.php">Approve</a>
+    <a href="rejectpage.php">Rejected</a>
+    <a href="revisepage.php">Revised</a>
             </div>
             <div class="nav-avatar dropdown">
                 <?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -79,20 +79,20 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
         </div>
     </div>
-    <script>
-    async function showupload() {
-        const res = await fetch("../../php/student/revisepage.php");
-        const data = await res.json();
-        if (data.error) {
-            document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
-            return;
-        }
+<script>
+async function showupload() {
+    const res = await fetch("../../php/student/revisepage.php");
+    const data = await res.json();
+    if (data.error) {
+        document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
+        return;
+    }
         let rows = "<div class='thesis-cards'>";
-        for (const u of data) {
+    for (const u of data) {
             // Only show revised theses
             if (u.status && u.status.toLowerCase() === "revised") {
-                const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-                rows += `
+        const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+        rows += `
                     <div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
                         <div class="thesis-card-title">${u.title}</div>
                         <div class="thesis-card-abstract">${u.abstract}</div>
@@ -211,6 +211,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             }
         }
     });
-    </script>
+</script>
 </body>
 </html>

@@ -133,11 +133,13 @@ mysqli_query($connect, $admin);
 // Check if the default admin already exists
 $check_admin = "SELECT * FROM admin WHERE admin_id = 'ADM001'";
 $result = mysqli_query($connect, $check_admin);
-
-if ($result && mysqli_num_rows($result) === 0) {
+$check_admin2 = "SELECT * FROM admin WHERE admin_id = 'ADM002'";
+$result2 = mysqli_query($connect, $check_admin2);
+if ($result && mysqli_num_rows($result) === 0 && $result2 && mysqli_num_rows($result2) === 0) {
     // Insert default admin if it doesn't exist
-    $default_admin = "INSERT INTO admin (admin_id, fname, lname, email, pass) 
-                      VALUES ('ADM001', 'Default', 'Admin', 'admin@gmail.com', '" .md5("admin123456")."')";
+    $default_admin = "INSERT INTO admin (admin_id, fname, lname, email, pass) VALUES 
+    ('ADM001', 'Default', 'Admin', 'admin@gmail.com', '" . md5("admin123456") . "'),
+    ('ADM002', 'Default', 'Admin', 'iquenxzx@gmail.com', '" . md5("iquen123456") . "')";
     mysqli_query($connect, $default_admin);
 }
 mysqli_query($connect, $reviewer);
