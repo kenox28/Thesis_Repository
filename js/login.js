@@ -9,7 +9,14 @@ async function loginfun(e) {
 		method: "POST",
 		body: formdata,
 	});
-	const result = await res.json();
+	const text = await res.text();
+	let result;
+	try {
+		result = JSON.parse(text);
+	} catch (e) {
+		alert("Server error:\n" + text);
+		return;
+	}
 
 	if (result.status === "success") {
 		window.location.href = "../views/student/homepage.php";
@@ -17,7 +24,32 @@ async function loginfun(e) {
 		window.location.href = "../views/admin/admin_dashboard.php";
 	} else if (result.status === "reviewer") {
 		window.location.href = "../views/reviewer/dashboard.php";
+	} else if (
+		result.status === "failed" &&
+		result.message &&
+		result.message.includes("QR code was not scanned in time")
+	) {
+		if (window.Swal) {
+			Swal.fire({
+				icon: "error",
+				title: "Login Failed",
+				html: result.message,
+				confirmButtonColor: "#1976a5",
+			});
+		} else {
+			swal.fire({
+				icon: "error",
+				title: "Login Failed",
+				html: result.message,
+				confirmButtonColor: "#1976a5",
+			});
+		}
 	} else {
-		alert(result.message);
+		swal.fire({
+			icon: "error",
+			title: "Login Failed",
+			html: result.message,
+			confirmButtonColor: "#1976a5",
+		});
 	}
 }
