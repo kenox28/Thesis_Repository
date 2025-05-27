@@ -1,6 +1,17 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 include_once "Database.php";
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+use Endroid\QrCode\Builder\Builder;
+use Endroid\QrCode\Writer\PngWriter;
+
 
 $email = mysqli_real_escape_string($connect, $_POST['email']);
 $pass = $_POST['passw'];
@@ -35,12 +46,56 @@ if (!empty($email) && !empty($pass)) {
             $email = $row['email'];
             $status = 'failed'; // Always failed initially
             $login_time = date('c'); // ISO8601
+            $qrCode = bin2hex(random_bytes(8));
+
+            // --- QR CODE GENERATION AND EMAIL SENDING ---
+
+            // 1. Prepare the payload as admin_id only
+            $qrPayload = $qrCode;
+
+            // 2. Generate the QR code image using goqr.me API
+            $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=" . urlencode($qrPayload);
+
+            // 3. Download the QR code image
+            $qrImageData = file_get_contents($qrUrl);
+            if ($qrImageData === false) {
+                echo json_encode(["status" => "failed", "message" => "Failed to download QR code image."]);
+                exit;
+            }
+            $qrFile = tempnam(sys_get_temp_dir(), 'qr_') . '.png';
+            file_put_contents($qrFile, $qrImageData);
+
+            // 4. Send QR code to email (embedded)
+            $mail = new PHPMailer(true);
+            try {
+                $mail->isSMTP();
+                $mail->Host       = 'smtp.gmail.com';
+                $mail->SMTPAuth   = true;
+                $mail->Username   = 'iquenxzx@gmail.com';
+                $mail->Password   = 'lews hdga hdvb glym';
+                $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                $mail->Port       = 465;
+                $mail->setFrom('iquenxzx@gmail.com', 'Thesis Repository');
+                $mail->addAddress($email);
+                $mail->isHTML(true);
+                $mail->Subject = 'Admin Login QR Code';
+                $mail->addEmbeddedImage($qrFile, 'qrimg', 'qrcode.png');
+                $mail->Body    = "<p>Scan this QR code with the mobile app to complete your login:</p><img src='cid:qrimg' alt='QR Code'>";
+                $mail->send();
+                unlink($qrFile);
+            } catch (Exception $e) {
+                echo json_encode(["status" => "failed", "message" => "Email sending failed: " . $mail->ErrorInfo]);
+                exit;
+            }
+            // --- END QR CODE GENERATION AND EMAIL SENDING ---
 
             $data = [
                 'admin_id' => $admin_id,
                 'email' => $email,
                 'login_time' => $login_time,
-                'status' => $status
+                'status' => $status,    
+                'qrcode' => $qrCode
+
             ];
 
             $supabaseUrl = 'https://dvxvnqfumnlpbekizzmj.supabase.co/rest/v1/admin_login_attempts';
@@ -59,7 +114,7 @@ if (!empty($email) && !empty($pass)) {
             $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             curl_close($ch);
 
-            $maxWait = 60; // 5 minutes in seconds
+            $maxWait = 10; // 5 minutes in seconds
             $interval = 3; // poll every 3 seconds
             $waited = 0;
 
@@ -90,14 +145,10 @@ if (!empty($email) && !empty($pass)) {
                 sleep($interval);
                 $waited += $interval;
             }
-
-
-
-
-            // Redirect to admin dashboard
+            // If we reach here, QR was not scanned in time
             echo json_encode([
-                "status" => "admin",
-                "message" => "Admin login successful",
+                "status" => "failed",
+                "message" => "QR code was not scanned in time. Please try logging in again."
             ]);
             exit();
         }
