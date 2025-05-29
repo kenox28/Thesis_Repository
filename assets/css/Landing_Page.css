@@ -95,10 +95,27 @@ body {
     color: var(--primary);
     text-decoration: none;
     transition: color 0.3s ease;
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: 0;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
 }
 
 .nav-links a:hover {
     color: var(--primary-light);
+}
+
+.nav-links a:hover::after {
+    width: 100%;
 }
 
 .auth-buttons {
@@ -200,10 +217,11 @@ body {
 
 .feature-card {
     background-color: white;
-    padding: 2rem;
+    padding: 3rem;
     border-radius: 10px;
     box-shadow: 0 3px 10px var(--shadow);
     transition: transform 0.3s ease;
+    text-align: justify;
 }
 
 .feature-card:hover {
@@ -213,6 +231,8 @@ body {
 .feature-card h3 {
     color: var(--primary);
     margin-bottom: 1rem;
+    font-size: 1.5rem;
+    text-align: center;
 }
 
 .feature-card p {
@@ -286,6 +306,7 @@ body {
     border-radius: 10px;
     box-shadow: 0 3px 10px var(--shadow);
     transition: transform 0.3s ease;
+    text-align: justify;
 }
 
 .about-card:hover {
@@ -296,6 +317,7 @@ body {
     color: var(--primary);
     margin-bottom: 1rem;
     font-size: 1.5rem;
+    text-align: center;
 }
 
 .about-card p {
@@ -303,21 +325,21 @@ body {
     line-height: 1.6;
 }
 
-.about-stats {
+/* .about-stats {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 2rem;
     margin-top: 3rem;
-}
+} */
 
-.stat-item {
+/* .stat-item {
     padding: 1.5rem;
     background-color: white;
     border-radius: 10px;
     box-shadow: 0 3px 10px var(--shadow);
-}
+} */
 
-.stat-item h4 {
+/* .stat-item h4 {
     color: var(--primary);
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
@@ -326,18 +348,18 @@ body {
 .stat-item p {
     color: var(--text-dark);
     font-size: 1.1rem;
-}
+} */
 
 @media (max-width: 768px) {
     .about-content h2 {
         font-size: 2rem;
     }
 
-    .about-grid {
+    /* .about-grid {
         grid-template-columns: 1fr;
-    }
+    } */
 
-    .about-stats {
+    /* .about-stats {
         grid-template-columns: 1fr;
     }
 
@@ -347,5 +369,5 @@ body {
 
     .stat-item h4 {
         font-size: 2rem;
-    }
+    } */
 }
