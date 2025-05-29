@@ -40,25 +40,25 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
 
-// $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
+$result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
 
-// if ($result === false) {
-//     // If query failed, create the table first
-//     mysqli_query($connect, $reviewer);
-//     // Try the query again
-//     $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
-// }
+if ($result === false) {
+    // If query failed, create the table first
+    mysqli_query($connect, $reviewer);
+    // Try the query again
+    $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
+}
 
-// if ($result && mysqli_num_rows($result) == 0) {
-//     // Add the 'Approve' column if it doesn't exist
-//     $add_column = "ALTER TABLE reviewer ADD COLUMN Approve BOOLEAN DEFAULT 0";
+if ($result && mysqli_num_rows($result) == 0) {
+    // Add the 'Approve' column if it doesn't exist
+    $add_column = "ALTER TABLE reviewer ADD COLUMN Approve BOOLEAN DEFAULT 0";
     
-//     if (mysqli_query($connect, $add_column)) {
-//         echo "Column 'Approve' added successfully.";
-//     } else {
-//         echo "Error adding column: " . mysqli_error($connect);
-//     }
-// } 
+    if (mysqli_query($connect, $add_column)) {
+        echo "Column 'Approve' added successfully.";
+    } else {
+        echo "Error adding column: " . mysqli_error($connect);
+    }
+} 
 
 
 $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(

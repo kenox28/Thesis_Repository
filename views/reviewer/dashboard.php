@@ -80,14 +80,14 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         .dashboard-cards {
             display: flex;
             flex-wrap: wrap;
-            gap: 90px;
+            gap: 100px;
             margin-bottom: 32px;
         }
         .dashboard-card {
             background: #fff;
             border-radius: 14px;
             box-shadow: 0 2px 12px #1976a522;
-            padding: 68px 56px;
+            padding: 88px 56px;
             min-width: 220px;
             flex: 1 1 220px;
             display: flex;
@@ -116,7 +116,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         .sidebar {
             background: var(--primary-color);
-            min-height: 95vh;
+            min-height: 100vh;
             width: 250px;
             display: flex;
             flex-direction: column;
