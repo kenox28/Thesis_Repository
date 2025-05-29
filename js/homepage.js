@@ -3,36 +3,6 @@ window.addEventListener("DOMContentLoaded", () => {
 	showdroptdown();
 });
 
-document.getElementById("thesisForm").addEventListener("submit", uploadfun);
-
-async function uploadfun(e) {
-	e.preventDefault();
-
-	const fileInput = document.getElementById("docfile");
-	const file = fileInput.files[0];
-	if (!file || file.type !== "application/pdf") {
-		alert("Please upload a PDF file only.");
-		return;
-	}
-
-	const form = document.getElementById("thesisForm");
-	const formdata = new FormData(form);
-
-	const res = await fetch("../../php/student/upload_thesis.php", {
-		method: "POST",
-		body: formdata,
-	});
-
-	const result = await res.json();
-
-	if (result.status === "success") {
-		alert(result.message);
-		// window.location.href = "../views/home.html";
-		showupload();
-	} else {
-		alert(result.message);
-	}
-}
 async function showupload() {
 	const res = await fetch("../../php/student/showupload.php");
 	const data = await res.json();
@@ -42,11 +12,31 @@ async function showupload() {
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		rows += `
+<<<<<<< HEAD
 			<div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
 				<div class="thesis-card-title">${u.title}</div>
 				<div class="thesis-card-abstract">${u.abstract}</div>
 				<div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
 				<div class="thesis-card-status">${u.status || 'Pending'}</div>
+=======
+			<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${
+			u.abstract
+		}', '${u.lname}, ${u.fname}', '${u.status}')">
+				<h3><i class='fas fa-book'></i> ${u.title}</h3>
+				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+				<div class="author-info">
+					<i class="fas fa-user-graduate"></i>
+					<span>${u.lname}, ${u.fname}</span>
+				</div>
+				<embed src="${filePath}" type="application/pdf">
+
+				<button onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
+					<i class="fas fa-trash"></i> Delete
+				</button>
+				<div class="status-badge">
+					<i class="fas fa-clock"></i> ${u.status || "Pending"}
+				</div>
+>>>>>>> 9a9cafbffd9f1798d037a03219eb67cadcacda25
 			</div>
 		`;
 	}
@@ -65,12 +55,12 @@ async function showdroptdown() {
 
 	document.getElementById("reviewerDropdown").innerHTML = options;
 }
-const logout = document.querySelector("#logout");
-logout.onclick = function (e) {
-	console.log("run");
-	e.preventDefault();
-	window.location.href = "../../php/logout.php";
-};
+// const logout = document.querySelector("#logout");
+// logout.onclick = function (e) {
+// 	console.log("run");
+// 	e.preventDefault();
+// 	window.location.href = "../../php/logout.php";
+// };
 
 function openModal(filePath, title, abstract, owner, status) {
 	const modal = document.createElement("div");
@@ -79,18 +69,110 @@ function openModal(filePath, title, abstract, owner, status) {
 		<div class="modal-content large-modal">
 			<span class="close-button">&times;</span>
 			<h2>${title}</h2>
-			<div class="thesis-card-status" style="margin-bottom:12px;">${status || 'Pending'}</div>
+			<div class="thesis-card-status" style="margin-bottom:12px;">${
+				status || "Pending"
+			}</div>
 			<p>${abstract}</p>
 			<p>Owner: ${owner}</p>
-			${status && status.toLowerCase() !== 'pending' ? `<a href="${filePath}" download class="custom-download-btn">Download PDF</a>` : ''}
+			${
+				status && status.toLowerCase() !== "pending"
+					? `<a href="${filePath}" download class="custom-download-btn">Download PDF</a>`
+					: ""
+			}
 			<iframe src="${filePath}#toolbar=0" width="100%" height="85vh" style="border-radius:8px;box-shadow:0 2px 12px #1976a522;margin-top:12px;"></iframe>
 		</div>
 	`;
 
 	const closeButton = modal.querySelector(".close-button");
-	closeButton.onclick = function() {
+	closeButton.onclick = function () {
 		document.body.removeChild(modal);
 	};
 
 	document.body.appendChild(modal);
+}
+
+////////////////////////////////////////////////////
+
+// Dropdown toggle for avatar
+const avatar = document.querySelector(".nav-avatar");
+if (avatar) {
+	avatar.addEventListener("click", function (e) {
+		e.stopPropagation();
+		this.classList.toggle("open");
+	});
+	document.addEventListener("click", function () {
+		avatar.classList.remove("open");
+	});
+}
+
+const profileLink = document.getElementById("profile-link");
+const profileModal = document.getElementById("profile-modal");
+const closeProfileModal = document.getElementById("closeProfileModal");
+if (profileLink && profileModal && closeProfileModal) {
+	profileLink.addEventListener("click", function (e) {
+		e.preventDefault();
+		profileModal.style.display = "flex";
+		avatar.classList.remove("open");
+	});
+	closeProfileModal.addEventListener("click", function () {
+		profileModal.style.display = "none";
+	});
+	window.addEventListener("click", function (event) {
+		if (event.target === profileModal) {
+			profileModal.style.display = "none";
+		}
+	});
+}
+// Logout confirmation modal logic
+const logoutLink = document.getElementById("logout-link");
+const logoutModal = document.getElementById("logout-modal");
+const closeLogoutModal = document.getElementById("closeLogoutModal");
+const confirmLogoutBtn = document.getElementById("confirmLogoutBtn");
+const cancelLogoutBtn = document.getElementById("cancelLogoutBtn");
+if (
+	logoutLink &&
+	logoutModal &&
+	closeLogoutModal &&
+	confirmLogoutBtn &&
+	cancelLogoutBtn
+) {
+	logoutLink.addEventListener("click", function (e) {
+		e.preventDefault();
+		logoutModal.style.display = "flex";
+		avatar.classList.remove("open");
+	});
+	closeLogoutModal.addEventListener("click", function () {
+		logoutModal.style.display = "none";
+	});
+	cancelLogoutBtn.addEventListener("click", function (e) {
+		e.preventDefault();
+		logoutModal.style.display = "none";
+	});
+	confirmLogoutBtn.addEventListener("click", function () {
+		window.location.href = "../../php/logout.php";
+	});
+	window.addEventListener("click", function (event) {
+		if (event.target === logoutModal) {
+			logoutModal.style.display = "none";
+		}
+	});
+}
+
+async function deleteThesis(thesisId, title) {
+	if (
+		!confirm(
+			`Are you sure you want to delete "${title}"? This action cannot be undone.`
+		)
+	)
+		return;
+	const res = await fetch("../../php/student/delete_thesis.php", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ id: thesisId }),
+	});
+	const result = await res.json();
+	alert(result.message);
+	if (result.status === "success") {
+		showupload(); // Refresh the list
+	}
 }

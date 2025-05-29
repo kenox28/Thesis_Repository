@@ -52,20 +52,6 @@
                     <p>Supporting academic excellence by providing tools and resources that enhance research quality and foster collaboration within the academic community.</p>
                 </div>
             </div>
-            <div class="about-stats">
-                <div class="stat-item">
-                    <h4>1000+</h4>
-                    <p>Research Papers</p>
-                </div>
-                <div class="stat-item">
-                    <h4>500+</h4>
-                    <p>Active Reviewers</p>
-                </div>
-                <div class="stat-item">
-                    <h4>50+</h4>
-                    <p>Partner Institutions</p>
-                </div>
-            </div>
         </div>
     </section>
 

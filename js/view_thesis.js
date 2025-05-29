@@ -46,6 +46,7 @@ async function showupload() {
                     <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
                     <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
                 </div>
+				
             `;
 		}
 
@@ -60,7 +61,22 @@ async function showupload() {
 showupload();
 
 async function updateStatus(thesisId, status) {
-	try {
+	let actionText = status === "approved" ? "approve" : "reject";
+	let confirmButtonText =
+		status === "approved" ? "Yes, Approve" : "Yes, Reject";
+	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
+
+	const result = await Swal.fire({
+		title: `Are you sure you want to ${actionText} this thesis?`,
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonText: confirmButtonText,
+		cancelButtonText: "Cancel",
+		confirmButtonColor: confirmButtonColor,
+		cancelButtonColor: "#888",
+	});
+
+	if (result.isConfirmed) {
 		// Create a FormData object to send the data
 		const formData = new FormData();
 		formData.append("thesis_id", thesisId);
@@ -71,13 +87,16 @@ async function updateStatus(thesisId, status) {
 			body: formData,
 		});
 
-		const result = await res.json();
-		alert(result.message);
-		if (result.status === "success") {
+		const data = await res.json();
+		Swal.fire({
+			icon: data.status === "success" ? "success" : "error",
+			title: data.status === "success" ? "Success" : "Error",
+			text: data.message,
+			confirmButtonColor: "#1976a5",
+		});
+		if (data.status === "success") {
 			showupload(); // Refresh the list
 		}
-	} catch (error) {
-		console.error("Error updating status:", error);
 	}
 }
 

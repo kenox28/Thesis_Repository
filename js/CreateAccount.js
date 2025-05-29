@@ -1,6 +1,8 @@
 const passwordInput = document.getElementById("password");
 const passwordStrengthBar = document.getElementById("password-strength-bar");
-const passwordStrengthLabel = document.getElementById("password-strength-label");
+const passwordStrengthLabel = document.getElementById(
+	"password-strength-label"
+);
 const createForm = document.getElementById("CreateForm");
 
 createForm.addEventListener("submit", CreateFun);
@@ -48,7 +50,12 @@ function checkPasswordStrength(password) {
 		barColor = "#43a047";
 		label = "Strong";
 		// Only allow if all requirements are met
-		if (password.length >= minLength && hasUpperCase && hasNumbers && hasSpecialChars) {
+		if (
+			password.length >= minLength &&
+			hasUpperCase &&
+			hasNumbers &&
+			hasSpecialChars
+		) {
 			allowSubmit = true;
 		}
 	}
@@ -72,45 +79,44 @@ async function CreateFun(e) {
 
 	if (strength !== "strong") {
 		Swal.fire({
-			icon: 'error',
-			title: 'Password Requirements',
-			html: 'Password must be at least 8 characters and include:<ul style="text-align:left;"><li>One uppercase letter</li><li>One number</li><li>One symbol</li></ul>'
+			icon: "error",
+			title: "Password Requirements",
+			html: 'Password must be at least 8 characters and include:<ul style="text-align:left;"><li>One uppercase letter</li><li>One number</li><li>One symbol</li></ul>',
 		});
 		return;
 	}
 
 	const formdata = new FormData(createForm);
 
+	const res = await fetch("../php/CreateAccount.php", {
+		method: "POST",
+		body: formdata,
+	});
+
+	const text = await res.text();
+	let data;
 	try {
-		const res = await fetch("../php/CreateAccount.php", {
-			method: "POST",
-			body: formdata,
-		});
+		data = JSON.parse(text);
+	} catch (e) {
+		alert("Server error:\n" + text);
+		return;
+	}
 
-		const result = await res.json();
-
-		if (result.status === "success") {
-			Swal.fire({
-				icon: 'success',
-				title: 'Success!',
-				text: result.message
-			}).then(() => {
-				createForm.reset();
-				passwordStrengthBar.style.width = "0%";
-				passwordStrengthLabel.textContent = "";
-			});
-		} else {
-			Swal.fire({
-				icon: 'error',
-				title: 'Error!',
-				text: result.message
-			});
-		}
-	} catch (error) {
+	if (data.status === "success") {
 		Swal.fire({
-			icon: 'error',
-			title: 'Oops...',
-			text: 'Something went wrong with the submission!'
+			icon: "success",
+			title: "Success!",
+			text: data.message,
+		}).then(() => {
+			createForm.reset();
+			passwordStrengthBar.style.width = "0%";
+			passwordStrengthLabel.textContent = "";
+		});
+	} else {
+		Swal.fire({
+			icon: "error",
+			title: "Error!",
+			text: data.message,
 		});
 	}
 }

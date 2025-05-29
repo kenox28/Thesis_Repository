@@ -7,9 +7,62 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Pending Thesis</title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
+	<style>
+            .upload-item {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .upload-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        .upload-item h3 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 1.4rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .upload-item p {
+            color: #666;
+            line-height: 1.6;
+            margin: 1rem 0;
+        }
+
+        .upload-item embed {
+            width: 100%;
+            height: 300px;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.3rem 0.8rem;
+            background-color: var(--success-color);
+            color: white;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+</style>
 	<body>
 		<div class="main-bg">
 			<nav class="main-nav">
@@ -18,12 +71,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
 				</div>
 				<div class="nav-links">
-					<a href="homepage.php">Pending</a>
 					<a href="public_repo.php">Home</a>
+					<a href="homepage.php">Pending</a>
+					<a href="upload.php">Upload Thesis</a>
 					<a href="approve_thesis.php">Approve</a>
 					<a href="rejectpage.php">Rejected</a>
-					<a href="request.php">Request</a>
 					<a href="revisepage.php">Revised</a>
+					
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -39,7 +93,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					</div>
 				</div>
 			</nav>
-			<main class="main-content">
+			<!-- <main class="main-content">
 				<section class="upload-card">
 					<header>
 						<h1 class="section-title">Upload Thesis</h1>
@@ -87,7 +141,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
 						<button type="submit" id="captbtn" class="btn">UPLOAD</button>
 					</form>
-				</section>
+				</section> -->
 				<section>
 					<div id="PDFFILE">
 					</div>
@@ -125,66 +179,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/homepage.js?v=1.0.4"></script>
+		<script src="../../js/homepage.js?v=1.0.6"></script>
 		<script>
-		// Dropdown toggle for avatar
-		const avatar = document.querySelector('.nav-avatar');
-		if (avatar) {
-			avatar.addEventListener('click', function(e) {
-				e.stopPropagation();
-				this.classList.toggle('open');
-			});
-			document.addEventListener('click', function() {
-				avatar.classList.remove('open');
-			});
-		}
-		// Profile modal logic
-		const profileLink = document.getElementById('profile-link');
-		const profileModal = document.getElementById('profile-modal');
-		const closeProfileModal = document.getElementById('closeProfileModal');
-		if (profileLink && profileModal && closeProfileModal) {
-			profileLink.addEventListener('click', function(e) {
-				e.preventDefault();
-				profileModal.style.display = 'flex';
-				avatar.classList.remove('open');
-			});
-			closeProfileModal.addEventListener('click', function() {
-				profileModal.style.display = 'none';
-			});
-			window.addEventListener('click', function(event) {
-				if (event.target === profileModal) {
-					profileModal.style.display = 'none';
-				}
-			});
-		}
-		// Logout confirmation modal logic
-		const logoutLink = document.getElementById('logout-link');
-		const logoutModal = document.getElementById('logout-modal');
-		const closeLogoutModal = document.getElementById('closeLogoutModal');
-		const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-		const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
-		if (logoutLink && logoutModal && closeLogoutModal && confirmLogoutBtn && cancelLogoutBtn) {
-			logoutLink.addEventListener('click', function(e) {
-				e.preventDefault();
-				logoutModal.style.display = 'flex';
-				avatar.classList.remove('open');
-			});
-			closeLogoutModal.addEventListener('click', function() {
-				logoutModal.style.display = 'none';
-			});
-			cancelLogoutBtn.addEventListener('click', function(e) {
-				e.preventDefault();
-				logoutModal.style.display = 'none';
-			});
-			confirmLogoutBtn.addEventListener('click', function() {
-				window.location.href = '../../php/logout.php';
-			});
-			window.addEventListener('click', function(event) {
-				if (event.target === logoutModal) {
-					logoutModal.style.display = 'none';
-				}
-			});
-		}
+			
 		</script>
 	</body>
 </html>
