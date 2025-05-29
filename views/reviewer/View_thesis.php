@@ -90,7 +90,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 1rem;
             background-color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            border: solid 2px black;
+            /* border: solid 2px black; */
         }
 
         .nav-links a {
