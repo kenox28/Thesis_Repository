@@ -9,11 +9,21 @@
         #reader { width: 100%; min-height: 300px; margin: 0 auto 18px auto; }
         .msg { color: #e74c3c; margin-bottom: 12px; }
         .success { color: #1976a5; }
+        .back-button {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: #1976a5;
+            text-decoration: none;
+        }
     </style>
     <!-- Include html5-qrcode library -->
     <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
 <body>
+    <header>
+        <a href="student_login.php" class="back-button">Back</a>
+    </header>
     <div class="scanner-container">
         <h2>Scan QR Code to Reset Password</h2>
         <div id="reader"></div>
