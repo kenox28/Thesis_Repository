@@ -1,3 +1,10 @@
+
+*{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
 body, html {
   min-height: 100vh;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,6 +31,7 @@ body, html {
   position: sticky;
   top: 0;
   z-index: 10;
+  height: 100px;
 }
 .nav-logo {
   display: flex;
@@ -160,7 +168,8 @@ body, html {
   color: #00246B;
   margin-bottom: 0.2em;
   letter-spacing: 0.5px;
-  text-align: left;
+  text-align: center;
+  /* border: solid 2px black; */
 }
 .section-subtitle {
   color: #6a7ba2;
@@ -176,6 +185,7 @@ body, html {
   align-items: flex-start;
   justify-content: flex-start;
 }
+
 #thesisForm input[type="text"],
 #thesisForm textarea,
 #thesisForm select {
