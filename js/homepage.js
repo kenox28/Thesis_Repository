@@ -22,29 +22,40 @@ for (const u of data) {
 			</div>
 			<embed src="${filePath}" type="application/pdf">
 
-			<button 
-				onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')" 
-				style="
-					border: solid 2px green;
-					padding: 5px;
-					background: #00246B;
-					color: #fff;
-					border: none;
-					border-radius: 7px;
-					padding: 8px 15px;
-					font-size: 1rem;
-					font-weight: 700;
-					cursor: pointer;
-					transition: background 0.18s, box-shadow 0.18s;
-					box-shadow: 0 2px 8px #cadcfc33;
-					margin-top: 0.5rem;
-				"
-			>
-				<i class="fas fa-trash"></i> Delete
-			</button>
 
-			<div class="status-badge" style="margin-top: 10px;">
-				<i class="fas fa-clock"></i> ${u.status || "Pending"}
+			<div style="display: flex; justify-content: space-around; align-items: center; margin-top: 10px;">
+				<button 
+					onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')" 
+					style="
+						background-color: #003B9A;
+						color: white;
+						border: none;
+						padding: 10px 20px;
+						font-weight: bold;
+						border-radius: 8px;
+						cursor: pointer;
+						transition: background-color 0.3s ease;
+						margin-top: 16px;
+					"
+					onmouseover="this.style.backgroundColor='#002f7a'"
+					onmouseout="this.style.backgroundColor='#003B9A'"
+				>
+					<i class="fas fa-trash"></i> Delete
+				</button>
+
+				<div 
+					class="status-badge" 
+					style="
+						background-color: #003B9A;
+						color: white;
+						padding: 8px 16px;
+						border-radius: 8px;
+						font-weight: bold;
+						font-size: 14px;
+					"
+				>
+					<i class="fas fa-clock"></i> ${u.status || "Pending"}
+				</div>
 			</div>
 		</div>
 	`;
