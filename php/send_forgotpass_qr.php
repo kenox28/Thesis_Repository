@@ -16,26 +16,37 @@ if(!isset($data['email']) || !isset($data['qrDataUrl'])) {
 $email = $data['email'];
 $qrDataUrl = $data['qrDataUrl'];
 
-// 1. Check if email exists in Student table
-$stmt = $connect->prepare("SELECT student_id, fname, lname FROM Student WHERE email=?");
+// 1. Check Student table
+$stmt = $connect->prepare("SELECT student_id, fname, lname, 'student' as role FROM Student WHERE email=?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
-if ($stmt->num_rows === 0) {
-    echo json_encode(['status'=>'error', 'message'=>'Email not found.']);
-    exit;
+if ($stmt->num_rows > 0) {
+    $stmt->bind_result($id, $fname, $lname, $role);
+    $stmt->fetch();
+    $stmt->close();
+} else {
+    $stmt->close();
+    // 2. Check Reviewer table
+    $stmt = $connect->prepare("SELECT reviewer_id, fname, lname, 'reviewer' as role FROM reviewer WHERE email=?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->store_result();
+    if ($stmt->num_rows > 0) {
+        $stmt->bind_result($id, $fname, $lname, $role);
+        $stmt->fetch();
+        $stmt->close();
+    } else {
+        $stmt->close();
+        echo json_encode(['status'=>'error', 'message'=>'Email not found.']);
+        exit;
+    }
 }
-$stmt->bind_result($student_id, $fname, $lname);
-$stmt->fetch();
-$stmt->close();
 
-// 2. Generate reset link with student_id
+// 3. Generate reset link with id and role
 $resetUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/thesis_Repository/views/scan_qr_reset.php';
 
-// 3. Generate QR code (already done in frontend, but you could do it here if you want)
-// $qrDataUrl = ... (from frontend)
-
-// 4. Send email with QR code and link
+// 4. Save QR code image
 if (preg_match('/^data:image\\/\\w+;base64,/', $qrDataUrl)) {
     $qrData = substr($qrDataUrl, strpos($qrDataUrl, ',') + 1);
     $qrData = base64_decode($qrData);
@@ -65,7 +76,7 @@ try {
     $mail->Subject = 'Password Reset Request';
     $mail->Body    = "
         <p>Hello $fname $lname,</p>
-        <p>Scan the QR code below to reset your password, or <a href='$resetUrl'>click here</a>:</p>
+        <p>Scan the QR code below to reset your password, or <a href='$resetUrl?id=$id&role=$role'>click here</a>:</p>
         <img src='cid:qrimg' alt='Reset QR Code' style='width:180px;height:180px;'><br>
         <p>This link will expire in 15 minutes.</p>
     ";
