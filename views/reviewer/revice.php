@@ -195,6 +195,27 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             justify-content: center;
         }
 
+        button{
+            border: solid 2px green;
+            padding: 5px;
+            background: #00246B;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #cadcfc33;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background:rgba(1, 5, 252, 0.7);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
         #reviseForm button {
             padding: 0.8rem 1.5rem;
             background-color: var(--accent-color);
