@@ -37,18 +37,20 @@ async function showupload() {
 			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 
 			rows += `
-                <div class="upload-item" style="margin-bottom: 20px;">
-                    <h3>${u.title}</h3>
-                    <p>${u.abstract}</p>
-                    <embed src="${filePath}" width="600" height="400" type="application/pdf">
-                    <button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
-                    <button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
-                    <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
-                    <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
-                </div>
-				
-            `;
+				<div class="upload-item" style="margin-bottom: 20px;">
+					<h3>${u.title}</h3>
+					<p>${u.abstract}</p>
+					<embed src="${filePath}" width="600" height="400" type="application/pdf">
+					<div style="display: flex; justify-content: space-between; margin-top: 10px;">
+						<button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
+						<button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
+						<button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
+					</div>
+					<button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'" style="width: 100%; margin-top: 10px;">Revision History</button>
+				</div>
+			`;
 		}
+
 
 		document.getElementById("userTableBody").innerHTML = rows;
 	} catch (error) {
@@ -61,20 +63,42 @@ async function showupload() {
 showupload();
 
 async function updateStatus(thesisId, status) {
-	// Create a FormData object to send the data
-	const formData = new FormData();
-	formData.append("thesis_id", thesisId);
-	formData.append("status", status);
+	let actionText = status === "approved" ? "approve" : "reject";
+	let confirmButtonText =
+		status === "approved" ? "Yes, Approve" : "Yes, Reject";
+	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
 
-	const res = await fetch("../../php/reviewer/updatethesis_status.php", {
-		method: "POST",
-		body: formData,
+	const result = await Swal.fire({
+		title: `Are you sure you want to ${actionText} this thesis?`,
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonText: confirmButtonText,
+		cancelButtonText: "Cancel",
+		confirmButtonColor: confirmButtonColor,
+		cancelButtonColor: "#888",
 	});
 
-	const result = await res.json();
-	alert(result.message);
-	if (result.status === "success") {
-		showupload(); // Refresh the list
+	if (result.isConfirmed) {
+		// Create a FormData object to send the data
+		const formData = new FormData();
+		formData.append("thesis_id", thesisId);
+		formData.append("status", status);
+
+		const res = await fetch("../../php/reviewer/updatethesis_status.php", {
+			method: "POST",
+			body: formData,
+		});
+
+		const data = await res.json();
+		Swal.fire({
+			icon: data.status === "success" ? "success" : "error",
+			title: data.status === "success" ? "Success" : "Error",
+			text: data.message,
+			confirmButtonColor: "#1976a5",
+		});
+		if (data.status === "success") {
+			showupload(); // Refresh the list
+		}
 	}
 }
 

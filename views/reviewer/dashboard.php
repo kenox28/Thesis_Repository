@@ -80,14 +80,14 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         .dashboard-cards {
             display: flex;
             flex-wrap: wrap;
-            gap: 28px;
+            gap: 90px;
             margin-bottom: 32px;
         }
         .dashboard-card {
             background: #fff;
             border-radius: 14px;
             box-shadow: 0 2px 12px #1976a522;
-            padding: 28px 36px;
+            padding: 68px 56px;
             min-width: 220px;
             flex: 1 1 220px;
             display: flex;
@@ -115,8 +115,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             .dashboard-welcome { flex-direction: column; align-items: flex-start; padding: 18px 10px; }
         }
         .sidebar {
-            background: linear-gradient(135deg, #1976a5 0%, #2893c7 100%);
-            min-height: 100vh;
+            background: var(--primary-color);
+            min-height: 95vh;
             width: 250px;
             display: flex;
             flex-direction: column;
@@ -229,10 +229,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <img class="sidebar-profile-img" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile">
         </div>
         <div class="sidebar-profile-name"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?></div>
-        <div class="sidebar-profile-role">REVIEWER</div>
+        <div class="sidebar-profile-role" >REVIEWER</div>
         <nav class="sidebar-nav">
             <a href="dashboard.php" class="active"><i class="fas fa-home"></i> Dashboard</a>
+            <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
             <a href="View_thesis.php"><i class="fas fa-file-alt"></i> Review</a>
+            <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
             <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
             <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
         </nav>
@@ -249,19 +251,19 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <div class="dashboard-cards">
             <div class="dashboard-card">
                 <div class="dashboard-card-title"><i class="fas fa-hourglass-half"></i> Pending Reviews</div>
-                <div class="dashboard-card-value">2</div>
+                <div class="dashboard-card-value" id="pendingCount">0</div>
             </div>
             <div class="dashboard-card">
                 <div class="dashboard-card-title"><i class="fas fa-check-circle"></i> Total Approved</div>
-                <div class="dashboard-card-value">5</div>
+                <div class="dashboard-card-value" id="approvedCount">0</div>
+            </div>
+            <div class="dashboard-card">
+                <div class="dashboard-card-title"><i class="fas fa-file-alt"></i> Public Repo</div>
+                <div class="dashboard-card-value" id="publicCount">0</div>
             </div>
             <div class="dashboard-card">
                 <div class="dashboard-card-title"><i class="fas fa-times-circle"></i> Total Rejected</div>
-                <div class="dashboard-card-value">1</div>
-            </div>
-            <div class="dashboard-card">
-                <div class="dashboard-card-title"><i class="fas fa-clipboard-list"></i> Total Reviewed</div>
-                <div class="dashboard-card-value">8</div>
+                <div class="dashboard-card-value" id="rejectedCount">0</div>
             </div>
         </div>
         <main>
@@ -270,4 +272,19 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     </div>
 </body>
 <script src="dashboard.js"></script>
+<script>
+async function loadDashboardStats() {
+    const res = await fetch("../../php/reviewer/reviewer_dashboard_stats.php");
+    const stats = await res.json();
+    if (stats.error) {
+        alert(stats.error);
+        return;
+    }
+    document.getElementById("pendingCount").textContent = stats.pending;
+    document.getElementById("approvedCount").textContent = stats.approved;
+    document.getElementById("rejectedCount").textContent = stats.rejected;
+    document.getElementById("publicCount").textContent = stats.public;
+}
+window.addEventListener("DOMContentLoaded", loadDashboardStats);
+</script>
 </html>

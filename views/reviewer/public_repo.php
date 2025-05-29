@@ -29,7 +29,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             color: var(--text-color);
         }
 
-              .header {
+        .header {
             background-color: var(--primary-color);
             padding: 1rem;
             color: white;
@@ -123,6 +123,27 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
 
+        /* button{
+            border: solid 2px green;
+            padding: 5px;
+            background: #00246B;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #cadcfc33;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background:rgba(1, 5, 252, 0.7);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        } */
+
         .upload-item:hover {
             transform: translateY(-5px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
@@ -203,11 +224,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
     <div class="nav-links">
         <a href="dashboard.php" ><i class="fas fa-home"></i> Dashboard</a>
-        <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
+        <a href="public_repo.php" class="active"><i class="fas fa-file-alt"></i>Public Repository</a>
         <a href="View_thesis.php" ><i class="fas fa-file-alt"></i> Review</a>
         <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
 
-        <a href="thesis_approved.php" class="active"><i class="fas fa-check-circle"></i> Approved</a>
+        <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
         <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
         <a href="../../php/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
@@ -218,7 +239,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </body>
 <script>
 async function showupload() {
-    const res = await fetch("../../php/reviewer/approve_thesis.php");
+    const res = await fetch("../../php/student/get_public_repo.php");
     const data = await res.json();
 
     if (data.error) {
@@ -242,7 +263,7 @@ async function showupload() {
                 </div>
                 <embed src="${filePath}" type="application/pdf">
                 <div class="status-badge">
-                    <i class="fas fa-check"></i> ${u.status}
+                    <i class="fas fa-check"></i> ${u.Privacy}
                 </div>
             </div>
         `;
