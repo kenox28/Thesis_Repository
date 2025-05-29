@@ -7,7 +7,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rejected Theses</title>
+    <title>Approved Theses</title>
     <!-- Add Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -18,8 +18,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             --background-color: #CADCFC;
             --text-color: #00246B;
             --card-bg: #ffffff;
-            --reject-color: #00246B;
-            --reject-light: #CADCFC;
+            --success-color: #00246B;
         }
 
         body {
@@ -49,7 +48,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--reject-color);
+            border: 3px solid var(--success-color);
         }
 
         .user-info {
@@ -106,7 +105,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 1.5rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            border-left: 4px solid var(--reject-color);
         }
 
         .upload-item:hover {
@@ -118,7 +116,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             color: var(--primary-color);
             margin-top: 0;
             font-size: 1.4rem;
-            border-bottom: 2px solid var(--reject-color);
+            border-bottom: 2px solid var(--secondary-color);
             padding-bottom: 0.5rem;
         }
 
@@ -133,39 +131,24 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             height: 300px;
             border-radius: 8px;
             margin-top: 1rem;
-            border: 1px solid var(--reject-light);
         }
 
         .author-info {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--reject-color);
+            color: var(--secondary-color);
             font-weight: 500;
         }
 
         .status-badge {
             display: inline-block;
             padding: 0.3rem 0.8rem;
-            background-color: var(--reject-color);
+            background-color: var(--success-color);
             color: white;
             border-radius: 20px;
             font-size: 0.9rem;
             margin-top: 1rem;
-        }
-
-        .rejection-reason {
-            background-color: var(--reject-light);
-            padding: 1rem;
-            border-radius: 8px;
-            margin-top: 1rem;
-            border-left: 3px solid var(--reject-color);
-        }
-
-        .rejection-reason p {
-            margin: 0;
-            color: var(--reject-color);
-            font-style: italic;
         }
 
         @media (max-width: 768px) {
@@ -192,7 +175,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-times-circle"></i> Rejected Theses</h1>
+        <h1><i class="fas fa-check-circle"></i> Approved Theses</h1>
         <div class="profile-section">
             <img src="../../assets/imageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-image">
             <div class="user-info">
@@ -204,10 +187,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
     <div class="nav-links">
         <a href="dashboard.php" ><i class="fas fa-home"></i> Dashboard</a>
-        <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
+        <a href="public_repo.php" class="active"><i class="fas fa-file-alt"></i>Public Repository</a>
         <a href="View_thesis.php" ><i class="fas fa-file-alt"></i> Review</a>
         <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
-        <a href="thesis_rejected.php" class="active"><i class="fas fa-times-circle"></i> Rejected</a>
+        <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
         <a href="../../php/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </div>
 
@@ -217,7 +200,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </body>
 <script>
 async function showupload() {
-    const res = await fetch("../../php/reviewer/reject_thesis.php");
+    const res = await fetch("../../php/student/get_public_repo.php");
     const data = await res.json();
 
     if (data.error) {
@@ -241,13 +224,8 @@ async function showupload() {
                 </div>
                 <embed src="${filePath}" type="application/pdf">
                 <div class="status-badge">
-                    <i class="fas fa-times"></i> Rejected
+                    <i class="fas fa-check"></i> ${u.Privacy}
                 </div>
-                ${u.rejection_reason ? `
-                    <div class="rejection-reason">
-                        <p><i class="fas fa-comment-alt"></i> ${u.rejection_reason}</p>
-                    </div>
-                ` : ''}
             </div>
         `;
     }

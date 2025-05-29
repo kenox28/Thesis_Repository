@@ -2,61 +2,92 @@
 session_start();
 require_once '../php/Database.php'; // adjust path as needed
 
-$student_id = $_GET['id'] ?? '';
+$user_id = $_GET['id'] ?? '';
 $showForm = false;
 $error = '';
 $success = '';
+$userType = ''; // 'student' or 'reviewer'
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $student_id = $_POST['student_id'] ?? '';
+    $user_id = $_POST['user_id'] ?? '';
     $password_raw = $_POST['password'] ?? '';
     $confirm_raw = $_POST['confirm'] ?? '';
     $password = md5($password_raw);
     $confirm = md5($confirm_raw);
-    
 
-    if (!$student_id || !$password_raw || !$confirm_raw) {
+    if (!$user_id || !$password_raw || !$confirm_raw) {
         $error = "All fields are required.";
     } elseif ($password !== $confirm) {
         $error = "Passwords do not match.";
     } elseif (strlen($password_raw) < 8) {
         $error = "Password must be at least 8 characters.";
     } else {
-        // Check if student exists
+        // Try Student first
         $stmt = $connect->prepare("SELECT email FROM Student WHERE student_id=?");
-        $stmt->bind_param("s", $student_id);
+        $stmt->bind_param("s", $user_id);
         $stmt->execute();
         $stmt->store_result();
-        if ($stmt->num_rows === 0) {
-            $error = "Invalid student ID.";
-        } else {
-            // Update password
+        if ($stmt->num_rows > 0) {
             $stmt2 = $connect->prepare("UPDATE Student SET passw=? WHERE student_id=?");
-            $stmt2->bind_param("ss", $password, $student_id);
+            $stmt2->bind_param("ss", $password, $user_id);
             if ($stmt2->execute()) {
                 $success = "Password updated successfully! You can now <a href='student_login.php'>login</a>.";
             } else {
                 $error = "Failed to update password.";
             }
             $stmt2->close();
+            $userType = 'student';
+        } else {
+            // Try Reviewer
+            $stmt2 = $connect->prepare("SELECT email FROM reviewer WHERE reviewer_id=?");
+            $stmt2->bind_param("s", $user_id);
+            $stmt2->execute();
+            $stmt2->store_result();
+            if ($stmt2->num_rows > 0) {
+                $stmt3 = $connect->prepare("UPDATE reviewer SET pass=? WHERE reviewer_id=?");
+                $stmt3->bind_param("ss", $password, $user_id);
+                if ($stmt3->execute()) {
+                    $success = "Password updated successfully! You can now <a href='../views/student_login.php'>login</a>.";
+                } else {
+                    $error = "Failed to update password.";
+                }
+                $stmt3->close();
+                $userType = 'reviewer';
+            } else {
+                $error = "Invalid user ID.";
+            }
+            $stmt2->close();
         }
         $stmt->close();
     }
 } else {
-    // On GET: check if student_id is valid
-    if ($student_id) {
+    // On GET: check if user_id is valid
+    if ($user_id) {
+        // Try Student first
         $stmt = $connect->prepare("SELECT fname, lname FROM Student WHERE student_id=?");
-        $stmt->bind_param("s", $student_id);
+        $stmt->bind_param("s", $user_id);
         $stmt->execute();
         $stmt->store_result();
-        if ($stmt->num_rows === 0) {
-            $error = "Invalid student ID.";
-        } else {
+        if ($stmt->num_rows > 0) {
             $showForm = true;
+            $userType = 'student';
+        } else {
+            // Try Reviewer
+            $stmt2 = $connect->prepare("SELECT fname, lname FROM reviewer WHERE reviewer_id=?");
+            $stmt2->bind_param("s", $user_id);
+            $stmt2->execute();
+            $stmt2->store_result();
+            if ($stmt2->num_rows > 0) {
+                $showForm = true;
+                $userType = 'reviewer';
+            } else {
+                $error = "Invalid user ID.";
+            }
+            $stmt2->close();
         }
         $stmt->close();
     } else {
-        $error = "No student ID provided.";
+        $error = "No user ID provided.";
     }
 }
 ?>
@@ -81,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="reset-container">
         <h2>Reset Password</h2>
         <form method="POST">
-            <input type="hidden" name="student_id" value="<?= htmlspecialchars($student_id) ?>">
+            <input type="hidden" name="user_id" value="<?= htmlspecialchars($user_id) ?>">
             <input type="password" name="password" placeholder="New Password" required minlength="8">
             <input type="password" name="confirm" placeholder="Confirm Password" required minlength="8">
             <button type="submit">Change Password</button>
