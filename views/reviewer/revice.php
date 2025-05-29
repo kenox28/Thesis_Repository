@@ -295,7 +295,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </head>
 <body>
     <div class="header">
-        <h1><i class="fas fa-check-circle"></i> Review Theses</h1>
+        <h1><i class="fas fa-check-circle"></i> Revice </h1>
         <div class="profile-section">
             <img src="../../assets/imageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-image">
             <div class="user-info">
@@ -310,6 +310,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
         <a href="View_thesis.php" class="active"><i class="fas fa-file-alt"></i> Review</a>
         <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
+
         <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
         <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
         <a href="../../php/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
@@ -348,5 +349,44 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
       </div>
     </div>
 </body>
-<script src="../../js/view_thesis.js?v=1.0.5"></script>
+<!-- <script src="../../js/view_thesis.js?v=1.0.5"></script> -->
+<script>
+    
+async function showupload() {
+	try {
+		const res = await fetch("../../php/reviewer/revthesis.php");
+		const data = await res.json();
+
+		if (data.error) {
+			document.getElementById(
+				"userTableBody"
+			).innerHTML = `<p>${data.error}</p>`;
+			return;
+		}
+
+		let rows = "";
+		for (const u of data) {
+			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+
+			rows += `
+                <div class="upload-item" style="margin-bottom: 20px;">
+                    <h3>${u.title}</h3>
+                    <p>${u.abstract}</p>
+                    <embed src="${filePath}" width="600" height="400" type="application/pdf">
+                    <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
+                </div>
+				
+            `;
+		}
+
+		document.getElementById("userTableBody").innerHTML = rows;
+	} catch (error) {
+		console.error("Error fetching uploads:", error);
+		document.getElementById(
+			"userTableBody"
+		).innerHTML = `<p>Something went wrong.</p>`;
+	}
+}
+showupload();
+</script>
 </html>

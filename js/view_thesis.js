@@ -61,20 +61,42 @@ async function showupload() {
 showupload();
 
 async function updateStatus(thesisId, status) {
-	// Create a FormData object to send the data
-	const formData = new FormData();
-	formData.append("thesis_id", thesisId);
-	formData.append("status", status);
+	let actionText = status === "approved" ? "approve" : "reject";
+	let confirmButtonText =
+		status === "approved" ? "Yes, Approve" : "Yes, Reject";
+	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
 
-	const res = await fetch("../../php/reviewer/updatethesis_status.php", {
-		method: "POST",
-		body: formData,
+	const result = await Swal.fire({
+		title: `Are you sure you want to ${actionText} this thesis?`,
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonText: confirmButtonText,
+		cancelButtonText: "Cancel",
+		confirmButtonColor: confirmButtonColor,
+		cancelButtonColor: "#888",
 	});
 
-	const result = await res.json();
-	alert(result.message);
-	if (result.status === "success") {
-		showupload(); // Refresh the list
+	if (result.isConfirmed) {
+		// Create a FormData object to send the data
+		const formData = new FormData();
+		formData.append("thesis_id", thesisId);
+		formData.append("status", status);
+
+		const res = await fetch("../../php/reviewer/updatethesis_status.php", {
+			method: "POST",
+			body: formData,
+		});
+
+		const data = await res.json();
+		Swal.fire({
+			icon: data.status === "success" ? "success" : "error",
+			title: data.status === "success" ? "Success" : "Error",
+			text: data.message,
+			confirmButtonColor: "#1976a5",
+		});
+		if (data.status === "success") {
+			showupload(); // Refresh the list
+		}
 	}
 }
 
