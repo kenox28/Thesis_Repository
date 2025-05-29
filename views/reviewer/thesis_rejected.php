@@ -30,18 +30,33 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             color: var(--text-color);
         }
 
-        .header {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
-            padding: 1.5rem;
+                .header {
+            background-color: var(--primary-color);
+            padding: 1rem;
             color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 80px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .header h1 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            /* border: solid 2px white; */
+            width: 50%;
+            padding: 2.5rem;
         }
 
         .profile-section {
             display: flex;
+            justify-content: end;
             align-items: center;
-            gap: 1rem;
+            gap: 2rem;
             margin-top: 1rem;
+            /* border: solid 2px green; */
+            width: 50%;
         }
 
         .profile-image {
@@ -49,12 +64,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             height: 60px;
             border-radius: 50%;
             object-fit: cover;
-            border: 3px solid var(--reject-color);
+            border: 3px solid var(--success-color);
         }
-
         .user-info {
             display: flex;
             flex-direction: column;
+            margin-right: 4rem;
         }
 
         .user-info h3 {
@@ -64,6 +79,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
         .nav-links {
             display: flex;
+            justify-content: center;
             gap: 1rem;
             padding: 1rem;
             background-color: white;
@@ -204,7 +220,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
     <div class="nav-links">
         <a href="dashboard.php" ><i class="fas fa-home"></i> Dashboard</a>
+        <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
         <a href="View_thesis.php" ><i class="fas fa-file-alt"></i> Review</a>
+        <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
+
         <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
         <a href="thesis_rejected.php" class="active"><i class="fas fa-times-circle"></i> Rejected</a>
         <a href="../../php/logout.php"><i class="fas fa-sign-out-alt"></i> Logout</a>
