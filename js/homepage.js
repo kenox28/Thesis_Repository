@@ -12,13 +12,7 @@ async function showupload() {
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		rows += `
-<<<<<<< HEAD
-			<div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
-				<div class="thesis-card-title">${u.title}</div>
-				<div class="thesis-card-abstract">${u.abstract}</div>
-				<div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
-				<div class="thesis-card-status">${u.status || 'Pending'}</div>
-=======
+
 			<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${
 			u.abstract
 		}', '${u.lname}, ${u.fname}', '${u.status}')">
@@ -30,13 +24,12 @@ async function showupload() {
 				</div>
 				<embed src="${filePath}" type="application/pdf">
 
-				<button onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
-					<i class="fas fa-trash"></i> Delete
+				<button style="background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
+					<i class="fas fa-trash"></i> Cancel
 				</button>
 				<div class="status-badge">
 					<i class="fas fa-clock"></i> ${u.status || "Pending"}
 				</div>
->>>>>>> 9a9cafbffd9f1798d037a03219eb67cadcacda25
 			</div>
 		`;
 	}
