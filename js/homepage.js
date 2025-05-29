@@ -9,29 +9,47 @@ async function showupload() {
 	console.log("runnnnnnnnnnnnnnn");
 
 	let rows = "<div class='thesis-cards'>";
-	for (const u of data) {
-		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-		rows += `
-			<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${
-			u.abstract
-		}', '${u.lname}, ${u.fname}', '${u.status}')">
-				<h3><i class='fas fa-book'></i> ${u.title}</h3>
-				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-				<div class="author-info">
-					<i class="fas fa-user-graduate"></i>
-					<span>${u.lname}, ${u.fname}</span>
-				</div>
-				<embed src="${filePath}" type="application/pdf">
+for (const u of data) {
+	const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 
-				<button onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
-					<i class="fas fa-trash"></i> Delete
-				</button>
-				<div class="status-badge">
-					<i class="fas fa-clock"></i> ${u.status || "Pending"}
-				</div>
+	rows += `
+		<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
+			<h3><i class='fas fa-book'></i> ${u.title}</h3>
+			<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+			<div class="author-info">
+				<i class="fas fa-user-graduate"></i>
+				<span>${u.lname}, ${u.fname}</span>
 			</div>
-		`;
-	}
+			<embed src="${filePath}" type="application/pdf">
+
+			<button 
+				onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')" 
+				style="
+					border: solid 2px green;
+					padding: 5px;
+					background: #00246B;
+					color: #fff;
+					border: none;
+					border-radius: 7px;
+					padding: 8px 15px;
+					font-size: 1rem;
+					font-weight: 700;
+					cursor: pointer;
+					transition: background 0.18s, box-shadow 0.18s;
+					box-shadow: 0 2px 8px #cadcfc33;
+					margin-top: 0.5rem;
+				"
+			>
+				<i class="fas fa-trash"></i> Delete
+			</button>
+
+			<div class="status-badge" style="margin-top: 10px;">
+				<i class="fas fa-clock"></i> ${u.status || "Pending"}
+			</div>
+		</div>
+	`;
+}
+
 	rows += "</div>";
 
 	document.getElementById("PDFFILE").innerHTML = rows;

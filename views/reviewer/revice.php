@@ -42,13 +42,28 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 1rem;
             color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 80px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .header h1 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            /* border: solid 2px white; */
+            width: 50%;
+            padding: 2.5rem;
         }
 
         .profile-section {
             display: flex;
+            justify-content: end;
             align-items: center;
-            gap: 1rem;
+            gap: 2rem;
             margin-top: 1rem;
+            /* border: solid 2px green; */
+            width: 50%;
         }
 
         .profile-image {
@@ -61,6 +76,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         .user-info {
             display: flex;
             flex-direction: column;
+            margin-right: 4rem;
         }
 
         .user-info h3 {
@@ -69,6 +85,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         .nav-links {
             display: flex;
+            justify-content: center;
             gap: 1rem;
             padding: 1rem;
             background-color: white;
