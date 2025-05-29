@@ -8,6 +8,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Document</title>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
 	<body>
@@ -121,6 +122,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/upload.js?v=1.0.5"></script>
+		<script src="../../js/upload.js?v=1.0.6"></script>
 	</body>
 </html>

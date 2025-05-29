@@ -13,7 +13,7 @@ if (!isset($_SESSION['admin_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link href="../../assets/css/Admin_Page.css" rel="stylesheet">
+    <link href="../../assets/css/Admin_Page.css?v=1.0.2" rel="stylesheet">
 
 </head>
 <body>
