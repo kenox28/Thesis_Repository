@@ -241,7 +241,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <a href="../../php/logout.php" class="sidebar-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </aside>
     <div class="dashboard-main">
-
         <div class="dashboard-welcome">
             <div>
                 <h2>Welcome, <?php echo $_SESSION['fname']; ?>!</h2>
@@ -271,7 +270,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </main>
     </div>
 </body>
-<script src="dashboard.js"></script>
 <script>
 async function loadDashboardStats() {
     const res = await fetch("../../php/reviewer/reviewer_dashboard_stats.php");
