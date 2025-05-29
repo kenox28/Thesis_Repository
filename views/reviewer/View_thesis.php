@@ -42,13 +42,28 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 1rem;
             color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 80px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .header h1 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            /* border: solid 2px white; */
+            width: 50%;
+            padding: 2.5rem;
         }
 
         .profile-section {
             display: flex;
+            justify-content: end;
             align-items: center;
-            gap: 1rem;
+            gap: 2rem;
             margin-top: 1rem;
+            /* border: solid 2px green; */
+            width: 50%;
         }
 
         .profile-image {
@@ -61,6 +76,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         .user-info {
             display: flex;
             flex-direction: column;
+            margin-right: 4rem;
         }
 
         .user-info h3 {
@@ -229,6 +245,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 1.5rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+
         }
 
         .upload-item:hover {
@@ -248,6 +265,27 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             color: #666;
             line-height: 1.6;
             margin: 1rem 0;
+        }
+
+        .upload-item button{
+            border: solid 2px green;
+            padding: 5px;
+            background: #00246B;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #cadcfc33;
+            margin-top: 0.5rem;
+        }
+
+        .upload-item button:hover {
+            background:rgba(1, 5, 252, 0.7);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
 
         .upload-item embed {
