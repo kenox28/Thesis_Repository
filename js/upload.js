@@ -9,7 +9,12 @@ async function uploadfun(e) {
 	const fileInput = document.getElementById("docfile");
 	const file = fileInput.files[0];
 	if (!file || file.type !== "application/pdf") {
-		alert("Please upload a PDF file only.");
+		Swal.fire({
+			icon: "error",
+			title: "Invalid File",
+			text: "Please upload a PDF file only.",
+			confirmButtonColor: "#1976a5",
+		});
 		return;
 	}
 
@@ -24,11 +29,22 @@ async function uploadfun(e) {
 	const result = await res.json();
 
 	if (result.status === "success") {
-		alert(result.message);
-		// window.location.href = "../views/home.html";
-		showupload();
+		Swal.fire({
+			icon: "success",
+			title: "Success!",
+			text: result.message,
+			confirmButtonColor: "#1976a5",
+		}).then(() => {
+			form.reset(); // Clear all input fields
+			showupload();
+		});
 	} else {
-		alert(result.message);
+		Swal.fire({
+			icon: "error",
+			title: "Error!",
+			text: result.message,
+			confirmButtonColor: "#1976a5",
+		});
 	}
 }
 
