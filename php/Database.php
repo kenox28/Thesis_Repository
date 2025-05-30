@@ -20,6 +20,8 @@ $student = "CREATE TABLE IF NOT EXISTS Student (
     email VARCHAR(50),
     passw VARCHAR(50),
     profileImg VARCHAR(255),
+    failed_attempts INT DEFAULT 0,
+    lockout_time DATETIME DEFAULT NULL,
     gender VARCHAR(255),
     bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
