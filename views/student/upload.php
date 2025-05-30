@@ -44,7 +44,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<section class="upload-card">
 					<header>
 						<h1 class="section-title">Upload Thesis</h1>
-						<h3 class="section-subtitle"><?php echo $_SESSION['fname']; ?> <?php echo $_SESSION['lname']; ?></h3>
 					</header>
 					<form action="#" id="thesisForm" enctype="multipart/form-data">
 						<input type="text" name="title" placeholder="Enter a title">

@@ -37,18 +37,20 @@ async function showupload() {
 			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 
 			rows += `
-                <div class="upload-item" style="margin-bottom: 20px;">
-                    <h3>${u.title}</h3>
-                    <p>${u.abstract}</p>
-                    <embed src="${filePath}" width="600" height="400" type="application/pdf">
-                    <button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
-                    <button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
-                    <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
-                    <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
-                </div>
-				
-            `;
+				<div class="upload-item" style="margin-bottom: 20px;">
+					<h3>${u.title}</h3>
+					<p>${u.abstract}</p>
+					<embed src="${filePath}" width="600" height="400" type="application/pdf">
+					<div style="display: flex; justify-content: space-between; margin-top: 10px;">
+						<button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
+						<button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
+						<button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
+					</div>
+					<button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'" style="width: 100%; margin-top: 10px;">Revision History</button>
+				</div>
+			`;
 		}
+
 
 		document.getElementById("userTableBody").innerHTML = rows;
 	} catch (error) {

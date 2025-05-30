@@ -36,15 +36,82 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 0;
             color: var(--text-color);
         }
-        .sidebar {
-            background: rgba(10, 35, 66, 0.85);
-            backdrop-filter: blur(8px);
-            min-height: 100vh;
-            width: 250px;
+
+        .header {
+            background-color: var(--primary-color);
+            padding: 1rem;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 80px;
+            display: flex;
+            justify-content: space-evenly;
+        }
+
+        .header h1 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            /* border: solid 2px white; */
+            width: 50%;
+            padding: 2.5rem;
+        }
+
+        .profile-section {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            /* border: solid 2px green; */
+            width: 50%;
+        }
+
+        .profile-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--success-color);
+        }
+        .user-info {
             display: flex;
             flex-direction: column;
-            align-items: center;
-            padding: 32px 0 24px 0;
+            margin-right: 4rem;
+        }
+
+        .user-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-color);
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .nav-links a.active {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        #reviseModal {
+            display: none;
             position: fixed;
             left: 0;
             top: 0;
@@ -105,14 +172,37 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             gap: 8px;
             margin-bottom: auto;
         }
-        .sidebar-nav a {
+
+        button{
+            border: solid 2px green;
+            padding: 5px;
+            background: #00246B;
             color: #fff;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 1.08rem;
-            padding: 12px 32px;
-            border-radius: 8px 0 0 8px;
-            transition: background 0.18s, color 0.18s, transform 0.18s;
+            border: none;
+            border-radius: 7px;
+            padding: 8px 15px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #cadcfc33;
+            margin-top: 0.5rem;
+        }
+
+        button:hover {
+            background:rgba(1, 5, 252, 0.7);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        #reviseForm button {
+            padding: 0.8rem 1.5rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 10px;

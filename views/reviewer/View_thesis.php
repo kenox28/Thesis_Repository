@@ -87,10 +87,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         .nav-links {
             display: flex;
+            justify-content: center;
             gap: 1rem;
             padding: 1rem;
             background-color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            /* border: solid 2px black; */
         }
 
         .nav-links a {
@@ -99,6 +101,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             padding: 0.5rem 1rem;
             border-radius: 4px;
             transition: all 0.3s ease;
+            /* border: solid 2px blue; */
+
         }
 
         .nav-links a:hover {
