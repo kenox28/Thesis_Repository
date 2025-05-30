@@ -8,8 +8,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reviewer Dashboard</title>
-    <link rel="stylesheet" href="../../assets/css/homepage.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-color: #00246B;
@@ -21,10 +21,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             --success-color: #00246B;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #e9f0ff 0%, #f7faff 100%);
             margin: 0;
             padding: 0;
-            background-color: var(--background-color);
             color: var(--text-color);
         }
         .header {
@@ -57,8 +57,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             background: linear-gradient(135deg, #e9f0ff 0%, #f7faff 100%);
         }
         .dashboard-welcome {
-            background: #fff;
-            border-radius: 16px;
+            background: rgba(255,255,255,0.85);
+            border-radius: 18px;
             box-shadow: 0 2px 12px #1976a522;
             padding: 32px 32px 24px 32px;
             margin-bottom: 32px;
@@ -68,7 +68,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         .dashboard-welcome h2 {
             color: #1976a5;
-            font-size: 2.1rem;
+            font-size: 2.2rem;
             font-weight: 800;
             margin-bottom: 6px;
         }
@@ -80,61 +80,87 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         .dashboard-cards {
             display: flex;
             flex-wrap: wrap;
-            gap: 100px;
+            gap: 30px;
             margin-bottom: 32px;
         }
         .dashboard-card {
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 2px 12px #1976a522;
-            padding: 88px 56px;
-            min-width: 220px;
-            flex: 1 1 220px;
+            background: linear-gradient(135deg, #fff 60%, #e9f0ff 100%);
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 38px 32px;
+            min-width: 200px;
+            flex: 1 1 200px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
+            transition: transform 0.18s, box-shadow 0.18s;
+            position: relative;
+        }
+        .dashboard-card:hover {
+            transform: translateY(-6px) scale(1.04);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.13);
         }
         .dashboard-card-title {
-            color: #1976a5;
-            font-size: 1.08rem;
-            font-weight: 700;
+            font-size: 1.1em;
+            color: #888;
             margin-bottom: 8px;
-            letter-spacing: 0.5px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
         .dashboard-card-value {
-            color: #00246B;
-            font-size: 2.2rem;
-            font-weight: 800;
+            font-size: 2.5em;
+            font-weight: 700;
+            color: #0a2342;
+            margin-top: 8px;
         }
+        .dashboard-card:nth-child(1) .dashboard-card-value { color: #1976a5; }
+        .dashboard-card:nth-child(2) .dashboard-card-value { color: #4fd1c5; }
+        .dashboard-card:nth-child(3) .dashboard-card-value { color: #f7b731; }
+        .dashboard-card:nth-child(4) .dashboard-card-value { color: #e74c3c; }
         @media (max-width: 900px) {
             .dashboard-main { padding: 24px 2vw 18px 2vw; }
             .dashboard-cards { flex-direction: column; gap: 18px; }
             .dashboard-welcome { flex-direction: column; align-items: flex-start; padding: 18px 10px; }
         }
         .sidebar {
-            background: var(--primary-color);
+            background: rgba(10, 35, 66, 0.85);
+            backdrop-filter: blur(8px);
             min-height: 100vh;
             width: 250px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 32px 0 24px 0;
+            padding: 32px 0 0 0;
             position: fixed;
             left: 0;
             top: 0;
             z-index: 100;
             box-shadow: 2px 0 16px #1976a522;
+            border-right: 1.5px solid #cadcfc55;
+        }
+        .sidebar-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 18px;
+            border-radius: 16px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px #cadcfc33;
+        }
+        .sidebar-logo i {
+            font-size: 2.2em;
+            color: #1976a5;
         }
         .sidebar-profile-img-wrapper {
-            width: 90px;
-            height: 90px;
+            width: 80px;
+            height: 80px;
             border-radius: 50%;
             overflow: hidden;
-            margin-bottom: 12px;
-            border: 4px solid #fff;
+            margin-bottom: 10px;
+            border: 3px solid #fff;
             background: #e9f0ff;
             box-shadow: 0 2px 8px #cadcfc33;
         }
@@ -146,16 +172,16 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         .sidebar-profile-name {
             color: #fff;
-            font-size: 1.3rem;
+            font-size: 1.15rem;
             font-weight: 700;
             margin-bottom: 2px;
             text-align: center;
         }
         .sidebar-profile-role {
             color: #e9f0ff;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             text-align: center;
             letter-spacing: 1px;
         }
@@ -173,19 +199,21 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             font-size: 1.08rem;
             padding: 12px 32px;
             border-radius: 8px 0 0 8px;
-            transition: background 0.18s, color 0.18s;
+            transition: background 0.18s, color 0.18s, transform 0.18s;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         .sidebar-nav a.active, .sidebar-nav a:hover {
             background: rgba(255,255,255,0.18);
-            color: #fff;
+            color: #4fd1c5;
+            transform: scale(1.05);
         }
         .sidebar-logout {
-            margin-top: 32px;
+            margin-top: 0;
+            margin-bottom: 18px;
             width: 90%;
-            background: #e74c3c;
+            /* background: #e74c3c; */
             color: #fff;
             border: none;
             border-radius: 8px;
@@ -199,8 +227,14 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             text-decoration: none;
         }
         .sidebar-logout:hover {
-            background: #c0392b;
+            /* background: #c0392b; */
         }
+        .sidebar-profile-img-wrapper form {
+            display: flex;
+            gap: 4px;
+        }
+        .profile-action { display: none; }
+        .sidebar-profile-img-wrapper:hover .profile-action { display: flex; }
         .dashboard-main {
             margin-left: 250px;
             padding: 40px 5vw 32px 5vw;
@@ -225,8 +259,17 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 </head>
 <body>
     <aside class="sidebar">
-        <div class="sidebar-profile-img-wrapper">
-            <img class="sidebar-profile-img" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile">
+        <div class="sidebar-profile-img-wrapper" style="position:relative;">
+            <img class="sidebar-profile-img" id="profileImg" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile">
+            <form id="profileImgForm" enctype="multipart/form-data" style="position:absolute; bottom:0; right:0; display:flex; gap:4px;">
+                <label for="profileImgInput" class="profile-action" style="cursor:pointer; background:#fff; border-radius:50%; padding:6px; box-shadow:0 2px 8px #cadcfc33;">
+                    <i class="fas fa-camera" style="color:#1976a5;"></i>
+                    <input type="file" id="profileImgInput" name="profileImg" accept="image/*" style="display:none;">
+                </label>
+                <button type="button" id="removeProfileImgBtn" class="profile-action" style="background:#fff; border:none; border-radius:50%; padding:6px; cursor:pointer; box-shadow:0 2px 8px #cadcfc33; margin-left:2px;">
+                    <i class="fas fa-trash" style="color:#e74c3c;"></i>
+                </button>
+            </form>
         </div>
         <div class="sidebar-profile-name"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?></div>
         <div class="sidebar-profile-role" >REVIEWER</div>
@@ -241,7 +284,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <a href="../../php/logout.php" class="sidebar-logout"><i class="fas fa-sign-out-alt"></i> Logout</a>
     </aside>
     <div class="dashboard-main">
-
         <div class="dashboard-welcome">
             <div>
                 <h2>Welcome, <?php echo $_SESSION['fname']; ?>!</h2>
@@ -271,8 +313,23 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </main>
     </div>
 </body>
-<script src="dashboard.js"></script>
 <script>
+function animateCount(id, end) {
+    let start = 0;
+    const duration = 900;
+    const step = Math.ceil(end / (duration / 16));
+    const el = document.getElementById(id);
+    function update() {
+        start += step;
+        if (start >= end) {
+            el.textContent = end;
+        } else {
+            el.textContent = start;
+            requestAnimationFrame(update);
+        }
+    }
+    update();
+}
 async function loadDashboardStats() {
     const res = await fetch("../../php/reviewer/reviewer_dashboard_stats.php");
     const stats = await res.json();
@@ -280,11 +337,26 @@ async function loadDashboardStats() {
         alert(stats.error);
         return;
     }
-    document.getElementById("pendingCount").textContent = stats.pending;
-    document.getElementById("approvedCount").textContent = stats.approved;
-    document.getElementById("rejectedCount").textContent = stats.rejected;
-    document.getElementById("publicCount").textContent = stats.public;
+    animateCount("pendingCount", stats.pending);
+    animateCount("approvedCount", stats.approved);
+    animateCount("rejectedCount", stats.rejected);
+    animateCount("publicCount", stats.public);
 }
 window.addEventListener("DOMContentLoaded", loadDashboardStats);
+
+document.getElementById('profileImgInput').addEventListener('change', async function() {
+    const formData = new FormData();
+    formData.append('profileImg', this.files[0]);
+    const res = await fetch('../../php/reviewer/upload_profile.php', {
+        method: 'POST',
+        body: formData
+    });
+    const data = await res.json();
+    if (data.success && data.newImg) {
+        document.getElementById('profileImg').src = '../../assets/ImageProfile/' + data.newImg + '?t=' + Date.now();
+    } else {
+        alert(data.error || 'Upload failed.');
+    }
+});
 </script>
 </html>
