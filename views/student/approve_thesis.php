@@ -11,7 +11,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
 </head>
 <style>
-            .upload-item {
+        .upload-item {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 1.5rem;
@@ -37,7 +37,18 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             line-height: 1.6;
             margin: 1rem 0;
         }
-
+        .thesis-card-public-private{
+            background-color: var(--secondary-color);
+            color: #fff;
+            border: none;
+            height: 30px;
+            width: 300px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .thesis-card-public-private:hover{
+            background-color: var(--secondary-color);
+        }
         .upload-item embed {
             width: 100%;
             height: 300px;
@@ -151,6 +162,7 @@ async function showupload() {
         rows += `
                     <div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
                         <h3><i class='fas fa-book'></i> ${u.title}</h3>
+                        
                         <p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
                         <div class="author-info">
                             <i class="fas fa-user-graduate"></i>
