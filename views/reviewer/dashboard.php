@@ -80,16 +80,16 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         .dashboard-cards {
             display: flex;
             flex-wrap: wrap;
-            gap: 30px;
+            gap: 100px;
             margin-bottom: 32px;
         }
         .dashboard-card {
-            background: linear-gradient(135deg, #fff 60%, #e9f0ff 100%);
-            border-radius: 18px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
-            padding: 38px 32px;
-            min-width: 200px;
-            flex: 1 1 200px;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 2px 12px #1976a522;
+            padding: 88px 56px;
+            min-width: 220px;
+            flex: 1 1 220px;
             display: flex;
             flex-direction: column;
             align-items: flex-start;
@@ -124,8 +124,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             .dashboard-welcome { flex-direction: column; align-items: flex-start; padding: 18px 10px; }
         }
         .sidebar {
-            background: rgba(10, 35, 66, 0.85);
-            backdrop-filter: blur(8px);
+            background: var(--primary-color);
             min-height: 100vh;
             width: 250px;
             display: flex;
