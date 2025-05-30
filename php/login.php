@@ -160,18 +160,90 @@ if (!empty($email) && !empty($pass)) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
+
+        // Check if account is locked
+        if ($row['lockout_time'] && strtotime($row['lockout_time']) > time()) {
+            $remaining = strtotime($row['lockout_time']) - time();
+            $minutes = ceil($remaining / 60);
+            echo json_encode([
+                "status" => "failed",
+                "message" => "Account locked due to multiple failed login attempts. Try again in $minutes minute(s)."
+            ]);
+            exit();
+        }
+
+        // Check password
         if (md5($pass) === $row['passw']) {
+            // Reset failed_attempts and lockout_time
+            $reset_sql = "UPDATE student SET failed_attempts = 0, lockout_time = NULL WHERE student_id = '{$row['student_id']}'";
+            mysqli_query($connect, $reset_sql);
+
             $_SESSION['student_id'] = $row['student_id'];
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['profileImg'] = $row['profileImg'];
 
-           echo json_encode([
-            "status" => "success", 
-            "message" => "log success"]);
-            
+            echo json_encode([
+                "status" => "success", 
+                "message" => "log success"
+            ]);
             exit();
+        } else {
+            // Increment failed_attempts
+            $failed_attempts = $row['failed_attempts'] + 1;
+            $lockout = false;
+            $lockout_time = null;
+
+            if ($failed_attempts >= 3) {
+                // Lock account for 30 minutes
+                $lockout_time = date('Y-m-d H:i:s', strtotime('+30 minutes'));
+                $lockout = true;
+                $update_sql = "UPDATE student SET failed_attempts = $failed_attempts, lockout_time = '$lockout_time' WHERE student_id = '{$row['student_id']}'";
+            } else {
+                $update_sql = "UPDATE student SET failed_attempts = $failed_attempts WHERE student_id = '{$row['student_id']}'";
+            }
+            mysqli_query($connect, $update_sql);
+
+            // Send security alert email if locked
+            if ($lockout) {
+                $mail = new PHPMailer(true);
+                try {
+                    $mail->isSMTP();
+                    $mail->Host       = 'smtp.gmail.com';
+                    $mail->SMTPAuth   = true;
+                    $mail->Username   = 'iquenxzx@gmail.com';
+                    $mail->Password   = 'lews hdga hdvb glym';
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+                    $mail->Port       = 465;
+                    $mail->setFrom('iquenxzx@gmail.com', 'Thesis Repository');
+                    $mail->addAddress($row['email']);
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Security Alert: Multiple Failed Login Attempts';
+                    $mail->Body    = "
+                        <h2>Security Alert</h2>
+                        <p>Dear {$row['fname']},</p>
+                        <p>There have been multiple failed login attempts to your account. Your account has been temporarily locked for 30 minutes for your security.</p>
+                        <p>If this wasn't you, please reset your password or contact support immediately.</p>
+                        <br>
+                        <p>Best regards,<br>EVSU OCC Administration</p>
+                    ";
+                    $mail->send();
+                } catch (Exception $e) {
+                    // Optionally log email error
+                }
+                echo json_encode([
+                    "status" => "failed",
+                    "message" => "Account locked due to multiple failed login attempts. Security alert sent to your email."
+                ]);
+                exit();
+            } else {
+                echo json_encode([
+                    "status" => "failed",
+                    "message" => "Wrong password or email"
+                ]);
+                exit();
+            }
         }
     } else {
         // Check if the user is a reviewer
