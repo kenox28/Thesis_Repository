@@ -2,7 +2,7 @@
 require_once "../Database.php";
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
-$sql = "SELECT reviewer_id, fname, lname FROM reviewer";
+$sql = "SELECT reviewer_id, fname, lname FROM reviewer WHERE approve = 1";
 $result = mysqli_query($connect, $sql);
 
 $reviewers = [];

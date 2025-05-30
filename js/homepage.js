@@ -9,6 +9,7 @@ async function showupload() {
 	console.log("runnnnnnnnnnnnnnn");
 
 	let rows = "<div class='thesis-cards'>";
+<<<<<<< HEAD
 for (const u of data) {
 	const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 
@@ -41,6 +42,25 @@ for (const u of data) {
 					onmouseout="this.style.backgroundColor='#003B9A'"
 				>
 					<i class="fas fa-trash"></i> Delete
+=======
+	for (const u of data) {
+		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+		rows += `
+
+			<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${
+			u.abstract
+		}', '${u.lname}, ${u.fname}', '${u.status}')">
+				<h3><i class='fas fa-book'></i> ${u.title}</h3>
+				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+				<div class="author-info">
+					<i class="fas fa-user-graduate"></i>
+					<span>${u.lname}, ${u.fname}</span>
+				</div>
+				<embed src="${filePath}" type="application/pdf">
+
+				<button style="background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
+					<i class="fas fa-trash"></i> Cancel
+>>>>>>> 74080fde2649a3a31ea3470653cbe2f62531ba27
 				</button>
 
 				<div 
