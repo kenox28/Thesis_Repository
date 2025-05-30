@@ -11,7 +11,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
 	<style>
-            .upload-item {
+
+		.upload-item {
             background: var(--card-bg);
             border-radius: 12px;
             padding: 1.5rem;
@@ -74,8 +75,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
 					<a href="approve_thesis.php">Approve</a>
-			<a href="rejectpage.php">Rejected</a>
-			<a href="revisepage.php">Revised</a>
+					<a href="rejectpage.php">Rejected</a>
+					<a href="revisepage.php">Revised</a>
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -91,6 +92,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					</div>
 				</div>
 			</nav>
+
 			<main class="main-content">
 				<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; flex-direction: column;">
 					<h1 class="section-title" style="margin-bottom: 0;">Public Theses Repository</h1>

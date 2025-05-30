@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt2 = $connect->prepare("UPDATE Student SET passw=? WHERE student_id=?");
             $stmt2->bind_param("ss", $password, $user_id);
             if ($stmt2->execute()) {
-                $success = "Password updated successfully! You can now <a href='student_login.php'>login</a>.";
+                $success = "window.location.href = 'student_login.php';";
             } else {
                 $error = "Failed to update password.";
             }
@@ -47,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt3 = $connect->prepare("UPDATE reviewer SET pass=? WHERE reviewer_id=?");
                 $stmt3->bind_param("ss", $password, $user_id);
                 if ($stmt3->execute()) {
-                    $success = "Password updated successfully! You can now <a href='../views/student_login.php'>login</a>.";
+                    $success = "window.location.href = 'student_login.php';";
                 } else {
                     $error = "Failed to update password.";
                 }
@@ -118,23 +118,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <button type="submit">Change Password</button>
         </form>
     </div>
+    <?php if ($success): ?>
     <script>
-    <?php if ($error): ?>
+        Swal.fire({
+            icon: 'success',
+            title: 'Password Changed!',
+            text: 'Your password has been updated successfully.',
+            confirmButtonColor: '#1976a5'
+        }).then(() => {
+            window.location.href = 'student_login.php';
+        });
+    </script>
+    <?php elseif ($error): ?>
+    <script>
         Swal.fire({
             icon: 'error',
             title: 'Error',
             html: <?= json_encode($error) ?>,
             confirmButtonColor: '#1976a5'
         });
-    <?php endif; ?>
-    <?php if ($success): ?>
-        Swal.fire({
-            icon: 'success',
-            title: 'Success',
-            html: <?= json_encode($success) ?>,
-            confirmButtonColor: '#1976a5'
-        });
-    <?php endif; ?>
     </script>
+    <?php endif; ?>
 </body>
 </html>

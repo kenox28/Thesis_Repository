@@ -9,6 +9,7 @@ async function showupload() {
 	console.log("runnnnnnnnnnnnnnn");
 
 	let rows = "<div class='thesis-cards'>";
+<<<<<<< HEAD
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		rows += `
@@ -26,13 +27,60 @@ async function showupload() {
 
 				<button style="background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')">
 					<i class="fas fa-trash"></i> Cancel
+=======
+for (const u of data) {
+	const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+
+	rows += `
+		<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
+			<h3><i class='fas fa-book'></i> ${u.title}</h3>
+			<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+			<div class="author-info">
+				<i class="fas fa-user-graduate"></i>
+				<span>${u.lname}, ${u.fname}</span>
+			</div>
+			<embed src="${filePath}" type="application/pdf">
+
+
+			<div style="display: flex; justify-content: space-around; align-items: center; margin-top: 10px;">
+				<button 
+					onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')" 
+					style="
+						background-color: #003B9A;
+						color: white;
+						border: none;
+						padding: 10px 20px;
+						font-weight: bold;
+						border-radius: 8px;
+						cursor: pointer;
+						transition: background-color 0.3s ease;
+						margin-top: 16px;
+					"
+					onmouseover="this.style.backgroundColor='#002f7a'"
+					onmouseout="this.style.backgroundColor='#003B9A'"
+				>
+					<i class="fas fa-trash"></i> Delete
+>>>>>>> a4a00721ebae737bfce9fff36452a14ebdbaf7be
 				</button>
-				<div class="status-badge">
+
+				<div 
+					class="status-badge" 
+					style="
+						background-color: #003B9A;
+						color: white;
+						padding: 8px 16px;
+						border-radius: 8px;
+						font-weight: bold;
+						font-size: 14px;
+					"
+				>
 					<i class="fas fa-clock"></i> ${u.status || "Pending"}
 				</div>
 			</div>
-		`;
-	}
+		</div>
+	`;
+}
+
 	rows += "</div>";
 
 	document.getElementById("PDFFILE").innerHTML = rows;

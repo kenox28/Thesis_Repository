@@ -120,15 +120,13 @@
                 >
             </div>
             <div class="form-options">
-                <label class="remember-me">
-                    <input type="checkbox" name="remember">
-                    <span>Remember me</span>
-                </label>
-                <a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
+                
             </div>
             <button type="submit">Login</button>
             <div class="form-footer">
                 <p>Don't have an account? <a href="Create_form.php">Create Account</a></p>
+                <a href="forgot_password.php" class="forgot-password">Forgot Password</a></p>
+
             </div>
             <a href="landingpage.php">Back to home</a>
         </form>
@@ -191,9 +189,15 @@
         });
         const result2 = await res2.json();
         if(result2.status === 'success') {
-            document.getElementById('forgotPassMsg').innerHTML = "A QR code has been sent to your email!";
+            // document.getElementById('forgotPassMsg').innerHTML = "A QR code has been sent to your email!";
+            window.location.href = 'scan_qr_reset.php';
         } else {
-            document.getElementById('forgotPassMsg').innerHTML = result2.message || "Failed to send email.";
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: result2.message || "Failed to send email.",
+                confirmButtonColor: '#174D38'
+            });
         }
     };
     </script>
