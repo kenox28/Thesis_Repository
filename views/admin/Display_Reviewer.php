@@ -23,7 +23,7 @@ if (!isset($_SESSION['admin_id'])) {
             <nav>
                 <a href="admin_dashboard.php">Home</a>
                 <a href="Display_Reviewer.php">Manage Reviewers</a>
-                <a href="view_reports.php">Reports</a>
+                <a href="public_thesis.php">Publication thesis</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
             </nav>
         </div>
