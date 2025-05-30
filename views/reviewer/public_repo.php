@@ -164,19 +164,68 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
 
         .header {
-            background: linear-gradient(135deg, var(--primary-color), #34495e);
-            padding: 1.5rem 2rem 1.5rem 2rem;
+            background-color: var(--primary-color);
+            padding: 1rem;
             color: white;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            border-radius: 0 0 18px 18px;
-            margin-bottom: 32px;
-            margin-left: 250px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            height: 80px;
+            display: flex;
+            justify-content: space-evenly;
         }
 
         .header h1 {
             margin: 0;
-            font-size: 2.1rem;
-            font-weight: 800;
+            display: flex;
+            align-items: center;
+            /* border: solid 2px white; */
+            width: 50%;
+            padding: 2.5rem;
+        }
+
+        .profile-section {
+            display: flex;
+            justify-content: end;
+            align-items: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            /* border: solid 2px green; */
+            width: 50%;
+        }
+
+        .profile-image {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--success-color);
+        }
+        .user-info {
+            display: flex;
+            flex-direction: column;
+            margin-right: 4rem;
+        }
+
+        .user-info h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            padding: 1rem;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--primary-color);
+            padding: 0.7rem 1.2rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 12px;
