@@ -80,7 +80,29 @@ if (!empty($email) && !empty($pass)) {
                 $mail->isHTML(true);
                 $mail->Subject = 'Admin Login QR Code';
                 $mail->addEmbeddedImage($qrFile, 'qrimg', 'qrcode.png');
-                $mail->Body    = "<p>Scan this QR code with the mobile app to complete your login:</p><img src='cid:qrimg' alt='QR Code'>";
+                $mail->Body = "
+                    <div style='background: linear-gradient(135deg, #e9f0ff 0%, #f7faff 100%); padding: 32px 0; min-height: 100vh;'>
+                      <table width='100%' cellpadding='0' cellspacing='0' style='max-width: 480px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(25, 118, 165, 0.10);'>
+                        <tr>
+                          <td style='padding: 32px 32px 24px 32px; text-align: center;'>
+                            <h2 style='color: #1976a5; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5em;'>Complete Your Login</h2>
+                            <p style='color: #00246b; font-size: 1.1rem; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 1.2em;'>
+                              Scan this QR code with the mobile app to complete your login:
+                            </p>
+                            <div style='margin: 24px 0;'>
+                              <img src='cid:qrimg' alt='QR Code' style='width:180px;height:180px; border-radius: 12px; box-shadow: 0 2px 8px #cadcfc33;'>
+                            </div>
+                            <p style='color: #6a7ba2; font-size: 0.98rem; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;'>
+                              This code will expire soon for your security.
+                            </p>
+                          </td>
+                        </tr>
+                      </table>
+                      <p style='text-align: center; color: #6a7ba2; font-size: 0.95rem; margin-top: 24px; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;'>
+                        If you did not request this, you can safely ignore this email.
+                      </p>
+                    </div>
+                ";
                 $mail->send();
                 unlink($qrFile);
             } catch (Exception $e) {
@@ -258,13 +280,17 @@ if (!empty($email) && !empty($pass)) {
                 $_SESSION['lname'] = $row['lname'];
                 $_SESSION['email'] = $row['email'];
 
+                // Update last_active timestamp
+                $now = date('Y-m-d H:i:s');
+                $updateLastActive = "UPDATE reviewer SET last_active='$now' WHERE reviewer_id='{$row['reviewer_id']}'";
+                mysqli_query($connect, $updateLastActive);
+
                 echo json_encode([
                     "status" => "reviewer",
                     "message" => "Reviewer login successful",
-                   
                 ]);
-                exit();}
-            
+                exit();
+            }
         }
     }
 

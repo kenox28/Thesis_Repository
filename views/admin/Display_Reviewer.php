@@ -42,6 +42,6 @@ if (!isset($_SESSION['admin_id'])) {
         </div>
     </div>
 
-    <script src="../../js/admin_dashboard.js"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.1"></script>
 </body>
 </html>

@@ -74,7 +74,7 @@ if (move_uploaded_file($file['tmp_name'], $thesisfileTarget)) {
     copy($thesisfileTarget, $revisedTarget);
 
     // 4. Update ThesisFile and updated timestamp in repoTable
-    $stmt2 = $connect->prepare("UPDATE repoTable SET ThesisFile=?, updated=NOW() WHERE title=? AND student_id=?");
+    $stmt2 = $connect->prepare("UPDATE repoTable SET ThesisFile=?, updated=NOW(), status='Pending' WHERE title=? AND student_id=?");
     if (!$stmt2) {
         echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $connect->error]);
         $connect->close();

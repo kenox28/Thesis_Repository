@@ -153,6 +153,16 @@ mysqli_query($connect, $thesis_history);
 if(mysqli_query($connect, $thesisrepo)){
     // echo "success";
 };
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'last_active'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE reviewer ADD COLUMN last_active DATETIME DEFAULT NULL";
+    if (mysqli_query($connect, $add_column)) {
+        echo "Column 'last_active' added successfully.";
+    } else {
+        echo "Error adding column: " . mysqli_error($connect);
+    }
+}
 ?>
 
 

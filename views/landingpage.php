@@ -10,10 +10,7 @@
     <nav class="navbar">
         <div class="navbar-content">
             <a href="#" class="logo">Thesis Repository</a>
-            <div class="search-container">
-                <input type="text" class="search-field" placeholder="Search thesis repositories...">
-                <span class="search-icon">🔍</span>
-            </div>
+
             <div class="nav-links">
                 <a href="#">Home</a>
                 <a href="#about">About</a>
