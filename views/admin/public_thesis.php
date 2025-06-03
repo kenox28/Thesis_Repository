@@ -80,11 +80,12 @@ if (!isset($_SESSION['admin_id'])) {
         .thesis-cards {
             display: flex;
             flex-wrap: wrap;
+            
             gap: 2rem;
-            justify-content: flex-start;
+            justify-content: center;
         }
         .upload-item {
-            background: #fff;
+            background:  #95a3e7;
             border-radius: 12px;
             box-shadow: 0 4px 24px rgba(0,36,107,0.08);
             padding: 1.2rem 1rem 1rem 1rem;
@@ -168,6 +169,137 @@ if (!isset($_SESSION['admin_id'])) {
                 max-width: 99vw;
             }
         }
+        /* Unique Modal Styles for Public Thesis */
+        .public-modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,36,107,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+        }
+        .public-modal-content {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 40px #1976a522, 0 1.5px 0 #cadcfc;
+            padding: 0;
+            max-width: 700px;
+            width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            border: 2px solid #1976a5;
+            position: relative;
+            overflow: hidden;
+        }
+        .public-modal-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: #00246b;
+            padding: 18px 28px 14px 28px;
+            border-bottom: 1.5px solid #e9f0ff;
+        }
+        .public-modal-header h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            letter-spacing: 0.5px;
+        }
+        .public-modal-icon {
+            background: #fff;
+            color: #1976a5;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px #cadcfc33;
+        }
+        .public-modal-body {
+            padding: 18px 28px 24px 28px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 60vh;
+        }
+        .public-modal-abstract {
+            font-size: 1.05rem;
+            color: #1976a5;
+            background: #f4f8ff;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            font-style: italic;
+            box-shadow: 0 1px 4px #cadcfc33;
+            border-left: 4px solid #1976a5;
+            word-break: break-word;
+        }
+        .public-modal-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1a3a8f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        .public-modal-status {
+            background: #ffe082;
+            color: #333;
+            border-radius: 6px;
+            padding: 2px 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 2px;
+        }
+        #publicModalPDF {
+            width: 100%;
+            height: 30vh;
+            min-height: 120px;
+            max-height: 35vh;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px #1976a522;
+            margin-top: 8px;
+            border: 1.5px solid #e9f0ff;
+            background: #f7faff;
+        }
+        .public-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            transition: color 0.18s;
+            z-index: 10;
+            text-shadow: 0 2px 8px #1976a5cc;
+        }
+        .public-modal-close:hover {
+            color: #e74c3c;
+        }
+        @media (max-width: 900px) {
+            .public-modal-content {
+                width: 99vw;
+                max-width: 99vw;
+                max-height: 99vh;
+            }
+            .public-modal-body {
+                max-height: 35vh;
+            }
+            #publicModalPDF {
+                height: 15vh;
+                max-height: 20vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -222,6 +354,56 @@ if (!isset($_SESSION['admin_id'])) {
 			document.getElementById("allPublicTheses").innerHTML = rows;
 		}
         showPublicRepo()    
+</script>
+
+<!-- Public Thesis Modal -->
+<div id="publicModal" class="public-modal" style="display:none;">
+  <div class="public-modal-content">
+    <span class="public-modal-close" id="closePublicModal">&times;</span>
+    <div class="public-modal-header">
+      <div class="public-modal-icon"><i class="fas fa-book-open"></i></div>
+      <div>
+        <h2 id="publicModalTitle"></h2>
+        <div class="public-modal-status" id="publicModalStatus"></div>
+      </div>
+    </div>
+    <div class="public-modal-body">
+      <p id="publicModalAbstract" class="public-modal-abstract"></p>
+      <div class="public-modal-author" id="publicModalOwner"></div>
+      <iframe id="publicModalPDF" src="" width="100%" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Modal open function
+    function openModal(filePath, title, abstract, owner, status) {
+        document.getElementById('publicModalTitle').textContent = title;
+        document.getElementById('publicModalStatus').textContent = status || "Public";
+        document.getElementById('publicModalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+        document.getElementById('publicModalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+        document.getElementById('publicModalPDF').src = filePath + "#toolbar=0";
+        document.getElementById('publicModal').style.display = "flex";
+    }
+
+    // Modal close logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeBtn = document.getElementById('closePublicModal');
+        const modal = document.getElementById('publicModal');
+        const modalPDF = document.getElementById('publicModalPDF');
+        if (closeBtn && modal && modalPDF) {
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+                modalPDF.src = "";
+            };
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                    modalPDF.src = "";
+                }
+            };
+        }
+    });
 </script>
 </body>
 </html>

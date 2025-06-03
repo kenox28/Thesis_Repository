@@ -41,10 +41,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
         .header {
             background-color: var(--primary-color);
-            padding: 1rem;
+            padding: 1.5rem;
             color: white;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: 80px;
+            /* height: 80px; */
             display: flex;
             justify-content: space-evenly;
         }
@@ -55,7 +55,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             align-items: center;
             /* border: solid 2px white; */
             width: 50%;
-            padding: 2.5rem;
+            /* padding: 2.5rem; */
         }
 
         .profile-section {
@@ -453,14 +453,20 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             min-height: 100vh;
             background: linear-gradient(135deg, #e9f0ff 0%, #f7faff 100%);
         }
+        .header > h1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
         .header {
             background: linear-gradient(135deg, var(--primary-color), #34495e);
-            padding: 1.5rem 2rem 1.5rem 2rem;
+            /* padding: 1.5rem 2rem 1.5rem 2rem; */
             color: white;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
             border-radius: 0 0 18px 18px;
             margin-bottom: 32px;
-            margin-left: 250px;
+            /* margin-left: 250px; */
         }
         .header h1 {
             margin: 0;
@@ -546,6 +552,147 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             #userTableBody { grid-template-columns: 1fr; padding: 1rem 0; }
             .upload-item { margin-bottom: 1rem; }
         }
+        /* Modal Overlay */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,36,107,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            overflow-y: auto;
+        }
+
+        /* Modal Content */
+        .modal-content.enhanced-modal {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 40px #1976a522, 0 1.5px 0 #cadcfc;
+            padding: 0;
+            max-width: 700px;
+            width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid #1976a5;
+            position: relative;
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: linear-gradient(90deg, #1976a5 60%, #2893c7 100%);
+            padding: 18px 28px 14px 28px;
+            border-bottom: 1.5px solid #e9f0ff;
+        }
+
+        .modal-header h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-icon {
+            background: #fff;
+            color: #1976a5;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px #cadcfc33;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 18px 28px 24px 28px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-abstract {
+            font-size: 1.05rem;
+            color: #1976a5;
+            background: #f4f8ff;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            font-style: italic;
+            box-shadow: 0 1px 4px #cadcfc33;
+            border-left: 4px solid #1976a5;
+            word-break: break-word;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #1a3a8f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        #modalPDF {
+            width: 100%;
+            height: 55vh;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px #1976a522;
+            margin-top: 8px;
+            border: 1.5px solid #e9f0ff;
+            background: #f7faff;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            transition: color 0.18s;
+            z-index: 10;
+            text-shadow: 0 2px 8px #1976a5cc;
+        }
+        .close-button:hover {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 900px) {
+            .modal-content.enhanced-modal {
+                width: 99vw !important;
+                max-width: 99vw !important;
+                height: 99vh !important;
+                max-height: 99vh !important;
+                padding: 0;
+            }
+            .modal-header, .modal-body {
+                padding: 10px 6px 10px 6px;
+            }
+            .modal-header h2 {
+                font-size: 1.1rem;
+            }
+            .modal-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+            }
+            #modalPDF {
+                height: 35vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -583,6 +730,24 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </main>
     </div>
 
+    <!-- Info Modal for thesis details (view only) -->
+    <div id="thesisModal" class="modal" style="display:none;">
+        <div class="modal-content enhanced-modal">
+            <span class="close-button" id="closeThesisModal">&times;</span>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 id="modalTitle"></h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modalAbstract" class="modal-abstract"></p>
+                <div class="author-info" id="modalOwner"></div>
+                <iframe id="modalPDF" src="" width="100%" height="55vh"></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Structure -->
 <div id="reviseModal" style="display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:1000; align-items:center; justify-content:center;">
       <div style="background:#fff; padding:20px; border-radius:8px; width:850px; max-width:95vw; max-height:95vh; overflow:auto; position:relative;">
@@ -605,7 +770,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
       </div>
 </div>
 </body>
-<script src="../../js/view_thesis.js?v=1.0.5"></script>
 <script>
 document.getElementById('profileImgInput').addEventListener('change', async function() {
     const formData = new FormData();
@@ -632,4 +796,6 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
+<script src="../../js/view_thesis.js?v=1.0.8"></script>
+</body>
 </html>

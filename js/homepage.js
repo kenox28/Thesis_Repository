@@ -9,17 +9,17 @@ async function showupload() {
 	console.log("runnnnnnnnnnnnnnn");
 
 	let rows = "<div class='thesis-cards'>";
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> 14ddf2752d62192337c668ab0ffeb681ffd26e80
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		rows += `
-
-			<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${
-			u.abstract
-		}', '${u.lname}, ${u.fname}', '${u.status}')">
+			<div class="upload-item"
+				data-file="${filePath}"
+				data-title="${encodeURIComponent(u.title)}"
+				data-abstract="${encodeURIComponent(u.abstract)}"
+				data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
+				data-status="${encodeURIComponent(u.status)}"
+				style="cursor:pointer;"
+			>
 				<h3><i class='fas fa-book'></i> ${u.title}</h3>
 				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 				<div class="author-info">
@@ -32,43 +32,6 @@ async function showupload() {
 					u.id
 				}, '${u.title}')">
 					<i class="fas fa-trash"></i> Cancel
-<<<<<<< HEAD
-=======
-=======
-for (const u of data) {
-	const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-
-	rows += `
-		<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
-			<h3><i class='fas fa-book'></i> ${u.title}</h3>
-			<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-			<div class="author-info">
-				<i class="fas fa-user-graduate"></i>
-				<span>${u.lname}, ${u.fname}</span>
-			</div>
-			<embed src="${filePath}" type="application/pdf">
-
-
-			<div style="display: flex; justify-content: space-around; align-items: center; margin-top: 10px;">
-				<button 
-					onclick="event.stopPropagation(); deleteThesis(${u.id}, '${u.title}')" 
-					style="
-						background-color: #003B9A;
-						color: white;
-						border: none;
-						padding: 10px 20px;
-						font-weight: bold;
-						border-radius: 8px;
-						cursor: pointer;
-						transition: background-color 0.3s ease;
-						margin-top: 16px;
-					"
-					onmouseover="this.style.backgroundColor='#002f7a'"
-					onmouseout="this.style.backgroundColor='#003B9A'"
-				>
-					<i class="fas fa-trash"></i> Delete
->>>>>>> a4a00721ebae737bfce9fff36452a14ebdbaf7be
->>>>>>> 14ddf2752d62192337c668ab0ffeb681ffd26e80
 				</button>
 
 				<div 
@@ -85,14 +48,44 @@ for (const u of data) {
 					<i class="fas fa-clock"></i> ${u.status || "Pending"}
 				</div>
 			</div>
-		</div>
-	`;
+		`;
 	}
-
 	rows += "</div>";
 
 	document.getElementById("PDFFILE").innerHTML = rows;
+
+	// Add modal open logic for .upload-item
+	document.querySelectorAll(".upload-item").forEach((item) => {
+		item.addEventListener("click", function (e) {
+			// Prevent modal if the button was clicked
+			if (e.target.tagName === "BUTTON") return;
+			const filePath = item.getAttribute("data-file");
+			const title = decodeURIComponent(item.getAttribute("data-title"));
+			const abstract = decodeURIComponent(item.getAttribute("data-abstract"));
+			const owner = decodeURIComponent(item.getAttribute("data-owner"));
+			const status = decodeURIComponent(item.getAttribute("data-status"));
+
+			document.getElementById("modalTitle").textContent = title;
+			document.getElementById("modalStatus").textContent = status || "Pending";
+			document.getElementById(
+				"modalAbstract"
+			).innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+			document.getElementById(
+				"modalOwner"
+			).innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+			document.getElementById("modalPDF").src = filePath + "#toolbar=0";
+			const downloadBtn = document.getElementById("modalDownload");
+			if (status && status.toLowerCase() !== "pending") {
+				downloadBtn.style.display = "inline-block";
+				downloadBtn.href = filePath;
+			} else {
+				downloadBtn.style.display = "none";
+			}
+			document.getElementById("thesisModal").style.display = "flex";
+		});
+	});
 }
+
 async function showdroptdown() {
 	const res = await fetch("../../php/student/showreviewer.php");
 	const data = await res.json();
@@ -111,34 +104,24 @@ async function showdroptdown() {
 // 	window.location.href = "../../php/logout.php";
 // };
 
-function openModal(filePath, title, abstract, owner, status) {
-	const modal = document.createElement("div");
-	modal.className = "modal";
-	modal.innerHTML = `
-		<div class="modal-content large-modal">
-			<span class="close-button">&times;</span>
-			<h2>${title}</h2>
-			<div class="thesis-card-status" style="margin-bottom:12px;">${
-				status || "Pending"
-			}</div>
-			<p>${abstract}</p>
-			<p>Owner: ${owner}</p>
-			${
-				status && status.toLowerCase() !== "pending"
-					? `<a href="${filePath}" download class="custom-download-btn">Download PDF</a>`
-					: ""
+// Modal close logic
+document.addEventListener("DOMContentLoaded", function () {
+	const closeBtn = document.getElementById("closeThesisModal");
+	const modal = document.getElementById("thesisModal");
+	const modalPDF = document.getElementById("modalPDF");
+	if (closeBtn && modal && modalPDF) {
+		closeBtn.onclick = function () {
+			modal.style.display = "none";
+			modalPDF.src = "";
+		};
+		modal.onclick = function (e) {
+			if (e.target === modal) {
+				modal.style.display = "none";
+				modalPDF.src = "";
 			}
-			<iframe src="${filePath}#toolbar=0" width="100%" height="85vh" style="border-radius:8px;box-shadow:0 2px 12px #1976a522;margin-top:12px;"></iframe>
-		</div>
-	`;
-
-	const closeButton = modal.querySelector(".close-button");
-	closeButton.onclick = function () {
-		document.body.removeChild(modal);
-	};
-
-	document.body.appendChild(modal);
-}
+		};
+	}
+});
 
 ////////////////////////////////////////////////////
 

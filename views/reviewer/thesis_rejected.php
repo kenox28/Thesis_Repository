@@ -32,69 +32,155 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             color: var(--text-color);
         }
 
-                .header {
-            background-color: var(--primary-color);
-            padding: 1rem;
-            color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            height: 80px;
+        .sidebar {
+            background: rgba(10, 35, 66, 0.85);
+            backdrop-filter: blur(8px);
+            min-height: 100vh;
+            width: 250px;
             display: flex;
-            justify-content: space-evenly;
+            flex-direction: column;
+            align-items: center;
+            padding: 32px 0 24px 0;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            box-shadow: 2px 0 16px #1976a522;
+            border-right: 1.5px solid #cadcfc55;
+        }
+
+        .sidebar-logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 18px;
+            border-radius: 16px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px #cadcfc33;
+        }
+
+        .sidebar-logo i {
+            font-size: 2.2em;
+            color: #1976a5;
+        }
+
+        .sidebar-profile-img-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 3px solid #fff;
+            background: #e9f0ff;
+            box-shadow: 0 2px 8px #cadcfc33;
+        }
+
+        .sidebar-profile-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+
+        .sidebar-profile-name {
+            color: #fff;
+            font-size: 1.15rem;
+            font-weight: 700;
+            margin-bottom: 2px;
+            text-align: center;
+        }
+
+        .sidebar-profile-role {
+            color: #e9f0ff;
+            font-size: 0.95rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        .sidebar-nav {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: auto;
+        }
+
+        .sidebar-nav a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.08rem;
+            padding: 12px 32px;
+            border-radius: 8px 0 0 8px;
+            transition: background 0.18s, color 0.18s, transform 0.18s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .sidebar-nav a.active, .sidebar-nav a:hover {
+            background: rgba(255,255,255,0.18);
+            color: #4fd1c5;
+            transform: scale(1.05);
+        }
+
+        .sidebar-logout {
+            margin-top: 0;
+            margin-bottom: 18px;
+            width: 90%;
+            /* background: #e74c3c; */
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 0;
+            font-size: 1.08rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.18s;
+            display: block;
+            text-decoration: none;
+        }
+        .sidebar-logout:hover {
+            /* background: #c0392b; */
+        }
+
+        .sidebar-profile-img-wrapper form {
+            display: flex;
+            gap: 4px;
+        }
+
+        .profile-action { display: none; }
+        .sidebar-profile-img-wrapper:hover .profile-action { display: flex; }
+
+        .main-content {
+            margin-left: 250px;
+            padding: 40px 5vw 32px 5vw;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #e9f0ff 0%, #f7faff 100%);
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-color), #34495e);
+            padding: 1.5rem 2rem 1.5rem 2rem;
+            color: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 0 0 18px 18px;
+            margin-bottom: 32px;
+            /* margin-left: 250px; */
         }
 
         .header h1 {
-            margin: 0;
-            display: flex;
-            align-items: center;
-            /* border: solid 2px white; */
-            width: 50%;
-            padding: 2.5rem;
-        }
-
-        .profile-section {
-            display: flex;
-            justify-content: end;
-            align-items: center;
-            gap: 2rem;
-            margin-top: 1rem;
-            /* border: solid 2px green; */
-            width: 50%;
-        }
-
-        .profile-image {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 3px solid var(--success-color);
-        }
-        .user-info {
-            display: flex;
-            flex-direction: column;
-            margin-right: 4rem;
-        }
-
-        .user-info h3 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-
-        .nav-links {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            padding: 1rem;
-            background-color: white;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-bottom: 2rem;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: var(--primary-color);
-            padding: 0.7rem 1.2rem;
-            border-radius: 6px;
-            transition: all 0.3s ease;
+            align-items: center;
+            margin: 0;
+            font-size: 2.1rem;
+            font-weight: 800;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -183,6 +269,148 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             #PDFFILE { grid-template-columns: 1fr; padding: 1rem 0; }
             .upload-item { margin-bottom: 1rem; }
         }
+
+        /* Modal Overlay */
+        .modal {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,36,107,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            overflow-y: auto;
+        }
+
+        /* Modal Content */
+        .modal-content.enhanced-modal {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 8px 40px #1976a522, 0 1.5px 0 #cadcfc;
+            padding: 0;
+            max-width: 700px;
+            width: 95vw;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 2px solid #1976a5;
+            position: relative;
+        }
+
+        /* Modal Header */
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            background: linear-gradient(90deg, #1976a5 60%, #2893c7 100%);
+            padding: 18px 28px 14px 28px;
+            border-bottom: 1.5px solid #e9f0ff;
+        }
+
+        .modal-header h2 {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0 0 4px 0;
+            letter-spacing: 0.5px;
+        }
+
+        .modal-icon {
+            background: #fff;
+            color: #1976a5;
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 8px #cadcfc33;
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 18px 28px 24px 28px;
+            overflow-y: auto;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .modal-abstract {
+            font-size: 1.05rem;
+            color: #1976a5;
+            background: #f4f8ff;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            font-style: italic;
+            box-shadow: 0 1px 4px #cadcfc33;
+            border-left: 4px solid #1976a5;
+            word-break: break-word;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #e74c3c;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+
+        #modalPDF {
+            width: 100%;
+            height: 55vh;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px #1976a522;
+            margin-top: 8px;
+            border: 1.5px solid #e9f0ff;
+            background: #f7faff;
+        }
+
+        .close-button {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 2rem;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 700;
+            transition: color 0.18s;
+            z-index: 10;
+            text-shadow: 0 2px 8px #1976a5cc;
+        }
+        .close-button:hover {
+            color: #e74c3c;
+        }
+
+        @media (max-width: 900px) {
+            .modal-content.enhanced-modal {
+                width: 99vw !important;
+                max-width: 99vw !important;
+                height: 99vh !important;
+                max-height: 99vh !important;
+                padding: 0;
+            }
+            .modal-header, .modal-body {
+                padding: 10px 6px 10px 6px;
+            }
+            .modal-header h2 {
+                font-size: 1.1rem;
+            }
+            .modal-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+            }
+            #modalPDF {
+                height: 35vh;
+            }
+        }
     </style>
 </head>
 <body>
@@ -219,6 +447,24 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <div id="PDFFILE"></div>
         </main>
     </div>
+    <!-- Info Modal for thesis details (view only) -->
+    <div id="thesisModal" class="modal" style="display:none;">
+        <div class="modal-content enhanced-modal">
+            <span class="close-button" id="closeThesisModal">&times;</span>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 id="modalTitle"></h2>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modalAbstract" class="modal-abstract"></p>
+                <div class="author-info" id="modalOwner"></div>
+                <div id="modalRejectionReason"></div>
+                <iframe id="modalPDF" src="" width="100%" height="55vh" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
+            </div>
+        </div>
+    </div>
 </body>
 <script>
 async function showupload() {
@@ -237,7 +483,14 @@ async function showupload() {
     for (const u of data) {
         const filePath = "../../assets/thesisfile/" + u.ThesisFile;
         rows += `
-            <div class="upload-item">
+            <div class="upload-item"
+                data-file="${filePath}"
+                data-title="${encodeURIComponent(u.title)}"
+                data-abstract="${encodeURIComponent(u.abstract)}"
+                data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
+                data-reason="${encodeURIComponent(u.rejection_reason || '')}"
+                style="cursor:pointer;"
+            >
                 <h3><i class="fas fa-book"></i> ${u.title}</h3>
                 <p><i class="fas fa-quote-left"></i> ${u.abstract}</p>
                 <div class="author-info">
@@ -258,8 +511,42 @@ async function showupload() {
     }
 
     document.getElementById("PDFFILE").innerHTML = rows;
+
+    // Add click event to each upload-item
+    document.querySelectorAll('.upload-item').forEach(item => {
+        item.addEventListener('click', function () {
+            const filePath = item.getAttribute('data-file');
+            const title = decodeURIComponent(item.getAttribute('data-title'));
+            const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
+            const owner = decodeURIComponent(item.getAttribute('data-owner'));
+            const reason = decodeURIComponent(item.getAttribute('data-reason'));
+
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+            document.getElementById('modalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+            document.getElementById('modalPDF').src = filePath + "#toolbar=0";
+            document.getElementById('modalRejectionReason').innerHTML = reason
+                ? `<div class="rejection-reason"><p><i class="fas fa-comment-alt"></i> ${reason}</p></div>`
+                : '';
+
+            document.getElementById('thesisModal').style.display = "flex";
+        });
+    });
 }
 showupload();
+
+// Modal close logic
+document.getElementById('closeThesisModal').onclick = function () {
+    document.getElementById('thesisModal').style.display = "none";
+    document.getElementById('modalPDF').src = ""; // Stop PDF loading
+};
+// Optional: close modal when clicking outside content
+document.getElementById('thesisModal').onclick = function(e) {
+    if (e.target === this) {
+        this.style.display = "none";
+        document.getElementById('modalPDF').src = "";
+    }
+};
 
 document.getElementById('profileImgInput').addEventListener('change', async function() {
     const formData = new FormData();
