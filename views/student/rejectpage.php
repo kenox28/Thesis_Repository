@@ -149,7 +149,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="public_repo.php">Home</a>
                 <a href="upload.php">Upload Thesis</a>
                 <a href="homepage.php">Pending</a>
-                <a href="approve_thesis.php">Approve</a>
+                <a href="approve_thesis.php">Approved</a>
                 <a href="rejectpage.php">Rejected</a>
                 <a href="revisepage.php">Revised</a>
 

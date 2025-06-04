@@ -7,7 +7,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Upload Thesis</title>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
@@ -22,7 +22,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<a href="public_repo.php">Home</a>
                     <a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
-                    <a href="approve_thesis.php">Approve</a>
+                    <a href="approve_thesis.php">Approved</a>
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 				</div>
