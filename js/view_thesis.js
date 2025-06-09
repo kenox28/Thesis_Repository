@@ -20,6 +20,11 @@ let totalPageCount = 1;
 let highlightsByPage = {};
 let textAnnotationsByPage = {};
 
+function capitalize(str) {
+	if (!str) return "";
+	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
 async function showupload() {
 	try {
 		const res = await fetch("../../php/reviewer/reView_thesis.php");
@@ -35,6 +40,7 @@ async function showupload() {
 		let rows = "";
 		for (const u of data) {
 			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+			const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 
 			rows += `
 				<div class="upload-item"
@@ -43,6 +49,12 @@ async function showupload() {
 					data-abstract="${encodeURIComponent(u.abstract)}"
 					data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
 					style="margin-bottom: 20px; cursor:pointer;">
+					<div class="author-info">
+                        <img src="${profileImg}" alt="Profile Image" class="profile-image">
+                        <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+                            ${capitalize(u.lname)}, ${capitalize(u.fname)}
+                        </span>
+                    </div>
 					<h3>${u.title}</h3>
 					<p>${u.abstract}</p>
 					<embed src="${filePath}" width="600" height="400" type="application/pdf">

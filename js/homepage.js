@@ -8,9 +8,15 @@ async function showupload() {
 	const data = await res.json();
 	console.log("runnnnnnnnnnnnnnn");
 
+	function capitalize(str) {
+		if (!str) return "";
+		return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+	}
+
 	let rows = "<div class='thesis-cards'>";
 	for (const u of data) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+		const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 		rows += `
 			<div class="upload-item"
 				data-file="${filePath}"
@@ -20,15 +26,24 @@ async function showupload() {
 				data-status="${encodeURIComponent(u.status)}"
 				style="cursor:pointer;"
 			>
-				<h3><i class='fas fa-book'></i> ${u.title}</h3>
-				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 				<div class="author-info">
-					<i class="fas fa-user-graduate"></i>
-					<span>${u.lname}, ${u.fname}</span>
+					<a href="profile_timeline.php?id=${
+						u.student_id
+					}" class="profile-link" onclick="event.stopPropagation();">
+						<img src="${profileImg}" alt="Profile Image" class="profile-image">
+					</a>
+					<span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+						${capitalize(u.lname)}, ${capitalize(u.fname)}
+					</span>
 				</div>
+				<h3 class="thesis-title" style="cursor:pointer;">
+					<i class='fas fa-book'></i> ${u.title}
+				</h3>
+				<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+
 				<embed src="${filePath}" type="application/pdf">
 
-				<button style="background-color: red; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;" onclick="event.stopPropagation(); deleteThesis(${
+				<button style="background-color: red; color: white; border: none; padding-bottom:10px; margin-bottom:50px; padding: 12px 15px; border-radius: 5px; cursor: pointer;" onclick="event.stopPropagation(); deleteThesis(${
 					u.id
 				}, '${u.title}')">
 					<i class="fas fa-trash"></i> Cancel
@@ -39,7 +54,7 @@ async function showupload() {
 					style="
 						background-color: #003B9A;
 						color: white;
-						padding: 8px 16px;
+						padding: 11px 16px;
 						border-radius: 8px;
 						font-weight: bold;
 						font-size: 14px;

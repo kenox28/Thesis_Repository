@@ -16,6 +16,22 @@ if (!isset($_SESSION['admin_id'])) {
     <link href="../../assets/css/Admin_Page.css?v=1.0.2" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;    
+            box-shadow: 0 2px 8px #cadcfc33;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
+
         body {
 	        background-color: var(--off-white);
             
@@ -77,13 +93,7 @@ if (!isset($_SESSION['admin_id'])) {
             margin-bottom: 1.5rem;
             font-weight: 700;
         }
-        .thesis-cards {
-            display: flex;
-            flex-wrap: wrap;
-            
-            gap: 2rem;
-            justify-content: center;
-        }
+
         .upload-item {
             background:  #95a3e7;
             border-radius: 12px;
@@ -300,6 +310,18 @@ if (!isset($_SESSION['admin_id'])) {
                 max-height: 20vh;
             }
         }
+        #allPublicTheses {
+            /* border: 1px solid #00246b; */
+            height: 700px;
+            overflow-y: auto;
+            width: 100%;
+        }
+        .thesis-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.2rem;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -310,7 +332,7 @@ if (!isset($_SESSION['admin_id'])) {
             <nav>
                 <a href="admin_dashboard.php">Home</a>
                 <a href="Display_Reviewer.php">Manage Reviewers</a>
-                <a href="view_reports.php">Publication thesis</a>
+                <a href="public_thesis.php">Publication thesis</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
             </nav>
         </div>
@@ -319,11 +341,20 @@ if (!isset($_SESSION['admin_id'])) {
     <div class="container">
         
         <h1>All Public Thesis</h1>
-        <div class="student-container" id="allPublicTheses">
+        <div id="allPublicTheses">
             <!-- Student tiles will be dynamically added here -->
         </div>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.2"></script>
 <script >
+
+    
+
+    function capitalize(str) {
+        if (!str) return "";
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+    }
     async function showPublicRepo() {
 			const res = await fetch("../../php/student/get_public_repo.php");
 			const data = await res.json();
@@ -335,14 +366,19 @@ if (!isset($_SESSION['admin_id'])) {
 			let rows = "<div class='thesis-cards'>";
 			for (const u of data) {
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+				const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 				rows += `
+
 					<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.Privacy}')">
+                        <div class="author-info">
+                            <img src="${profileImg}" alt="Profile Image" class="profile-image">
+                            <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+                                ${capitalize(u.lname)}, ${capitalize(u.fname)}
+                            </span>
+                        </div>
 						<h3><i class='fas fa-book'></i> ${u.title}</h3>
 						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-						<div class="author-info">
-							<i class="fas fa-user-graduate"></i>
-							<span>${u.lname}, ${u.fname}</span>
-						</div>
+
 						<embed src="${filePath}" type="application/pdf" width="300" height="250">
 						<div class="status-badge">
 							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}

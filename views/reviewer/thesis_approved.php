@@ -13,6 +13,22 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <!-- Add Google Fonts in <head> -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
     <style>
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #cadcfc33;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
+        
         :root {
             --primary-color: #00246B;
             --secondary-color: #1a3a8f;
@@ -455,6 +471,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     </div>
 </body>
 <script>
+function capitalize(str) {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
 async function showupload() {
     const res = await fetch("../../php/reviewer/approve_thesis.php");
     const data = await res.json();
@@ -470,6 +490,7 @@ async function showupload() {
     let rows = "";
     for (const u of data) {
         const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+        const profileImg = "../../assets/ImageProfile/" + u.profileImg;
         rows += `
             <div class="upload-item"
                 data-file="${filePath}"
@@ -478,12 +499,15 @@ async function showupload() {
                 data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
                 data-status="${encodeURIComponent(u.status)}"
             >
+                <div class="author-info">
+                    <img src="${profileImg}" alt="Profile Image" class="profile-image">
+                    <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+                        ${capitalize(u.lname)}, ${capitalize(u.fname)}
+                    </span>
+                </div>
                 <h3><i class="fas fa-book"></i> ${u.title}</h3>
                 <p id="abstract"><i class="fas fa-quote-left"></i> ${u.abstract}</p>
-                <div class="author-info">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>${u.lname}, ${u.fname}</span>
-                </div>
+
                 <embed src="${filePath}" type="application/pdf">
                 <div class="status-badge">
                     <i class="fas fa-check"></i> ${u.status}

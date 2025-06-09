@@ -88,6 +88,7 @@ async function fetchReviewers() {
                     <p>${lastSeenText}</p>
                     <p><strong>Approved:</strong> Yes</p>
                     <button class="btn-remove" onclick="removeReviewer('${reviewer.reviewer_id}')">Remove</button>
+					<button class="btn-inactive" onclick="inactiveReviewer('${reviewer.reviewer_id}')">Inactive</button>
                 </div>
             `;
 			approvedContainer.innerHTML += tile;
@@ -137,6 +138,23 @@ async function approveReviewer(reviewerId) {
 	}
 }
 
+async function inactiveReviewer(reviewerId) {
+	try {
+		const result = await fetchData(
+			"../../php/admin/inactive_reviewer.php",
+			"POST",
+			{ reviewer_id: reviewerId }
+		);
+		if (!result) return;
+
+		alert(result.message);
+		if (result.status === "success") fetchReviewers();
+	} catch (error) {
+		console.error("Error approving reviewer:", error);
+		alert("An error occurred while approving the reviewer.");
+	}
+}
+
 async function removeReviewer(reviewerId) {
 	if (!confirm("Are you sure you want to remove this reviewer?")) return;
 
@@ -160,7 +178,11 @@ function setupLogoutHandler() {
 		const result = await fetchData("../../php/admin/admin_logout.php", "POST");
 		if (!result) return;
 
-		alert(result.message);
+		swal.fire({
+			title: "Success",
+			text: result.message,
+			icon: "success",
+		});
 		if (result.status === "success")
 			window.location.href = "../landingpage.php";
 	});
