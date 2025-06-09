@@ -63,6 +63,14 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     role VARCHAR(255) DEFAULT 'reviewer'
 )";
 
+$activity_log_admin = "CREATE TABLE IF NOT EXISTS activity_log_admin (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    admin_id VARCHAR(255),
+    activity VARCHAR(255),
+    date DATETIME DEFAULT CURRENT_TIMESTAMP
+)";
+
+
 $result_bdate2 = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'bdate'");
 $bdate_exists2 = ($result_bdate2 && mysqli_num_rows($result_bdate2) > 0);
 
@@ -188,6 +196,7 @@ mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
 mysqli_query($connect, $revise_table);
 mysqli_query($connect, $thesis_history);
+mysqli_query($connect, $activity_log_admin);
 
 if(mysqli_query($connect, $thesisrepo)){
     // echo "success";

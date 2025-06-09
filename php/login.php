@@ -24,6 +24,7 @@ if (!empty($email) && !empty($pass)) {
     if ($result_admin && mysqli_num_rows($result_admin) > 0) {
         $row = mysqli_fetch_assoc($result_admin);
         if (md5($pass) === $row['pass']) {
+            
             $_SESSION['admin_id'] = $row['admin_id'];
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
