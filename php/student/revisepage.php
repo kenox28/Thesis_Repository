@@ -12,6 +12,11 @@ $result = mysqli_query($connect, $sql);
 
 $uploads = [];
 while ($row = mysqli_fetch_assoc($result)) {
+    $student_id = $row['student_id'];
+    $profileImgQuery = "SELECT profileImg FROM student WHERE student_id = '$student_id'";
+    $profileImgResult = $connect->query($profileImgQuery);
+    $profileImgRow = $profileImgResult ? $profileImgResult->fetch_assoc() : null;
+    $row['profileImg'] = $profileImgRow ? $profileImgRow['profileImg'] : null;
     $uploads[] = $row;  // Add each row to the uploads array
 }
 

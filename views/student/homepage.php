@@ -9,8 +9,25 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Pending Thesis</title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css?v=1.0.6" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	</head>
 	<style>
+        
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #1976a533;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
 		#PDFFILE{
 			display: flex;
 			justify-content: center;
@@ -343,7 +360,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 			</div>
 		</div>
-		<script src="../../js/homepage.js?v=1.0.7"></script>
+		<script src="../../js/homepage.js?v=1.0.12"></script>
 		<script>
 			
 		</script>

@@ -201,3 +201,17 @@ p {
 	margin: 5px 0;
 	color: #555;
 }
+.inactive-reviewer {
+	background-color: #dc3545;
+	color: white;
+}
+.inactive-reviewer:hover {
+	background-color: #c82333;
+}
+.btn-inactive {
+	background-color: #dc3545;
+	color: white;
+}
+.btn-inactive:hover {
+	background-color: #c82333;
+}
