@@ -11,6 +11,21 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #1976a533;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
         .modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -165,6 +180,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             border: 2px solid #1976a5;
             position: relative;
             overflow: hidden;
+            animation: popIn 0.25s cubic-bezier(.4,2,.6,1) 1;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         .revise-modal-unique-header {
             display: flex;
@@ -306,6 +326,178 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 max-height: 20vh;
             }
         }
+        .thesis-card {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px #1976a522, 0 1.5px 0 #cadcfc;
+            padding: 1.5rem 1.2rem 1.2rem 1.2rem;
+            margin: 18px 0;
+            max-width: 420px;
+            min-width: 320px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            border: 2px solid #e9f0ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+            position: relative;
+        }
+        .thesis-card:hover {
+            background: #f4f8ff;
+            box-shadow: 0 8px 32px #1976a544;
+            border-color: #1976a5;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 8px;
+        }
+        .thesis-card-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1976a5;
+            margin-bottom: 0.5rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: color 0.18s;
+        }
+        .thesis-card-title:hover {
+            color: #12507b;
+            text-decoration: underline;
+        }
+        .thesis-card-abstract {
+            font-size: 1.05rem;
+            color: #1976a5;
+            background: #f4f8ff;
+            border-radius: 8px;
+            padding: 10px 16px;
+            margin-bottom: 8px;
+            font-style: italic;
+            box-shadow: 0 1px 4px #cadcfc33;
+            border-left: 4px solid #1976a5;
+            word-break: break-word;
+        }
+        .thesis-card-owner {
+            color: #1a3a8f;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+        .thesis-card-status {
+            background: #ffe082;
+            color: #333;
+            border-radius: 6px;
+            padding: 2px 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 2px;
+        }
+        .thesis-card embed[type='application/pdf'] {
+            min-height: 220px;
+            max-height: 350px;
+            width: 100%;
+            background: #f7faff;
+            border-radius: 10px;
+            border: 1.5px solid #e9f0ff;
+            box-shadow: 0 2px 12px #1976a522;
+            margin-top: 8px;
+        }
+        .thesis-card .not-found-message {
+            background: #fff3f3;
+            color: #c0392b;
+            border: 1.5px solid #e57373;
+            border-radius: 8px;
+            padding: 18px 16px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 12px 0;
+            text-align: center;
+            box-shadow: 0 2px 8px #e5737333;
+        }
+        .thesis-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .thesis-card button,
+        .thesis-card .status-badge {
+            margin-top: 10px;
+        }
+        #reviseModalUniqueUpdateForm input[type="text"],
+        #reviseModalUniqueUpdateForm textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1.5px solid #e9f0ff;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            background: #f7faff;
+            transition: border-color 0.2s;
+        }
+        #reviseModalUniqueUpdateForm input[type="text"]:focus,
+        #reviseModalUniqueUpdateForm textarea:focus {
+            border-color: #1976a5;
+            outline: none;
+        }
+        #reviseModalUniqueUpdateForm input[type="file"] {
+            margin-bottom: 8px;
+        }
+        /* Hide the default file input */
+        input[type="file"].custom-file-input {
+            display: none;
+        }
+        /* Custom file label/button */
+        .custom-file-label {
+            display: inline-block;
+            background: #1976a5;
+            color: #fff;
+            font-weight: 600;
+            padding: 10px 22px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-right: 16px;
+            transition: background 0.18s;
+            font-size: 1rem;
+            border: none;
+            box-shadow: 0 2px 8px #1976a522;
+        }
+        .custom-file-label:hover {
+            background: #12507b;
+        }
+        /* Show selected file name */
+        #selectedFileName {
+            font-size: 1rem;
+            color: #1976a5;
+            margin-right: 18px;
+            vertical-align: middle;
+        }
+        /* Style the submit button to match */
+        .revise-modal-unique-upload-btn {
+            background: #1976a5;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.18s;
+            box-shadow: 0 2px 8px #1976a522;
+        }
+        .revise-modal-unique-upload-btn:hover {
+            background: #12507b;
+        }
+        .file-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
@@ -415,185 +607,212 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <p id="reviseModalUniqueAbstract" class="revise-modal-unique-abstract"></p>
                 <div class="revise-modal-unique-author" id="reviseModalUniqueOwner"></div>
                 <button id="reviseModalUniqueHistoryBtn" class="revise-modal-unique-history-btn">Revision History</button>
-                <form id="reviseModalUniqueUpdateForm" enctype="multipart/form-data" style="margin: 16px 0;">
+                <form id="reviseModalUniqueUpdateForm" enctype="multipart/form-data" style="margin: 16px 0; display: flex; flex-direction: column; gap: 14px; align-items: stretch;">
                     <input type="hidden" name="title" id="reviseModalUniqueTitleInput">
-                    <input class="revise-modal-unique-file-btn" type="file" name="revised_file" accept="application/pdf" required style="margin-bottom:8px;">
-                    <button type="submit" class="revise-modal-unique-upload-btn">Update File</button>
+                    <input type="text" name="newtitle" id="reviseModalUniqueNewTitleInput" required placeholder="Title">
+                    <textarea name="abstract" id="reviseModalUniqueAbstractInput" rows="3" required placeholder="Abstract"></textarea>
+                    <div class="file-row">
+                        <label class="custom-file-label" style="margin-bottom:0; width: fit-content;">
+                            Choose File
+                            <input type="file" name="revised_file" class="custom-file-input" accept="application/pdf" required onchange="document.getElementById('selectedFileName').textContent = this.files[0]?.name || 'No file chosen';">
+                        </label>
+                        <span id="selectedFileName" style="color:#1976a5; font-size:1rem; min-width:120px; margin-left:14px;">No file chosen</span>
+                    </div>
+                    <button type="submit" class="revise-modal-unique-upload-btn" style="width:100%;">Update File</button>
                 </form>
                 <iframe id="reviseModalUniquePDF" src="" width="100%" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
             </div>
         </div>
     </div>
 <script>
-async function showupload() {
-    const res = await fetch("../../php/student/revisepage.php");
-    const data = await res.json();
-    if (data.error) {
-        document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
-        return;
+    function capitalize(str) {
+        if (!str) return "";
+        return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
-    let rows = "<div class='thesis-cards'>";
-    for (const u of data) {
-        if (u.status && u.status.toLowerCase() === "revised") {
-            const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-            rows += `
-                <div class="thesis-card"
-                    data-file="${filePath}"
-                    data-title="${encodeURIComponent(u.title)}"
-                    data-abstract="${encodeURIComponent(u.abstract)}"
-                    data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-                    data-status="${encodeURIComponent(u.status)}"
-                    style="cursor:pointer;"
-                >
-                    <div class="thesis-card-title">${u.title}</div>
-                    <div class="thesis-card-abstract">${u.abstract}</div>
-                    <embed src="${filePath}" type="application/pdf" width="300" height="250">
-                    <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
-                    <div class="thesis-card-status">${u.status || "Revised"}</div>
-                </div>
-            `;
+
+    async function showupload() {
+        const res = await fetch("../../php/student/revisepage.php");
+        const data = await res.json();
+        if (data.error) {
+            document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
+            return;
         }
-    }
-    rows += "</div>";
-    document.getElementById("PDFFILE").innerHTML = rows;
+        let rows = "<div class='thesis-cards'>";
+        for (const u of data) {
+            if (u.status && u.status.toLowerCase() === "revised") {
+                const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+                const profileImg = "../../assets/ImageProfile/" + u.profileImg;
+                rows += `
+                    <div class="thesis-card"
+                        data-file="${filePath}"
+                        data-title="${encodeURIComponent(u.title)}"
+                        data-abstract="${encodeURIComponent(u.abstract)}"
+                        data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
+                        data-status="${encodeURIComponent(u.status)}"
+                        data-id="${u.id}"
+                        style="cursor:pointer;"
+                    >
+                        <div class="author-info">
+                            <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
+                                <img src="${profileImg}" alt="Profile Image" class="profile-image">
+                            </a>
+                            <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+                                ${capitalize(u.lname)}, ${capitalize(u.fname)}
+                            </span>
+                        </div>
+                        <h3 class="thesis-title thesis-card-title" style="cursor:pointer;">
+                            <i class='fas fa-book'></i> ${u.title}
+                        </h3>
+                        <div class="thesis-card-abstract">${u.abstract}</div>
+                        <embed src="${filePath}" type="application/pdf" width="300" height="250">
+                        <div class="thesis-card-owner">${capitalize(u.lname)}, ${capitalize(u.fname)}</div>
+                        <div class="thesis-card-status">${u.status || "Revised"}</div>
+                    </div>
+                `;
+            }
+        }
+        rows += "</div>";
+        document.getElementById("PDFFILE").innerHTML = rows;
 
-    // Modal open logic for .thesis-card
-    document.querySelectorAll('.thesis-card').forEach(item => {
-        item.addEventListener('click', function (e) {
-            const filePath = item.getAttribute('data-file');
-            const title = decodeURIComponent(item.getAttribute('data-title'));
-            const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
-            const owner = decodeURIComponent(item.getAttribute('data-owner'));
-            const status = decodeURIComponent(item.getAttribute('data-status'));
+        // Modal open logic for .thesis-card
+        document.querySelectorAll('.thesis-card').forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filePath = item.getAttribute('data-file');
+                const title = decodeURIComponent(item.getAttribute('data-title'));
+                const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
+                const owner = decodeURIComponent(item.getAttribute('data-owner'));
+                const status = decodeURIComponent(item.getAttribute('data-status'));
 
-            document.getElementById('reviseModalUniqueTitle').textContent = title;
-            document.getElementById('reviseModalUniqueStatus').textContent = status || "Revised";
-            document.getElementById('reviseModalUniqueAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-            document.getElementById('reviseModalUniqueOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
-            document.getElementById('reviseModalUniquePDF').src = filePath + "#toolbar=0";
-            document.getElementById('reviseModalUniqueTitleInput').value = title;
-            document.getElementById('reviseModalUnique').style.display = "flex";
+                document.getElementById('reviseModalUniqueTitle').textContent = title;
+                document.getElementById('reviseModalUniqueStatus').textContent = status || "Revised";
+                document.getElementById('reviseModalUniqueAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+                document.getElementById('reviseModalUniqueOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+                document.getElementById('reviseModalUniquePDF').src = filePath + "#toolbar=0";
+                document.getElementById('reviseModalUniqueTitleInput').value = title;
+                document.getElementById('reviseModalUniqueNewTitleInput').value = title;
+                document.getElementById('reviseModalUniqueAbstractInput').value = abstract;
+                document.getElementById('reviseModalUnique').style.display = "flex";
+            });
         });
-    });
-}
-showupload();
+    }
+    showupload();
 
-// Modal close logic
-document.addEventListener('DOMContentLoaded', function() {
-    const closeBtn = document.getElementById('closeReviseModalUnique');
-    const modal = document.getElementById('reviseModalUnique');
-    const modalPDF = document.getElementById('reviseModalUniquePDF');
-    if (closeBtn && modal && modalPDF) {
-        closeBtn.onclick = function () {
-            modal.style.display = "none";
-            modalPDF.src = "";
-        };
-        modal.onclick = function(e) {
-            if (e.target === modal) {
+    // Modal close logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeBtn = document.getElementById('closeReviseModalUnique');
+        const modal = document.getElementById('reviseModalUnique');
+        const modalPDF = document.getElementById('reviseModalUniquePDF');
+        if (closeBtn && modal && modalPDF) {
+            closeBtn.onclick = function () {
                 modal.style.display = "none";
                 modalPDF.src = "";
+            };
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                    modalPDF.src = "";
+                }
+            };
+        }
+        // Revision History button
+        const historyBtn = document.getElementById('reviseModalUniqueHistoryBtn');
+        if (historyBtn) {
+            historyBtn.onclick = function() {
+                const title = document.getElementById('reviseModalUniqueTitle').textContent;
+                window.location.href = 'revise_history.php?title=' + encodeURIComponent(title);
+            };
+        }
+    });
+
+    // Handle update form submit (no backend change needed)
+    document.addEventListener('submit', async function(e) {
+        if (e.target && e.target.id === 'reviseModalUniqueUpdateForm') {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const res = await fetch('../../php/student/updated_revised_file.php', {
+                method: 'POST',
+                body: formData
+            });
+            const result = await res.json();
+            if (result.status === 'success') {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: result.message,
+                    confirmButtonColor: "#1976a5",
+                });
+                document.getElementById('closeReviseModalUnique').click();
+                showupload(); // Refresh the list
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Error",
+                    text: result.message || 'Failed to update file.',
+                    confirmButtonColor: "#1976a5",
+                });
             }
-        };
-    }
-    // Revision History button
-    const historyBtn = document.getElementById('reviseModalUniqueHistoryBtn');
-    if (historyBtn) {
-        historyBtn.onclick = function() {
-            const title = document.getElementById('reviseModalUniqueTitle').textContent;
-            window.location.href = 'revise_history.php?title=' + encodeURIComponent(title);
-        };
-    }
-});
+        }
+    });
 
-// Handle update form submit (no backend change needed)
-document.addEventListener('submit', async function(e) {
-    if (e.target && e.target.id === 'reviseModalUniqueUpdateForm') {
-        e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        const res = await fetch('../../php/student/updated_revised_file.php', {
-            method: 'POST',
-            body: formData
+    // Dropdown toggle for avatar
+    const avatar = document.querySelector('.nav-avatar');
+    if (avatar) {
+        avatar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            this.classList.toggle('open');
         });
-        const result = await res.json();
-        if (result.status === 'success') {
-            Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: result.message,
-                confirmButtonColor: "#1976a5",
-            });
-            document.getElementById('closeReviseModalUnique').click();
-            showupload(); // Refresh the list
-        } else {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: result.message || 'Failed to update file.',
-                confirmButtonColor: "#1976a5",
-            });
-        }
+        document.addEventListener('click', function() {
+            avatar.classList.remove('open');
+        });
     }
-});
-
-// Dropdown toggle for avatar
-const avatar = document.querySelector('.nav-avatar');
-if (avatar) {
-    avatar.addEventListener('click', function(e) {
-        e.stopPropagation();
-        this.classList.toggle('open');
-    });
-    document.addEventListener('click', function() {
-        avatar.classList.remove('open');
-    });
-}
-// Profile modal logic
-const profileLink = document.getElementById('profile-link');
-const profileModal = document.getElementById('profile-modal');
-const closeProfileModal = document.getElementById('closeProfileModal');
-if (profileLink && profileModal && closeProfileModal) {
-    profileLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        profileModal.style.display = 'flex';
-        avatar.classList.remove('open');
-    });
-    closeProfileModal.addEventListener('click', function() {
-        profileModal.style.display = 'none';
-    });
-    window.addEventListener('click', function(event) {
-        if (event.target === profileModal) {
+    // Profile modal logic
+    const profileLink = document.getElementById('profile-link');
+    const profileModal = document.getElementById('profile-modal');
+    const closeProfileModal = document.getElementById('closeProfileModal');
+    if (profileLink && profileModal && closeProfileModal) {
+        profileLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            profileModal.style.display = 'flex';
+            avatar.classList.remove('open');
+        });
+        closeProfileModal.addEventListener('click', function() {
             profileModal.style.display = 'none';
-        }
-    });
-}
-// Logout confirmation modal logic
-const logoutLink = document.getElementById('logout-link');
-const logoutModal = document.getElementById('logout-modal');
-const closeLogoutModal = document.getElementById('closeLogoutModal');
-const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
-if (logoutLink && logoutModal && closeLogoutModal && confirmLogoutBtn && cancelLogoutBtn) {
-    logoutLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        logoutModal.style.display = 'flex';
-        avatar.classList.remove('open');
-    });
-    closeLogoutModal.addEventListener('click', function() {
-        logoutModal.style.display = 'none';
-    });
-    cancelLogoutBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        logoutModal.style.display = 'none';
-    });
-    confirmLogoutBtn.addEventListener('click', function() {
-        window.location.href = '../../php/logout.php';
-    });
-    window.addEventListener('click', function(event) {
-        if (event.target === logoutModal) {
+        });
+        window.addEventListener('click', function(event) {
+            if (event.target === profileModal) {
+                profileModal.style.display = 'none';
+            }
+        });
+    }
+    // Logout confirmation modal logic
+    const logoutLink = document.getElementById('logout-link');
+    const logoutModal = document.getElementById('logout-modal');
+    const closeLogoutModal = document.getElementById('closeLogoutModal');
+    const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
+    const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
+    if (logoutLink && logoutModal && closeLogoutModal && confirmLogoutBtn && cancelLogoutBtn) {
+        logoutLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            logoutModal.style.display = 'flex';
+            avatar.classList.remove('open');
+        });
+        closeLogoutModal.addEventListener('click', function() {
             logoutModal.style.display = 'none';
-        }
-    });
-}
+        });
+        cancelLogoutBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            logoutModal.style.display = 'none';
+        });
+        confirmLogoutBtn.addEventListener('click', function() {
+            window.location.href = '../../php/logout.php';
+        });
+        window.addEventListener('click', function(event) {
+            if (event.target === logoutModal) {
+                logoutModal.style.display = 'none';
+            }
+        });
+    }
 </script>
 </body>
 </html>

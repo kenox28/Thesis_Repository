@@ -46,14 +46,14 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						<h1 class="section-title">Upload Thesis</h1>
 					</header>
 					<form action="#" id="thesisForm" enctype="multipart/form-data">
-						<input type="text" name="title" placeholder="Enter a title">
+						<input type="text" name="title" placeholder="Enter a title" required>
 						<textarea
 							required=""
 							name="abstract"
 							class="input"
 							id="captadd"
 							rows="4"
-							placeholder="Enter the abstract"></textarea>
+							placeholder="Enter the abstract" required></textarea>
 
 						<label for="docfile" class="label">UPLOADED THESIS</label>
 						<input
@@ -62,7 +62,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							name="docfile"
 							id="docfile"
 							class="input"
-							accept="application/pdf" />
+							accept="application/pdf" required/>
 						<input
 							type="hidden"
 							name="student_id"
@@ -80,7 +80,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							name="profileImg"
 							value="<?php echo $_SESSION['profileImg'];?>"/>
 						
-						<select id="reviewerDropdown" name="reviewer_id">
+						<select id="reviewerDropdown" name="reviewer_id" required>
 							<option value="">Select Reviewer</option>
 						</select>
 

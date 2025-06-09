@@ -50,8 +50,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: var(--secondary-color);
+            color: #1a3a8f;
             font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+			font-size: uppercase;
         }
 
         .status-badge {
@@ -150,6 +153,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             font-weight: 500;
             margin-bottom: 8px;
             font-size: 1rem;
+			font-size: uppercase;
         }
 
         #modalPDF {
@@ -201,6 +205,22 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             #modalPDF {
                 height: 35vh;
             }
+        }
+
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #1976a533;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
         }
 	</style>
 	<body>
@@ -302,10 +322,16 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			renderPublicRepo(data);
 		}
 
+		function capitalize(str) {
+			if (!str) return '';
+			return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+		}
+
 		function renderPublicRepo(data) {
 			let rows = "<div class='thesis-cards'>";
 			for (const u of data) {
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+				const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 				rows += `
 					<div class="upload-item"
 						data-file="${filePath}"
@@ -315,12 +341,19 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						data-privacy="${encodeURIComponent(u.Privacy)}"
 						style="cursor:pointer;"
 					>
-						<h3><i class='fas fa-book'></i> ${u.title}</h3>
-						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 						<div class="author-info">
-							<i class="fas fa-user-graduate"></i>
-							<span>${u.lname}, ${u.fname}</span>
+							<a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
+								<img src="${profileImg}" alt="Profile Image" class="profile-image">
+							</a>
+							<span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+								${capitalize(u.lname)}, ${capitalize(u.fname)}
+							</span>
 						</div>
+						<h3 class="thesis-title" style="cursor:pointer;">
+							<i class='fas fa-book'></i> ${u.title}
+						</h3>
+						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+
 						<embed src="${filePath}" type="application/pdf" width="300" height="250">
 						<div class="status-badge">
 							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
