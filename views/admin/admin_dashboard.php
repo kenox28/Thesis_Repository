@@ -37,6 +37,7 @@ if (!isset($_SESSION['admin_id'])) {
             <!-- Student tiles will be dynamically added here -->
         </div>
     </div>
-<script src="../../js/admin_dashboard.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="../../js/admin_dashboard.js?v=1.0.2"></script>
 </body>
 </html>

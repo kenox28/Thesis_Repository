@@ -13,7 +13,8 @@ if (!isset($_SESSION['admin_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Reviewers</title>
-    <link href="../../assets/css/Admin_Page.css?v=1.0.1" rel="stylesheet">
+    <link href="../../assets/css/Admin_Page.css?v=1.0.2" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <!-- Header Section -->
@@ -42,6 +43,6 @@ if (!isset($_SESSION['admin_id'])) {
         </div>
     </div>
 
-    <script src="../../js/admin_dashboard.js?v=1.0.1"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.2"></script>
 </body>
 </html>
