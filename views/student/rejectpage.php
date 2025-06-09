@@ -9,6 +9,135 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rejected Theses</title>
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
+    <style>
+    .modal {
+        position: fixed;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background: rgba(0,36,107,0.18);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 3000;
+        overflow-y: auto;
+    }
+    .modal-content.enhanced-modal {
+        background: #fff;
+        border-radius: 18px;
+        box-shadow: 0 8px 40px #1976a522, 0 1.5px 0 #cadcfc;
+        padding: 0;
+        max-width: 700px;
+        width: 95vw;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        border: 2px solid #1976a5;
+        position: relative;
+    }
+    .modal-header {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        background: linear-gradient(90deg, #1976a5 60%, #2893c7 100%);
+        padding: 18px 28px 14px 28px;
+        border-bottom: 1.5px solid #e9f0ff;
+    }
+    .modal-header h2 {
+        color: #fff;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+        letter-spacing: 0.5px;
+    }
+    .modal-icon {
+        background: #fff;
+        color: #1976a5;
+        border-radius: 50%;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        box-shadow: 0 2px 8px #cadcfc33;
+    }
+    .modal-body {
+        padding: 18px 28px 24px 28px;
+        overflow-y: auto;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    .modal-abstract {
+        font-size: 1.05rem;
+        color: #1976a5;
+        background: #f4f8ff;
+        border-radius: 8px;
+        padding: 10px 16px;
+        margin-bottom: 8px;
+        font-style: italic;
+        box-shadow: 0 1px 4px #cadcfc33;
+        border-left: 4px solid #1976a5;
+        word-break: break-word;
+    }
+    .author-info {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #1a3a8f;
+        font-weight: 500;
+        margin-bottom: 8px;
+        font-size: 1rem;
+    }
+    #modalPDF {
+        width: 100%;
+        height: 55vh;
+        border-radius: 10px;
+        box-shadow: 0 2px 12px #1976a522;
+        margin-top: 8px;
+        border: 1.5px solid #e9f0ff;
+        background: #f7faff;
+    }
+    .close-button {
+        position: absolute;
+        top: 12px;
+        right: 18px;
+        font-size: 2rem;
+        color: #fff;
+        cursor: pointer;
+        font-weight: 700;
+        transition: color 0.18s;
+        z-index: 10;
+        text-shadow: 0 2px 8px #1976a5cc;
+    }
+    .close-button:hover {
+        color: #e74c3c;
+    }
+    @media (max-width: 900px) {
+        .modal-content.enhanced-modal {
+            width: 99vw !important;
+            max-width: 99vw !important;
+            height: 99vh !important;
+            max-height: 99vh !important;
+            padding: 0;
+        }
+        .modal-header, .modal-body {
+            padding: 10px 6px 10px 6px;
+        }
+        .modal-header h2 {
+            font-size: 1.1rem;
+        }
+        .modal-icon {
+            width: 32px;
+            height: 32px;
+            font-size: 1.1rem;
+        }
+        #modalPDF {
+            height: 35vh;
+        }
+    }
+    </style>
 </head>
 <body>
     <div class="main-bg">
@@ -20,9 +149,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="public_repo.php">Home</a>
                 <a href="upload.php">Upload Thesis</a>
                 <a href="homepage.php">Pending</a>
-                <a href="approve_thesis.php">Approve</a>
+                <a href="approve_thesis.php">Approved</a>
                 <a href="rejectpage.php">Rejected</a>
-                <a href="request.php">Request</a>
                 <a href="revisepage.php">Revised</a>
 
             </div>
@@ -80,6 +208,23 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
         </div>
     </div>
+    <div id="thesisModal" class="modal" style="display:none;">
+        <div class="modal-content enhanced-modal">
+            <span class="close-button" id="closeThesisModal">&times;</span>
+            <div class="modal-header">
+                <div class="modal-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h2 id="modalTitle"></h2>
+                    <div class="thesis-card-status" id="modalStatus"></div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <p id="modalAbstract" class="modal-abstract"></p>
+                <div class="author-info" id="modalOwner"></div>
+                <iframe id="modalPDF" src="" width="100%" height="55vh" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
+            </div>
+        </div>
+    </div>
     <script>
     async function showupload() {
         const res = await fetch("../../php/student/rejectpage.php");
@@ -94,9 +239,17 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             if (u.status && u.status.toLowerCase() === "rejected") {
                 const filePath = "../../assets/thesisfile/" + u.ThesisFile;
                 rows += `
-                    <div class="thesis-card" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.status}')">
+                    <div class="thesis-card"
+                        data-file="${filePath}"
+                        data-title="${encodeURIComponent(u.title)}"
+                        data-abstract="${encodeURIComponent(u.abstract)}"
+                        data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
+                        data-status="${encodeURIComponent(u.status)}"
+                        style="cursor:pointer;"
+                    >
                         <div class="thesis-card-title">${u.title}</div>
                         <div class="thesis-card-abstract">${u.abstract}</div>
+                        <embed src="${filePath}" type="application/pdf" width="300" height="250">
                         <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
                         <div class="thesis-card-status">${u.status || "Rejected"}</div>
                     </div>
@@ -105,28 +258,45 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         rows += "</div>";
         document.getElementById("PDFFILE").innerHTML = rows;
+
+        // Add modal open logic for .thesis-card
+        document.querySelectorAll('.thesis-card').forEach(item => {
+            item.addEventListener('click', function (e) {
+                const filePath = item.getAttribute('data-file');
+                const title = decodeURIComponent(item.getAttribute('data-title'));
+                const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
+                const owner = decodeURIComponent(item.getAttribute('data-owner'));
+                const status = decodeURIComponent(item.getAttribute('data-status'));
+
+                document.getElementById('modalTitle').textContent = title;
+                document.getElementById('modalStatus').textContent = status || "Rejected";
+                document.getElementById('modalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+                document.getElementById('modalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+                document.getElementById('modalPDF').src = filePath + "#toolbar=0";
+                document.getElementById('thesisModal').style.display = "flex";
+            });
+        });
     }
     showupload();
 
-    function openModal(filePath, title, abstract, owner, status) {
-        const modal = document.createElement("div");
-        modal.className = "modal";
-        modal.innerHTML = `
-            <div class="modal-content large-modal">
-                <span class="close-button">&times;</span>
-                <h2>${title}</h2>
-                <div class="thesis-card-status" style="margin-bottom:12px;">${status || "Rejected"}</div>
-                <p>${abstract}</p>
-                <p>Owner: ${owner}</p>
-                <iframe src="${filePath}#toolbar=0" width="100%" height="85vh" style="border-radius:8px;box-shadow:0 2px 12px #1976a522;margin-top:12px;"></iframe>
-            </div>
-        `;
-        const closeButton = modal.querySelector(".close-button");
-        closeButton.onclick = function () {
-            document.body.removeChild(modal);
-        };
-        document.body.appendChild(modal);
-    }
+    // Modal close logic
+    document.addEventListener('DOMContentLoaded', function() {
+        const closeBtn = document.getElementById('closeThesisModal');
+        const modal = document.getElementById('thesisModal');
+        const modalPDF = document.getElementById('modalPDF');
+        if (closeBtn && modal && modalPDF) {
+            closeBtn.onclick = function () {
+                modal.style.display = "none";
+                modalPDF.src = "";
+            };
+            modal.onclick = function(e) {
+                if (e.target === modal) {
+                    modal.style.display = "none";
+                    modalPDF.src = "";
+                }
+            };
+        }
+    });
     // Dropdown toggle for avatar
     const avatar = document.querySelector('.nav-avatar');
     if (avatar) {

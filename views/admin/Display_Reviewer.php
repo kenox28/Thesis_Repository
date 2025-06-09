@@ -13,7 +13,7 @@ if (!isset($_SESSION['admin_id'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Reviewers</title>
-    <link href="../../assets/css/Admin_Page.css" rel="stylesheet">
+    <link href="../../assets/css/Admin_Page.css?v=1.0.1" rel="stylesheet">
 </head>
 <body>
     <!-- Header Section -->
@@ -23,7 +23,7 @@ if (!isset($_SESSION['admin_id'])) {
             <nav>
                 <a href="admin_dashboard.php">Home</a>
                 <a href="Display_Reviewer.php">Manage Reviewers</a>
-                <a href="view_reports.php">Reports</a>
+                <a href="public_thesis.php">Publication thesis</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
             </nav>
         </div>
@@ -31,17 +31,17 @@ if (!isset($_SESSION['admin_id'])) {
 
     <!-- Main Content -->
     <div class="container">
-        <h2>Approved Reviewers</h2>
+        <h1>Approved Reviewers</h1>
         <div class="reviewer-container" id="approvedReviewers">
             <!-- Approved reviewer tiles will be dynamically added here -->
         </div>
 
-        <h2>Pending Reviewers</h2>
+        <h1>Pending Reviewers</h1>
         <div class="reviewer-container" id="pendingReviewers">
             <!-- Pending reviewer tiles will be dynamically added here -->
         </div>
     </div>
 
-    <script src="../../js/admin_dashboard.js"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.1"></script>
 </body>
 </html>

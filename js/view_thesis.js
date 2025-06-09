@@ -37,19 +37,57 @@ async function showupload() {
 			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 
 			rows += `
-                <div class="upload-item" style="margin-bottom: 20px;">
-                    <h3>${u.title}</h3>
-                    <p>${u.abstract}</p>
-                    <embed src="${filePath}" width="600" height="400" type="application/pdf">
-                    <button onclick="updateStatus(${u.id}, 'rejected')">Reject</button>
-                    <button onclick="openReviseModal('${u.id}', '${u.ThesisFile}')">Revise</button>
-                    <button onclick="updateStatus(${u.id}, 'approved')">Approve</button>
-                    <button onclick="window.location.href='view_Revise.php?thesis_id=${u.id}'">Revision History</button>
-                </div>
-            `;
+				<div class="upload-item"
+					data-file="${filePath}"
+					data-title="${encodeURIComponent(u.title)}"
+					data-abstract="${encodeURIComponent(u.abstract)}"
+					data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
+					style="margin-bottom: 20px; cursor:pointer;">
+					<h3>${u.title}</h3>
+					<p>${u.abstract}</p>
+					<embed src="${filePath}" width="600" height="400" type="application/pdf">
+					<div style="display: flex; justify-content: space-between; margin-top: 10px;">
+						<button onclick="updateStatus(${
+							u.id
+						}, 'rejected'); event.stopPropagation();">Reject</button>
+						<button onclick="openReviseModal('${u.id}', '${
+				u.ThesisFile
+			}'); event.stopPropagation();">Revise</button>
+						<button onclick="updateStatus(${
+							u.id
+						}, 'approved'); event.stopPropagation();">Approve</button>
+					</div>
+					<button onclick="window.location.href='view_Revise.php?thesis_id=${
+						u.id
+					}'; event.stopPropagation();" style="width: 100%; margin-top: 10px;">Revision History</button>
+				</div>
+			`;
 		}
 
 		document.getElementById("userTableBody").innerHTML = rows;
+
+		// Add modal open logic for .upload-item
+		document.querySelectorAll(".upload-item").forEach((item) => {
+			item.addEventListener("click", function (e) {
+				// Prevent modal if a button inside was clicked
+				if (e.target.tagName === "BUTTON") return;
+				const filePath = item.getAttribute("data-file");
+				const title = decodeURIComponent(item.getAttribute("data-title"));
+				const abstract = decodeURIComponent(item.getAttribute("data-abstract"));
+				const owner = decodeURIComponent(item.getAttribute("data-owner"));
+
+				document.getElementById("modalTitle").textContent = title;
+				document.getElementById(
+					"modalAbstract"
+				).innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+				document.getElementById(
+					"modalOwner"
+				).innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+				document.getElementById("modalPDF").src = filePath + "#toolbar=0";
+
+				document.getElementById("thesisModal").style.display = "flex";
+			});
+		});
 	} catch (error) {
 		console.error("Error fetching uploads:", error);
 		document.getElementById(
@@ -60,7 +98,22 @@ async function showupload() {
 showupload();
 
 async function updateStatus(thesisId, status) {
-	try {
+	let actionText = status === "approved" ? "approve" : "reject";
+	let confirmButtonText =
+		status === "approved" ? "Yes, Approve" : "Yes, Reject";
+	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
+
+	const result = await Swal.fire({
+		title: `Are you sure you want to ${actionText} this thesis?`,
+		icon: "warning",
+		showCancelButton: true,
+		confirmButtonText: confirmButtonText,
+		cancelButtonText: "Cancel",
+		confirmButtonColor: confirmButtonColor,
+		cancelButtonColor: "#888",
+	});
+
+	if (result.isConfirmed) {
 		// Create a FormData object to send the data
 		const formData = new FormData();
 		formData.append("thesis_id", thesisId);
@@ -71,22 +124,19 @@ async function updateStatus(thesisId, status) {
 			body: formData,
 		});
 
-		const result = await res.json();
-		alert(result.message);
-		if (result.status === "success") {
+		const data = await res.json();
+		Swal.fire({
+			icon: data.status === "success" ? "success" : "error",
+			title: data.status === "success" ? "Success" : "Error",
+			text: data.message,
+			confirmButtonColor: "#1976a5",
+		});
+		if (data.status === "success") {
 			showupload(); // Refresh the list
 		}
-	} catch (error) {
-		console.error("Error updating status:", error);
 	}
 }
 
-const logout = document.querySelector("#logout");
-logout.onclick = function (e) {
-	console.log("run");
-	e.preventDefault();
-	window.location.href = "../php/logout.php";
-};
 pdfjsLib.GlobalWorkerOptions.workerSrc =
 	"https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
 
@@ -285,8 +335,13 @@ async function saveHighlightedPDF() {
 		body: formData,
 	});
 	const result = await res.json();
-	alert(result.message);
 	if (result.status === "success") {
+		Swal.fire({
+			icon: "success",
+			title: "Success",
+			text: result.message,
+			confirmButtonColor: "#1976a5",
+		});
 		closeReviseModal();
 		showupload();
 	}
@@ -307,7 +362,7 @@ function enableTextMode() {
 			textAnnotations.push({ x, y, text: userText });
 			// Draw the text on the overlay for preview
 			const ctx = highlightCanvas.getContext("2d");
-			ctx.font = "12px Arial";
+			ctx.font = "14px Arial";
 			ctx.fillStyle = "rgba(0,0,0,0.8)";
 			ctx.fillText(userText, x, y);
 		}
@@ -409,8 +464,38 @@ function redrawHighlightsAndText() {
 		ctx.fillRect(h.x, h.y, h.w, h.h);
 	}
 	for (const t of textAnnotations) {
-		ctx.font = "12px Arial";
+		ctx.font = "14px Arial";
 		ctx.fillStyle = "rgba(0,0,0,0.8)";
 		ctx.fillText(t.text, t.x, t.y);
 	}
 }
+
+// --- Modal close logic (add at the end of the file) ---
+document.addEventListener("DOMContentLoaded", function () {
+	const closeBtn = document.getElementById("closeThesisModal");
+	const modal = document.getElementById("thesisModal");
+	const modalPDF = document.getElementById("modalPDF");
+
+	if (!closeBtn) {
+		console.error("closeThesisModal not found");
+	}
+	if (!modal) {
+		console.error("thesisModal not found");
+	}
+	if (!modalPDF) {
+		console.error("modalPDF not found");
+	}
+
+	if (closeBtn && modal && modalPDF) {
+		closeBtn.onclick = function () {
+			modal.style.display = "none";
+			modalPDF.src = "";
+		};
+		modal.onclick = function (e) {
+			if (e.target === modal) {
+				modal.style.display = "none";
+				modalPDF.src = "";
+			}
+		};
+	}
+});

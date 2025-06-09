@@ -7,7 +7,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Document</title>
+		<title>Upload Thesis</title>
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 	</head>
 	<body>
@@ -18,12 +19,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
 				</div>
 				<div class="nav-links">
-                    <a href="public_repo.php">Home</a>
+				<a href="public_repo.php">Home</a>
                     <a href="upload.php">Upload Thesis</a>
-                    <a href="homepage.php">Pending</a>  
-					<a href="approve_thesis.php">Approve</a>
+					<a href="homepage.php">Pending</a>
+                    <a href="approve_thesis.php">Approved</a>
 					<a href="rejectpage.php">Rejected</a>
-					<a href="request.php">Request</a>
 					<a href="revisepage.php">Revised</a>
 				</div>
 				<div class="nav-avatar dropdown">
@@ -44,7 +44,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<section class="upload-card">
 					<header>
 						<h1 class="section-title">Upload Thesis</h1>
-						<h3 class="section-subtitle"><?php echo $_SESSION['fname']; ?> <?php echo $_SESSION['lname']; ?></h3>
 					</header>
 					<form action="#" id="thesisForm" enctype="multipart/form-data">
 						<input type="text" name="title" placeholder="Enter a title">
@@ -122,9 +121,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/upload.js?v=1.0.5"></script>
-		<script>
-
-		</script>
+		<script src="../../js/upload.js?v=1.0.6"></script>
 	</body>
 </html>

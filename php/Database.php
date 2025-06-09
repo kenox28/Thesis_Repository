@@ -20,6 +20,8 @@ $student = "CREATE TABLE IF NOT EXISTS Student (
     email VARCHAR(50),
     passw VARCHAR(50),
     profileImg VARCHAR(255),
+    failed_attempts INT DEFAULT 0,
+    lockout_time DATETIME DEFAULT NULL,
     gender VARCHAR(255),
     bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -42,7 +44,14 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
 
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
 
-if (mysqli_num_rows($result) == 0) {
+if ($result === false) {
+    // If query failed, create the table first
+    mysqli_query($connect, $reviewer);
+    // Try the query again
+    $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
+}
+
+if ($result && mysqli_num_rows($result) == 0) {
     // Add the 'Approve' column if it doesn't exist
     $add_column = "ALTER TABLE reviewer ADD COLUMN Approve BOOLEAN DEFAULT 0";
     
@@ -92,6 +101,7 @@ $publicRepo = "CREATE TABLE IF NOT EXISTS publicRepo(
     abstract VARCHAR(255),
     ThesisFile VARCHAR(255),
     reviewer_id VARCHAR(255),
+    Privacy VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
@@ -123,13 +133,15 @@ $admin = "CREATE TABLE IF NOT EXISTS admin (
 mysqli_query($connect, $admin);
 
 // Check if the default admin already exists
-$check_admin = "SELECT * FROM admin WHERE admin_id = 'ADM001'";
+$check_admin = "SELECT * FROM admin";
 $result = mysqli_query($connect, $check_admin);
 
 if ($result && mysqli_num_rows($result) === 0) {
     // Insert default admin if it doesn't exist
-    $default_admin = "INSERT INTO admin (admin_id, fname, lname, email, pass) 
-                      VALUES ('ADM001', 'Default', 'Admin', 'admin@gmail.com', '" .md5("admin123456")."')";
+    $default_admin = "INSERT INTO admin (admin_id, fname, lname, email, pass) VALUES
+    ('ADM001', 'Default', 'Admin', 'admin@gmail.com', '" . md5("admin123456") . "'),
+    ('ADM002', 'Default', 'Admin', 'iquenxzx@gmail.com', '" . md5("iquen123456") . "'),
+    ('ADM003', 'Default', 'Admin', 'russeljhondasigan@gmail.com', '" . md5("russel123456") . "')";
     mysqli_query($connect, $default_admin);
 }
 mysqli_query($connect, $reviewer);
@@ -141,6 +153,16 @@ mysqli_query($connect, $thesis_history);
 if(mysqli_query($connect, $thesisrepo)){
     // echo "success";
 };
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'last_active'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE reviewer ADD COLUMN last_active DATETIME DEFAULT NULL";
+    if (mysqli_query($connect, $add_column)) {
+        echo "Column 'last_active' added successfully.";
+    } else {
+        echo "Error adding column: " . mysqli_error($connect);
+    }
+}
 ?>
 
 
