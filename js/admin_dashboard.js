@@ -43,12 +43,32 @@ async function fetchStudents() {
                     <h3>${student.fname} ${student.lname}</h3>
                     <p><strong>ID:</strong> ${student.student_id}</p>
                     <p><strong>Email:</strong> ${student.email}</p>
+					<button class="btn-role" onclick="setRole('${student.student_id}', 'reviewer')">Set Role to Reviewer</button>
+					<button class="btn-role" onclick="setRole('${student.student_id}', 'student')">Set Role to Student</button>
                 </div>
             `;
 			container.innerHTML += tile;
 		});
 	} else {
 		alert(result.message);
+	}
+}
+
+async function setRole(id, role) {
+	const result = await fetchData("../../php/admin/set_role.php", "POST", {
+		id,
+		role,
+	});
+	if (!result) return;
+
+	if (result.status === "success") {
+		swal.fire({
+			title: "Success",
+			text: result.message,
+			icon: "success",
+		});
+		fetchStudents();
+		fetchReviewers();
 	}
 }
 

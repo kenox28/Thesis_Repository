@@ -17,11 +17,11 @@
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>Create Account</h1>
            
-            <input type="radio" id="radio1" name="Role" value="Reviewer" required />
-            <label for="radio1">Reviewer</label>
+            <!-- <input type="radio" id="radio1" name="Role" value="Reviewer" required />
+            <label for="radio1">Reviewer</label> -->
             
-            <input type="radio" id="radio2" name="Role" value="Student" required />
-            <label for="radio2">Student</label>
+            <!-- <input type="radio" id="radio2" name="Role" value="Student" required />
+            <label for="radio2">Student</label> -->
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
@@ -42,15 +42,7 @@
               <span id="password-strength-label"></span>
             </div>
             
-			<label class="label" for="dateb">Birthdate</label>
-            <input required type="date" name="bday" class="input" id="dateb" />
-            
-
-            <input type="radio" id="radio3" name="gender" value="Male" required />
-            <label for="radio3">Male</label>
-
-            <input type="radio" id="radio4" name="gender" value="Female" />
-            <label for="radio4">Female</label>
+			
             
             <button class="btn" id="login" type="submit">Sign Up</button>
 

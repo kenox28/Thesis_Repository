@@ -22,11 +22,31 @@ $student = "CREATE TABLE IF NOT EXISTS Student (
     profileImg VARCHAR(255),
     failed_attempts INT DEFAULT 0,
     lockout_time DATETIME DEFAULT NULL,
-    gender VARCHAR(255),
-    bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    role VARCHAR(255) DEFAULT 'student'
 )";
+
+$result_bdate = mysqli_query($connect, "SHOW COLUMNS FROM student LIKE 'bdate'");
+$bdate_exists = ($result_bdate && mysqli_num_rows($result_bdate) > 0);
+
+// Check if 'gender' exists
+$result_gender = mysqli_query($connect, "SHOW COLUMNS FROM student LIKE 'gender'");
+$gender_exists = ($result_gender && mysqli_num_rows($result_gender) > 0);
+
+if ($bdate_exists || $gender_exists) {
+    $drop = [];
+    if ($bdate_exists) $drop[] = "DROP COLUMN bdate";
+    if ($gender_exists) $drop[] = "DROP COLUMN gender";
+    $remove_column = "ALTER TABLE student " . implode(", ", $drop);
+    mysqli_query($connect, $remove_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM student LIKE 'role'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $alter_student = "ALTER TABLE student ADD COLUMN role VARCHAR(255) DEFAULT 'student'";
+    mysqli_query($connect, $alter_student);
+}
 
 $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -36,11 +56,35 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     email VARCHAR(50),
     pass VARCHAR(50),
     profileImg VARCHAR(255),
-    gender VARCHAR(255),
-    bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    Approve BOOLEAN DEFAULT 0,
+    last_active DATETIME DEFAULT NULL,
+    role VARCHAR(255) DEFAULT 'reviewer'
 )";
+
+$result_bdate2 = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'bdate'");
+$bdate_exists2 = ($result_bdate2 && mysqli_num_rows($result_bdate2) > 0);
+
+$result_gender2 = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'gender'");
+$gender_exists2 = ($result_gender2 && mysqli_num_rows($result_gender2) > 0);
+
+if ($bdate_exists2 || $gender_exists2) {
+    $drop = [];
+    if ($bdate_exists2) $drop[] = "DROP COLUMN bdate";
+    if ($gender_exists2) $drop[] = "DROP COLUMN gender";
+    $remove_column = "ALTER TABLE reviewer " . implode(", ", $drop);
+    mysqli_query($connect, $remove_column);
+}
+
+$result_role = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'role'");
+if ($result_role && mysqli_num_rows($result_role) == 0) {
+    $alter_reviewer = "ALTER TABLE reviewer ADD COLUMN role VARCHAR(255) DEFAULT 'reviewer'";
+    mysqli_query($connect, $alter_reviewer);
+}
+
+
+
 
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
 
@@ -62,11 +106,10 @@ if ($result && mysqli_num_rows($result) == 0) {
     }
 } 
 
-
 $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(50),
-    fname VARCHAR(50),
+    fname VARCHAR(50),  
     lname VARCHAR(50),
     title VARCHAR(255),
     abstract VARCHAR(255),
@@ -76,7 +119,6 @@ $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
-
 
 $revise_table = "CREATE TABLE IF NOT EXISTS revise_table(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -103,10 +145,7 @@ $publicRepo = "CREATE TABLE IF NOT EXISTS publicRepo(
     reviewer_id VARCHAR(255),
     Privacy VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-
-
 )";
 
 $thesis_history = "CREATE TABLE IF NOT EXISTS thesis_history (
