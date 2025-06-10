@@ -116,7 +116,6 @@
                     required
                     autocomplete="current-password"
                     aria-label="Password"
-                    minlength="8"
                 >
             </div>
             <div class="form-options">
@@ -146,6 +145,106 @@
           <button type="submit" class="modal-fp-btn">Send QR Code</button>
         </form>
         <div id="forgotPassMsg" class="modal-fp-msg"></div>
+      </div>
+    </div>
+
+    <!-- Forced Password Change Modal -->
+    <style>
+    #forceResetModal {
+      display: none;
+      position: fixed;
+      z-index: 99999;
+      left: 0; top: 0; width: 100vw; height: 100vh;
+      background: rgba(0,0,0,0.45);
+      align-items: center; justify-content: center;
+      transition: background 0.2s;
+    }
+    #forceResetModal .force-reset-content {
+      background: #fff;
+      max-width: 400px;
+      width: 92vw;
+      padding: 36px 28px 28px 28px;
+      border-radius: 16px;
+      box-shadow: 0 2px 24px #1976a522;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #forceResetModal h2 {
+      color: #1976a5;
+      text-align: center;
+      margin-bottom: 10px;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    #forceResetModal .force-reset-reminder {
+      color: #e67e22;
+      text-align: center;
+      margin-bottom: 18px;
+      font-weight: 600;
+      font-size: 1.08rem;
+    }
+    #forceResetForm input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0 18px 0;
+      border-radius: 6px;
+      border: 1.5px solid #1976a5;
+      font-size: 1rem;
+    }
+    #forceResetForm button {
+      width: 100%;
+      background: #1976a5;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1.08rem;
+      margin-top: 6px;
+      transition: background 0.2s;
+    }
+    #forceResetForm button:hover {
+      background: #12507b;
+    }
+    #forceResetMsg {
+      text-align: center;
+      margin-top: 12px;
+      color: #e74c3c;
+      min-height: 24px;
+    }
+    #forceResetClose {
+      display: none;
+      margin-top: 18px;
+      width: 100%;
+      background: #888;
+      color: #fff;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1.08rem;
+    }
+    @media (max-width: 600px) {
+      #forceResetModal .force-reset-content {
+        padding: 18px 6vw 18px 6vw;
+        max-width: 98vw;
+      }
+    }
+    </style>
+    <div id="forceResetModal">
+      <div class="force-reset-content">
+        <h2>Change Your Password</h2>
+        <div class="force-reset-reminder">For your security, you must change your password before using the system.</div>
+        <form id="forceResetForm">
+          <input type="password" name="password" placeholder="New Password" required minlength="8">
+          <input type="password" name="confirm" placeholder="Confirm Password" required minlength="8">
+          <button type="submit">Change Password</button>
+        </form>
+        <div id="forceResetMsg"></div>
+        <button id="forceResetClose">Close</button>
       </div>
     </div>
 </body>
