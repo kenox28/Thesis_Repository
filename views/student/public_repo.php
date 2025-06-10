@@ -311,6 +311,20 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 			</div>
 		</div>
+		<!-- Forced Password Change Modal -->
+		<div id="forceResetModal" style="display:none;position:fixed;z-index:99999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;">
+			<div style="background:#fff;max-width:400px;width:92vw;padding:32px 24px;border-radius:12px;box-shadow:0 2px 16px #1976a522;position:relative;">
+				<h2 style="color:#1976a5;text-align:center;margin-bottom:18px;">Change Your Password</h2>
+				<div style="color:#e67e22;text-align:center;margin-bottom:12px;font-weight:600;">For your security, you must change your password before using the system.</div>
+				<form id="forceResetForm">
+					<input type="password" name="password" placeholder="New Password" required minlength="8" style="width:100%;padding:10px;margin:10px 0 18px 0;border-radius:6px;border:1.5px solid #1976a5;">
+					<input type="password" name="confirm" placeholder="Confirm Password" required minlength="8" style="width:100%;padding:10px;margin:10px 0 18px 0;border-radius:6px;border:1.5px solid #1976a5;">
+					<button type="submit" style="width:100%;background:#1976a5;color:#fff;padding:10px;border:none;border-radius:6px;font-weight:600;">Change Password</button>
+				</form>
+				<div id="forceResetMsg" style="text-align:center;margin-top:12px;color:#e74c3c;"></div>
+				<button id="forceResetClose" style="display:none;margin-top:18px;width:100%;background:#888;color:#fff;padding:10px;border:none;border-radius:6px;font-weight:600;">Close</button>
+			</div>
+		</div>
 		<script>
 		// Store all theses for filtering
 		let allPublicTheses = [];
@@ -473,6 +487,66 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				};
 			}
 		});
+		// Check for force_reset=1 in URL
+		function getQueryParam(name) {
+			const url = new URL(window.location.href);
+			return url.searchParams.get(name);
+		}
+		const forceReset = getQueryParam('force_reset');
+		if (forceReset === '1') {
+			document.getElementById('forceResetModal').style.display = 'flex';
+			// Prevent closing modal and block logout
+			document.getElementById('logout-link').onclick = function(e) {
+				e.preventDefault();
+				alert('You must change your password before logging out.');
+			};
+			// Optionally block navigation
+			window.onbeforeunload = function() {
+				return 'You must change your password before leaving this page.';
+			};
+		}
+		// Handle password reset form
+		const forceResetForm = document.getElementById('forceResetForm');
+		if (forceResetForm) {
+			forceResetForm.onsubmit = async function(e) {
+				e.preventDefault();
+				const password = forceResetForm.password.value;
+				const confirm = forceResetForm.confirm.value;
+				if (password.length < 8) {
+					document.getElementById('forceResetMsg').textContent = 'Password must be at least 8 characters.';
+					return;
+				}
+				if (password !== confirm) {
+					document.getElementById('forceResetMsg').textContent = 'Passwords do not match.';
+					return;
+				}
+				// Send AJAX to reset password
+				const res = await fetch('../../php/reset_password_api.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						user_id: '<?php echo $_SESSION['student_id']; ?>',
+						password,
+						confirm
+					})
+				});
+				const result = await res.json();
+				if (result.status === 'success') {
+					document.getElementById('forceResetMsg').style.color = '#1976a5';
+					document.getElementById('forceResetMsg').textContent = 'Password changed successfully! You can now use the system.';
+					document.getElementById('forceResetClose').style.display = 'block';
+					window.onbeforeunload = null;
+					// Allow logout again
+					document.getElementById('logout-link').onclick = null;
+				} else {
+					document.getElementById('forceResetMsg').style.color = '#e74c3c';
+					document.getElementById('forceResetMsg').textContent = result.message || 'Failed to change password.';
+				}
+			};
+			document.getElementById('forceResetClose').onclick = function() {
+				document.getElementById('forceResetModal').style.display = 'none';
+			};
+		}
 		showPublicRepo();
 		</script>
 	</body>
