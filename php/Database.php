@@ -120,13 +120,64 @@ $thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
     fname VARCHAR(50),  
     lname VARCHAR(50),
     title VARCHAR(255),
-    abstract VARCHAR(255),
+    abstract VARCHAR(1000),
+    introduction VARCHAR(1000),
+    Project_objective VARCHAR(1000),
+    significance_of_study VARCHAR(1000),
+    system_analysis_and_design VARCHAR(1000),
+    Chapter VARCHAR(1000),
+    message VARCHAR(1000),
+    members_id VARCHAR(1000),
     ThesisFile VARCHAR(255),
     reviewer_id VARCHAR(255),
     status VARCHAR(50),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'members_id'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN members_id VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'introduction'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN introduction VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'message'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN message VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'Project_objective'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN Project_objective VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'significance_of_study'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN significance_of_study VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'system_analysis_and_design'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN system_analysis_and_design VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM repoTable LIKE 'Chapter'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE repoTable ADD COLUMN Chapter VARCHAR(1000)";
+    mysqli_query($connect, $add_column);
+}
+
+
 
 $revise_table = "CREATE TABLE IF NOT EXISTS revise_table(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
