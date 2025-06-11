@@ -197,6 +197,21 @@ if (!empty($email) && !empty($pass)) {
 
         // Check password
         if (md5($pass) === $row['passw']) {
+            // Check if password is still the default (first name)
+            if ($row['passw'] === md5($row['fname'])) {
+                // Set session for password reset
+                $_SESSION['student_id'] = $row['student_id'];
+                $_SESSION['fname'] = $row['fname'];
+                $_SESSION['lname'] = $row['lname'];
+                $_SESSION['email'] = $row['email'];
+                $_SESSION['profileImg'] = $row['profileImg'];
+                echo json_encode([
+                    "status" => "reset_required",
+                    "message" => "You must change your password on first login.",
+                    "student_id" => $row['student_id']
+                ]);
+                exit();
+            }
             // Reset failed_attempts and lockout_time
             $reset_sql = "UPDATE student SET failed_attempts = 0, lockout_time = NULL WHERE student_id = '{$row['student_id']}'";
             mysqli_query($connect, $reset_sql);

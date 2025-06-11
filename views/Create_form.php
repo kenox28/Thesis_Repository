@@ -17,11 +17,8 @@
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>Create Account</h1>
            
-            <!-- <input type="radio" id="radio1" name="Role" value="Reviewer" required />
-            <label for="radio1">Reviewer</label> -->
-            
-            <!-- <input type="radio" id="radio2" name="Role" value="Student" required />
-            <label for="radio2">Student</label> -->
+            <!-- Only Student option -->
+            <input type="hidden" name="Role" value="Student" />
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
@@ -34,16 +31,6 @@
             <label class="label" for="email">Email</label>
             <input required type="email" name="email" class="input" id="email" />
             
-
-            <label class="label" for="password">Password</label>
-            <input required type="password" name="passw" class="input" id="password" />
-            <div id="password-strength-bar-container">
-              <div id="password-strength-bar"></div>
-              <span id="password-strength-label"></span>
-            </div>
-            
-			
-            
             <button class="btn" id="login" type="submit">Sign Up</button>
 
             <div>
@@ -52,5 +39,5 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </body>
-    <script src="../js/CreateAccount.js?v=1.0.1"></script>
+    <script src="../js/CreateAccount.js?v=1.0.2"></script>
 </html>
