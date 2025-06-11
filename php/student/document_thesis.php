@@ -48,7 +48,7 @@ if (!empty($members_id)) {
     $memberQuery = mysqli_query($connect, "SELECT fname, lname FROM student WHERE student_id IN ($idsList)");
     while ($row = mysqli_fetch_assoc($memberQuery)) {
         $memberNames[] = $row['fname'] . ' ' . $row['lname'];
-    }
+}
 }
 $membersText = !empty($memberNames) ? ("With members: " . implode(', ', $memberNames)) : '';
 
@@ -135,25 +135,25 @@ $pdfPath = $uploadDir . $pdfName;
 
 if ($resultCode !== 0 || !file_exists($pdfPath)) {
     echo json_encode(["status" => "failed", "message" => "DOCX to PDF conversion failed."]);
-    exit;
-}
+        exit;
+    }
 
 // Update thesis record in repoTable
 $stmt2 = $connect->prepare("UPDATE repoTable SET ThesisFile=?, title=?, abstract=?, introduction=?, Project_objective=?, significance_of_study=?, system_analysis_and_design=?, updated=NOW(), status='Pending' WHERE student_id=? AND title=?");
 $stmt2->bind_param("sssssssss", $pdfName, $newtitle, $abstract, $introduction, $project_objective, $significance_of_study, $system_analysis_and_design, $student_id, $title);
 
-if ($stmt2->execute()) {
+    if ($stmt2->execute()) {
     // Optionally, add to thesis_history here
     //add to thesis_history
-    $stmt4 = $connect->prepare("INSERT INTO thesis_history (thesis_id, student_id, revision_num, file_name, revised_by, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
-    $stmt4->bind_param("iisssss", $thesis_id, $student_id, $next_revision, $newFileName, $revised_by, $status, $notes);
-    $stmt4->execute();
-    $stmt4->close();
-    
+        $stmt4 = $connect->prepare("INSERT INTO thesis_history (thesis_id, student_id, revision_num, file_name, revised_by, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $stmt4->bind_param("iisssss", $thesis_id, $student_id, $next_revision, $newFileName, $revised_by, $status, $notes);
+        $stmt4->execute();
+        $stmt4->close();
+
     echo json_encode(['status' => 'success', 'message' => 'File updated and PDF generated successfully.']);
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Database update failed.']);
-}
-$stmt2->close();
-$connect->close();
+    } else {
+        echo json_encode(['status' => 'error', 'message' => 'Database update failed.']);
+    }
+    $stmt2->close();
+    $connect->close();
 ?>
