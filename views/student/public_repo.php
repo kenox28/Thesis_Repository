@@ -50,8 +50,16 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             display: flex;
             align-items: center;
             gap: 0.5rem;
+<<<<<<< HEAD
             color: var(--secondary-color);
             font-weight: 500;
+=======
+            color: #1a3a8f;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 1rem;
+			font-size: uppercase;
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         }
 
         .status-badge {
@@ -150,6 +158,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             font-weight: 500;
             margin-bottom: 8px;
             font-size: 1rem;
+<<<<<<< HEAD
+=======
+			font-size: uppercase;
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         }
 
         #modalPDF {
@@ -202,6 +214,25 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 height: 35vh;
             }
         }
+<<<<<<< HEAD
+=======
+
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #1976a533;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 	</style>
 	<body>
 		<div class="main-bg">
@@ -214,6 +245,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
 					<a href="approve_thesis.php">Approved</a>
+<<<<<<< HEAD
+=======
+					<a href="approve_title.php">Approved Title</a>
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 				</div>
@@ -291,6 +326,23 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 			</div>
 		</div>
+<<<<<<< HEAD
+=======
+		<!-- Forced Password Change Modal -->
+		<div id="forceResetModal" style="display:none;position:fixed;z-index:99999;left:0;top:0;width:100vw;height:100vh;background:rgba(0,0,0,0.45);align-items:center;justify-content:center;">
+			<div style="background:#fff;max-width:400px;width:92vw;padding:32px 24px;border-radius:12px;box-shadow:0 2px 16px #1976a522;position:relative;">
+				<h2 style="color:#1976a5;text-align:center;margin-bottom:18px;">Change Your Password</h2>
+				<div style="color:#e67e22;text-align:center;margin-bottom:12px;font-weight:600;">For your security, you must change your password before using the system.</div>
+				<form id="forceResetForm">
+					<input type="password" name="password" placeholder="New Password" required minlength="8" style="width:100%;padding:10px;margin:10px 0 18px 0;border-radius:6px;border:1.5px solid #1976a5;">
+					<input type="password" name="confirm" placeholder="Confirm Password" required minlength="8" style="width:100%;padding:10px;margin:10px 0 18px 0;border-radius:6px;border:1.5px solid #1976a5;">
+					<button type="submit" style="width:100%;background:#1976a5;color:#fff;padding:10px;border:none;border-radius:6px;font-weight:600;">Change Password</button>
+				</form>
+				<div id="forceResetMsg" style="text-align:center;margin-top:12px;color:#e74c3c;"></div>
+				<button id="forceResetClose" style="display:none;margin-top:18px;width:100%;background:#888;color:#fff;padding:10px;border:none;border-radius:6px;font-weight:600;">Close</button>
+			</div>
+		</div>
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		<script>
 		// Store all theses for filtering
 		let allPublicTheses = [];
@@ -302,10 +354,22 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			renderPublicRepo(data);
 		}
 
+<<<<<<< HEAD
+=======
+		function capitalize(str) {
+			if (!str) return '';
+			return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+		}
+
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		function renderPublicRepo(data) {
 			let rows = "<div class='thesis-cards'>";
 			for (const u of data) {
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+<<<<<<< HEAD
+=======
+				const profileImg = "../../assets/ImageProfile/" + u.profileImg;
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 				rows += `
 					<div class="upload-item"
 						data-file="${filePath}"
@@ -315,12 +379,28 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						data-privacy="${encodeURIComponent(u.Privacy)}"
 						style="cursor:pointer;"
 					>
+<<<<<<< HEAD
 						<h3><i class='fas fa-book'></i> ${u.title}</h3>
 						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 						<div class="author-info">
 							<i class="fas fa-user-graduate"></i>
 							<span>${u.lname}, ${u.fname}</span>
 						</div>
+=======
+						<div class="author-info">
+							<a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
+								<img src="${profileImg}" alt="Profile Image" class="profile-image">
+							</a>
+							<span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+								${capitalize(u.lname)}, ${capitalize(u.fname)}
+							</span>
+						</div>
+						<h3 class="thesis-title" style="cursor:pointer;">
+							<i class='fas fa-book'></i> ${u.title}
+						</h3>
+						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 						<embed src="${filePath}" type="application/pdf" width="300" height="250">
 						<div class="status-badge">
 							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
@@ -440,6 +520,69 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				};
 			}
 		});
+<<<<<<< HEAD
+=======
+		// Check for force_reset=1 in URL
+		function getQueryParam(name) {
+			const url = new URL(window.location.href);
+			return url.searchParams.get(name);
+		}
+		const forceReset = getQueryParam('force_reset');
+		if (forceReset === '1') {
+			document.getElementById('forceResetModal').style.display = 'flex';
+			// Prevent closing modal and block logout
+			document.getElementById('logout-link').onclick = function(e) {
+				e.preventDefault();
+				alert('You must change your password before logging out.');
+			};
+			// Optionally block navigation
+			window.onbeforeunload = function() {
+				return 'You must change your password before leaving this page.';
+			};
+		}
+		// Handle password reset form
+		const forceResetForm = document.getElementById('forceResetForm');
+		if (forceResetForm) {
+			forceResetForm.onsubmit = async function(e) {
+				e.preventDefault();
+				const password = forceResetForm.password.value;
+				const confirm = forceResetForm.confirm.value;
+				if (password.length < 8) {
+					document.getElementById('forceResetMsg').textContent = 'Password must be at least 8 characters.';
+					return;
+				}
+				if (password !== confirm) {
+					document.getElementById('forceResetMsg').textContent = 'Passwords do not match.';
+					return;
+				}
+				// Send AJAX to reset password
+				const res = await fetch('../../php/reset_password_api.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						user_id: '<?php echo $_SESSION['student_id']; ?>',
+						password,
+						confirm
+					})
+				});
+				const result = await res.json();
+				if (result.status === 'success') {
+					document.getElementById('forceResetMsg').style.color = '#1976a5';
+					document.getElementById('forceResetMsg').textContent = 'Password changed successfully! You can now use the system.';
+					document.getElementById('forceResetClose').style.display = 'block';
+					window.onbeforeunload = null;
+					// Allow logout again
+					document.getElementById('logout-link').onclick = null;
+				} else {
+					document.getElementById('forceResetMsg').style.color = '#e74c3c';
+					document.getElementById('forceResetMsg').textContent = result.message || 'Failed to change password.';
+				}
+			};
+			document.getElementById('forceResetClose').onclick = function() {
+				document.getElementById('forceResetModal').style.display = 'none';
+			};
+		}
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		showPublicRepo();
 		</script>
 	</body>

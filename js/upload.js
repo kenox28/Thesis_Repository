@@ -1,5 +1,6 @@
 window.addEventListener("DOMContentLoaded", () => {
 	showdroptdown();
+<<<<<<< HEAD
 });
 document.getElementById("thesisForm").addEventListener("submit", uploadfun);
 
@@ -18,6 +19,17 @@ async function uploadfun(e) {
 		return;
 	}
 
+=======
+	showdorpdownmember();
+});
+document
+	.getElementById("thesisForm")
+	.addEventListener("submit", generateAPAReference);
+
+async function generateAPAReference(e) {
+	e.preventDefault();
+
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 	const form = document.getElementById("thesisForm");
 	const formdata = new FormData(form);
 
@@ -31,12 +43,18 @@ async function uploadfun(e) {
 	if (result.status === "success") {
 		Swal.fire({
 			icon: "success",
+<<<<<<< HEAD
 			title: "Success!",
 			text: result.message,
 			confirmButtonColor: "#1976a5",
 		}).then(() => {
 			form.reset(); // Clear all input fields
 			showupload();
+=======
+			title: "Successfully Uploaded!",
+			text: result.message,
+			confirmButtonColor: "#1976a5",
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		});
 	} else {
 		Swal.fire({
@@ -60,6 +78,22 @@ async function showdroptdown() {
 	document.getElementById("reviewerDropdown").innerHTML = options;
 }
 
+<<<<<<< HEAD
+=======
+async function showdorpdownmember() {
+	const res = await fetch("../../php/student/showmember.php");
+	const data = await res.json();
+
+	let options = "";
+
+	for (const u of data) {
+		options += `<option value="${u.student_id}">${u.student_name}</option>`;
+	}
+
+	document.getElementById("memberDropdown").innerHTML = options;
+}
+
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 // Dropdown toggle for avatar
 const avatar = document.querySelector(".nav-avatar");
 if (avatar) {

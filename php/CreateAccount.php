@@ -1,5 +1,4 @@
 <?php
-session_start();
 include "Database.php";
 require_once __DIR__ . '/../vendor/autoload.php'; // For PHPMailer
 
@@ -9,15 +8,20 @@ use PHPMailer\PHPMailer\Exception;
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+<<<<<<< HEAD
 $role = mysqli_real_escape_string($connect, $_POST['Role']);
+=======
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 $fname = mysqli_real_escape_string($connect, $_POST['fname']);
 $lname = mysqli_real_escape_string($connect, $_POST['lname']);
 $email = mysqli_real_escape_string($connect, $_POST['email']);
-$password_raw = $_POST['passw'];
-$password = md5($password_raw); 
-$gender = mysqli_real_escape_string($connect, $_POST['gender']);
-$dateb = mysqli_real_escape_string($connect, $_POST['bday']);
 
+<<<<<<< HEAD
+=======
+// Set password to first name (hashed)
+$password = md5($fname);
+
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 // 1. Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode([
@@ -51,10 +55,16 @@ if (!$api_result['format_valid'] || !$api_result['mx_found'] || $api_result['dis
     exit();
 }
 
+<<<<<<< HEAD
 // 4. Check if email exists in both tables
 $check_student = mysqli_query($connect, "SELECT * FROM Student WHERE email = '{$email}'");
 $check_reviewer = mysqli_query($connect, "SELECT * FROM reviewer WHERE email = '{$email}'");
 if (mysqli_num_rows($check_student) > 0 || mysqli_num_rows($check_reviewer) > 0) {
+=======
+// 4. Check if email exists in Student table
+$check_student = mysqli_query($connect, "SELECT * FROM Student WHERE email = '{$email}'");
+if (mysqli_num_rows($check_student) > 0) {
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     echo json_encode(array(
         'status' => 'failed',
         'message' => 'Email already exists'
@@ -76,7 +86,11 @@ try {
     $mail->addAddress($email);
     $mail->isHTML(true);
     $mail->Subject = 'Welcome to Thesis Repository';
+<<<<<<< HEAD
     $mail->Body    = "Hello $fname $lname,<br><br>Welcome to the Thesis Repository!";
+=======
+    $mail->Body    = "Hello $fname $lname,<br><br>Welcome to the Thesis Repository! Your initial password is your first name. Please change it after your first login.";
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     $mail->send();
 } catch (Exception $e) {
     echo json_encode([
@@ -96,10 +110,29 @@ if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
     move_uploaded_file($tempimage, $folder);
 }
 
+<<<<<<< HEAD
 if ($role === 'Reviewer') {
     $sql1 = "INSERT INTO reviewer (reviewer_id, fname, lname, email, pass, profileImg, gender, bdate) 
             VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";
     $result = mysqli_query($connect, $sql1);
+=======
+$sql1 = "INSERT INTO Student (student_id, fname, lname, email, passw, profileImg) 
+        VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img')";
+$result = mysqli_query($connect, $sql1);
+
+$sql2 = "SELECT * FROM Student WHERE student_id = '$userid'";
+$result1 = mysqli_query($connect, $sql2);
+$row = mysqli_fetch_assoc($result1);
+session_start();
+$_SESSION['student_id'] = $row['student_id'];
+$_SESSION['fname'] = $row['fname'];
+$_SESSION['lname'] = $row['lname'];
+$_SESSION['email'] = $row['email'];
+$_SESSION['profileImg'] = $row['profileImg'];
+if ($result) {
+
+    
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 
     if ($result) {
         echo json_encode(["status" => "success", "message" => "Successfully created account"]);
@@ -111,10 +144,17 @@ if ($role === 'Reviewer') {
             VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";
     $result = mysqli_query($connect, $sql1);
 
+<<<<<<< HEAD
     if ($result) {
         echo json_encode(["status" => "success", "message" => "Successfully created account"]);
     } else {
         echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
     }
+=======
+    echo json_encode(["status" => "success", "message" => "Successfully created account"]);
+
+} else {
+    echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 }
 ?>

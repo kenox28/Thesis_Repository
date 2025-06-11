@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 const passwordInput = document.getElementById("password");
 const passwordStrengthBar = document.getElementById("password-strength-bar");
 const passwordStrengthLabel = document.getElementById(
@@ -70,10 +71,16 @@ function checkPasswordStrength(password) {
 	if (strength === 3) return "medium";
 	return "weak";
 }
+=======
+const createForm = document.getElementById("CreateForm");
+
+createForm.addEventListener("submit", CreateFun);
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 
 async function CreateFun(e) {
 	e.preventDefault(); // Prevent form submission initially
 
+<<<<<<< HEAD
 	const password = passwordInput.value;
 	const strength = checkPasswordStrength(password);
 
@@ -86,6 +93,8 @@ async function CreateFun(e) {
 		return;
 	}
 
+=======
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 	const formdata = new FormData(createForm);
 
 	const res = await fetch("../php/CreateAccount.php", {
@@ -98,7 +107,11 @@ async function CreateFun(e) {
 	try {
 		data = JSON.parse(text);
 	} catch (e) {
+<<<<<<< HEAD
 		alert("Server error:\n" + text);
+=======
+		console.log("Server error:\n" + text);
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		return;
 	}
 
@@ -108,9 +121,13 @@ async function CreateFun(e) {
 			title: "Success!",
 			text: data.message,
 		}).then(() => {
+<<<<<<< HEAD
 			createForm.reset();
 			passwordStrengthBar.style.width = "0%";
 			passwordStrengthLabel.textContent = "";
+=======
+			window.location.href = "../views/student/public_repo.php";
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		});
 	} else {
 		Swal.fire({

@@ -796,6 +796,10 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
+<<<<<<< HEAD
 <script src="../../js/view_thesis.js?v=1.0.8"></script>
+=======
+<script src="../../js/view_thesis.js?v=1.0.13"></script>
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 </body>
 </html>

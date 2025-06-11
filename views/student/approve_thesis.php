@@ -12,6 +12,24 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
+<<<<<<< HEAD
+=======
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #1976a533;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         .upload-item {
             background: var(--card-bg);
             border-radius: 12px;
@@ -293,6 +311,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </div>
     </div>
 <script>
+<<<<<<< HEAD
+=======
+function capitalize(str) {
+		if (!str) return "";
+		return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 async function showupload() {
     const res = await fetch("../../php/student/approve_thesis.php");
     const data = await res.json();
@@ -305,6 +330,7 @@ async function showupload() {
         // Only show approved theses
         if (u.status && u.status.toLowerCase() === "approved") {
             const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+<<<<<<< HEAD
             rows += `
                 <div class="upload-item"
                     data-file="${filePath}"
@@ -330,6 +356,38 @@ async function showupload() {
                     </div>
                 </div>
             `;
+=======
+            const profileImg = "../../assets/ImageProfile/" + u.profileImg;
+				rows += `
+					<div class="upload-item"
+						data-file="${filePath}"
+						data-title="${encodeURIComponent(u.title)}"
+						data-abstract="${encodeURIComponent(u.abstract)}"
+						data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
+						data-privacy="${encodeURIComponent(u.Privacy)}"
+						style="cursor:pointer;"
+					>
+						<div class="author-info">
+							<a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">  
+								<img src="${profileImg}" alt="Profile Image" class="profile-image">
+							</a>
+							<span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+								${capitalize(u.lname)}, ${capitalize(u.fname)}
+							</span>
+						</div>
+                        <h3 class="thesis-title" style="cursor:pointer;">
+							<i class='fas fa-book'></i> ${u.title}
+						</h3>
+						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+
+						<embed src="${filePath}" type="application/pdf" width="300" height="250">
+                        <div style="margin-top:12px;display:flex;gap:10px;">
+                            <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
+                            <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
+                        </div>
+					</div>
+				`;
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         }
     }
     rows += "</div>";
