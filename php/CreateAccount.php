@@ -107,6 +107,8 @@ $_SESSION['email'] = $row['email'];
 $_SESSION['profileImg'] = $row['profileImg'];
 if ($result) {
 
+    
+
 
     echo json_encode(["status" => "success", "message" => "Successfully created account"]);
 
