@@ -27,6 +27,20 @@ $project_objective = isset($_POST['project_objective']) ? trim($_POST['project_o
 $significance_of_study = isset($_POST['significance_of_study']) ? trim($_POST['significance_of_study']) : '';
 $system_analysis_and_design = isset($_POST['system_analysis_and_design']) ? trim($_POST['system_analysis_and_design']) : '';
 $abstract = isset($_POST['abstract']) ? trim($_POST['abstract']) : ''; // If you have this field
+$chapter = isset($_POST['chapter']) ? trim($_POST['chapter']) : '';
+
+// Only keep allowed fields based on chapter
+if ($chapter === "1") {
+    $project_objective = '';
+    $significance_of_study = '';
+    $system_analysis_and_design = '';
+} elseif ($chapter === "2") {
+    $significance_of_study = '';
+    $system_analysis_and_design = '';
+} elseif ($chapter === "3") {
+    $system_analysis_and_design = '';
+}
+// For chapter 4, keep all fields
 
 // Get members_id from DB or POST
 $members_id = '';

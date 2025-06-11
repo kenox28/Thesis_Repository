@@ -9,6 +9,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $thesis_id = $_POST['thesis_id'];
     $status = $_POST['status'];
     $message = $_POST['message'];
+    $chapter = $_POST['chapter'];
+
 
     $sql = "UPDATE repoTable SET status = ?, message = ? WHERE id = ?";
     $stmt = $connect->prepare($sql);
@@ -66,13 +68,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         // If status is 'continue', update chapter to 2
         if (strtolower($status) === 'continue') {
+            // Get the current chapter from POST, default to 1 if not set
+            $currentChapter = isset($_POST['chapter']) ? intval($_POST['chapter']) : 1;
+            $nextChapter = strval($currentChapter + 1);
+            if ($nextChapter == 5) {
+                $statusif5 = 'pending';
+                $sql5 = "UPDATE repoTable SET status = ?, chapter = ? WHERE id = ?";
+                $stmt5 = $connect->prepare($sql5);
+                if ($stmt5) {
+                    $stmt5->bind_param("ssi", $statusif5, $nextChapter, $thesis_id);
+                    $stmt5->execute();
+                    $stmt5->close();
+                }
+            }else{
             $sql5 = "UPDATE repoTable SET chapter = ? WHERE id = ?";
             $stmt5 = $connect->prepare($sql5);
             if ($stmt5) {
-                $chapterValue = '2';
-                $stmt5->bind_param("si", $chapterValue, $thesis_id);
-                $stmt5->execute();
-                $stmt5->close();
+                $stmt5->bind_param("si", $nextChapter, $thesis_id);
+                    $stmt5->execute();
+                    $stmt5->close();
+                }
             }
         }
 

@@ -132,7 +132,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_objective = '';
     $significance_of_study = '';
     $system_analysis_and_design = '';
-    $chapter = '1';
+    $chapter = '0';
     $status = 'pending';
     $message = '';
     $member_ids = implode(',', $member_ids);
