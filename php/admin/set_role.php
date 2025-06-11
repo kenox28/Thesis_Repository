@@ -5,7 +5,10 @@
 
     $data = json_decode(file_get_contents("php://input"), true);
     $id = $data['id'];
-    $newRole = $data['role'];
+    $newRole = $data['role'];   
+
+
+    
     
     // First, try to find the student
     $stmt = $connect->prepare("SELECT fname, lname, email, passw, profileImg, role FROM student WHERE student_id = ?");
