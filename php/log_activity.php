@@ -3,8 +3,8 @@ session_start();
 include_once "Database.php";
 include_once "Logger.php";
 
-// Check if user is logged in as super admin
-if (!isset($_SESSION['super_admin_id'])) {
+// Check if user is logged in as admin or super admin
+if (!isset($_SESSION['admin_id']) && !isset($_SESSION['super_admin_id'])) {
     echo json_encode([
         "status" => "error",
         "message" => "Unauthorized access"
@@ -24,8 +24,12 @@ if (!$data || !isset($data['action_type']) || !isset($data['description'])) {
 }
 
 $logger = new Logger($connect);
+
+// Use admin_id if it exists, otherwise use super_admin_id
+$user_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : $_SESSION['super_admin_id'];
+
 $result = $logger->logActivity(
-    $_SESSION['super_admin_id'],
+    $user_id,
     $data['action_type'],
     $data['description']
 );

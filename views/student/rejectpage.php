@@ -1,5 +1,15 @@
 <?php
 session_start();
+
+// Check if user is logged in as student or super admin in student view
+if (!isset($_SESSION['student_id']) && (!isset($_SESSION['super_admin_id']) || !isset($_SESSION['super_admin_student_view']))) {
+    header("Location: ../student_login.php");
+    exit();
+}
+
+// Include the admin banner
+include 'includes/admin_banner.php';
+
 $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
@@ -260,7 +270,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             if (u.status && u.status.toLowerCase() === "rejected") {
                 const filePath = "../../assets/thesisfile/" + u.ThesisFile;
                 const profileImg = "../../assets/ImageProfile/" + u.profileImg;
-
                 rows += `
                     <div class="thesis-card"
                         data-file="${filePath}"
