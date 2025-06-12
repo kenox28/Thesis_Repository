@@ -1,38 +1,78 @@
 <?php
 session_start();
-$profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
+
+// Check if user is logged in as student or super admin in student view
+if (!isset($_SESSION['student_id']) && (!isset($_SESSION['super_admin_id']) || !isset($_SESSION['super_admin_student_view']))) {
+    header("Location: ../student_login.php");
+    exit();
+}
+
+// Set user information based on who is logged in
+if (isset($_SESSION['super_admin_id'])) {
+    $fname = 'Super';
+    $lname = 'Admin';
+    $profileImg = 'noprofile.png';
+    $email = $_SESSION['email'] ?? 'superadmin@example.com';
+} else {
+    $fname = $_SESSION['fname'];
+    $lname = $_SESSION['lname'];
+    $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
+    $email = $_SESSION['email'];
+}
+
+// Check if viewing as super admin
+$isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admin_student_view']);
 ?>
 <!DOCTYPE html>
 <html lang="en">
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Pending Thesis</title>
+		<title><?php echo $isAdminView ? 'Student View - Super Admin' : 'Pending Thesis'; ?></title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css?v=1.0.6" />
-<<<<<<< HEAD
+		<?php if ($isAdminView): ?>
+		<style>
+			.admin-view-banner {
+				background: #1976a5;
+				color: white;
+				padding: 10px;
+				text-align: center;
+				position: fixed;
+				top: 0;
+				left: 0;
+				right: 0;
+				z-index: 1000;
+				display: flex;
+				justify-content: space-between;
+				align-items: center;
+			}
+			.admin-view-banner button {
+				background: white;
+				color: #1976a5;
+				border: none;
+				padding: 5px 15px;
+				border-radius: 4px;
+				cursor: pointer;
+				font-weight: 600;
+			}
+			.admin-view-banner button:hover {
+				background: #f0f0f0;
+			}
+			.main-nav {
+				margin-top: 40px;
+			}
+			/* Hide profile-related features for super admin */
+			<?php if ($isAdminView): ?>
+			#profile-link,
+			#profileImgFormModal,
+			#profileImgDeleteFormModal {
+				display: none !important;
+			}
+			<?php endif; ?>
+		</style>
+		<?php endif; ?>
 	</head>
 	<style>
-=======
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-	</head>
-	<style>
-        
-        .profile-image {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2.5px solid #1976a5;
-            box-shadow: 0 2px 8px #1976a533;
-            margin-right: 10px;
-            background: #f4f8ff;
-            transition: box-shadow 0.2s, border-color 0.2s;
-        }
-        .profile-image:hover {
-            box-shadow: 0 4px 16px #1976a555;
-            border-color: #2893c7;
-        }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		#PDFFILE{
 			display: flex;
 			justify-content: center;
@@ -231,6 +271,14 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
 </style>
 	<body>
+		<?php if ($isAdminView): ?>
+		<div class="admin-view-banner">
+			<span>You are viewing the student dashboard as a Super Admin</span>
+			<button onclick="window.location.href='../super_admin/super_admin_dashboard.php'">
+				Return to Admin Dashboard
+			</button>
+		</div>
+		<?php endif; ?>
 		<div class="main-bg">
 			<nav class="main-nav">
 				<div class="nav-logo">
@@ -242,24 +290,27 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
 					<a href="approve_thesis.php">Approved</a>
-<<<<<<< HEAD
-=======
-                    <a href="approve_title.php">Approved Title</a>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
+					<a href="approve_title.php">Approved Title</a>
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 					
 				</div>
 				<div class="nav-avatar dropdown">
-					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
-					<?php if ($hasProfileImg): ?>
-						<img class="avatar-img" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" onerror="this.style.display='none'">
+					<?php if (!$isAdminView): ?>
+						<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
+						<?php if ($hasProfileImg): ?>
+							<img class="avatar-img" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" onerror="this.style.display='none'">
+						<?php else: ?>
+							<span class="avatar-initials"><?php echo strtoupper($fname[0] . $lname[0]); ?></span>
+						<?php endif; ?>
 					<?php else: ?>
-						<span class="avatar-initials"><?php echo strtoupper($_SESSION['fname'][0] . $_SESSION['lname'][0]); ?></span>
+						<span class="avatar-initials" style="background: #1976a5;">SA</span>
 					<?php endif; ?>
-					<span class="avatar-name"><?php echo $_SESSION['fname'][0]; ?><?php echo $_SESSION['lname'][0]; ?></span>
+					<span class="avatar-name"><?php echo $fname[0]; ?><?php echo $lname[0]; ?></span>
 					<div class="dropdown-content">
-						<a href="#" id="profile-link">Profile</a>
+						<?php if (!$isAdminView): ?>
+							<a href="#" id="profile-link">Profile</a>
+						<?php endif; ?>
 						<a href="#" id="logout-link">Logout</a>
 					</div>
 				</div>
@@ -319,18 +370,21 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</section>
 			</main>
 		</div>
-		<div id="profile-modal" class="profile-modal">
+		<div id="profile-modal" class="profile-modal" <?php if ($isAdminView) echo 'style="display:none;"'; ?>>
 			<div class="profile-modal-content">
 				<span class="close-modal" id="closeProfileModal">&times;</span>
 				<div class="profile-modal-header">
-					<?php if ($hasProfileImg): ?>
-						<img class="profile-modal-img" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" onerror="this.style.display='none'">
-					<?php else: ?>
-						<span class="profile-modal-initials"><?php echo strtoupper($_SESSION['fname'][0] . $_SESSION['lname'][0]); ?></span>
+					<?php if (!$isAdminView): ?>
+						<?php if ($hasProfileImg): ?>
+							<img class="profile-modal-img" src="../../assets/ImageProfile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" onerror="this.style.display='none'">
+						<?php else: ?>
+							<span class="profile-modal-initials"><?php echo strtoupper($fname[0] . $lname[0]); ?></span>
+						<?php endif; ?>
+						<div class="profile-modal-name"><?php echo $fname . ' ' . $lname; ?></div>
+						<div class="profile-modal-email"><?php echo $email; ?></div>
 					<?php endif; ?>
-					<div class="profile-modal-name"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?></div>
-					<div class="profile-modal-email"><?php echo $_SESSION['email']; ?></div>
 				</div>
+				<?php if (!$isAdminView): ?>
 				<form id="profileImgFormModal" action="../../php/student/profile_img_upload.php" method="POST" enctype="multipart/form-data" style="margin-bottom: 10px;">
 					<label class="profile-modal-upload-label">
 						<input type="file" name="profileImg" accept="image/*" onchange="this.form.submit()" style="display:none;">
@@ -340,6 +394,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<form id="profileImgDeleteFormModal" action="../../php/student/profile_img_delete.php" method="POST">
 					<button type="submit" class="profile-modal-delete-btn">Remove Photo</button>
 				</form>
+				<?php endif; ?>
 			</div>
 		</div>
 		<div id="logout-modal" class="profile-modal">
@@ -369,11 +424,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 			</div>
 		</div>
-<<<<<<< HEAD
-		<script src="../../js/homepage.js?v=1.0.7"></script>
-=======
 		<script src="../../js/homepage.js?v=1.0.12"></script>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		<script>
 			
 		</script>

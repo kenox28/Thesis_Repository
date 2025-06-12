@@ -1,5 +1,15 @@
 <?php
 session_start();
+
+// Check if user is logged in as student or super admin in student view
+if (!isset($_SESSION['student_id']) && (!isset($_SESSION['super_admin_id']) || !isset($_SESSION['super_admin_student_view']))) {
+    header("Location: ../student_login.php");
+    exit();
+}
+
+// Include the admin banner
+include 'includes/admin_banner.php';
+
 $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
@@ -11,8 +21,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-<<<<<<< HEAD
-=======
         .profile-image {
             width: 48px;
             height: 48px;
@@ -28,7 +36,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             box-shadow: 0 4px 16px #1976a555;
             border-color: #2893c7;
         }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         .modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -183,14 +190,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             border: 2px solid #1976a5;
             position: relative;
             overflow: hidden;
-<<<<<<< HEAD
-=======
-            animation: popIn 0.25s cubic-bezier(.4,2,.6,1) 1;
-        }
-        @keyframes popIn {
-            0% { transform: scale(0.95); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         }
         .revise-modal-unique-header {
             display: flex;
@@ -332,8 +331,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 max-height: 20vh;
             }
         }
-<<<<<<< HEAD
-=======
         .thesis-card {
             background: #fff;
             border-radius: 18px;
@@ -353,12 +350,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             background: #f4f8ff;
             box-shadow: 0 8px 32px #1976a544;
             border-color: #1976a5;
-        }
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 0.7rem;
-            margin-bottom: 8px;
         }
         .thesis-card-title {
             font-size: 1.25rem;
@@ -506,7 +497,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             gap: 12px;
             margin-bottom: 8px;
         }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     </style>
 </head>
 <body>
@@ -520,10 +510,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <a href="upload.php">Upload Thesis</a>
             <a href="homepage.php">Pending</a>
     <a href="approve_thesis.php">Approved</a>
-<<<<<<< HEAD
-=======
     <a href="approve_title.php">Approved Title</a>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     <a href="rejectpage.php">Rejected</a>
     <a href="revisepage.php">Revised</a>
             </div>
@@ -620,12 +607,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <p id="reviseModalUniqueAbstract" class="revise-modal-unique-abstract"></p>
                 <div class="revise-modal-unique-author" id="reviseModalUniqueOwner"></div>
                 <button id="reviseModalUniqueHistoryBtn" class="revise-modal-unique-history-btn">Revision History</button>
-<<<<<<< HEAD
-                <form id="reviseModalUniqueUpdateForm" enctype="multipart/form-data" style="margin: 16px 0;">
-                    <input type="hidden" name="title" id="reviseModalUniqueTitleInput">
-                    <input class="revise-modal-unique-file-btn" type="file" name="revised_file" accept="application/pdf" required style="margin-bottom:8px;">
-                    <button type="submit" class="revise-modal-unique-upload-btn">Update File</button>
-=======
                 <form id="reviseModalUniqueUpdateForm" enctype="multipart/form-data" style="margin: 16px 0; display: flex; flex-direction: column; gap: 14px; align-items: stretch;">
                     <input type="hidden" name="title" id="reviseModalUniqueTitleInput">
                     <input type="text" name="newtitle" id="reviseModalUniqueNewTitleInput" required placeholder="Title">
@@ -638,184 +619,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         <span id="selectedFileName" style="color:#1976a5; font-size:1rem; min-width:120px; margin-left:14px;">No file chosen</span>
                     </div>
                     <button type="submit" class="revise-modal-unique-upload-btn" style="width:100%;">Update File</button>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 </form>
                 <iframe id="reviseModalUniquePDF" src="" width="100%" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
             </div>
         </div>
     </div>
 <script>
-<<<<<<< HEAD
-async function showupload() {
-    const res = await fetch("../../php/student/revisepage.php");
-    const data = await res.json();
-    if (data.error) {
-        document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
-        return;
-    }
-    let rows = "<div class='thesis-cards'>";
-    for (const u of data) {
-        if (u.status && u.status.toLowerCase() === "revised") {
-            const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-            rows += `
-                <div class="thesis-card"
-                    data-file="${filePath}"
-                    data-title="${encodeURIComponent(u.title)}"
-                    data-abstract="${encodeURIComponent(u.abstract)}"
-                    data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-                    data-status="${encodeURIComponent(u.status)}"
-                    style="cursor:pointer;"
-                >
-                    <div class="thesis-card-title">${u.title}</div>
-                    <div class="thesis-card-abstract">${u.abstract}</div>
-                    <embed src="${filePath}" type="application/pdf" width="300" height="250">
-                    <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
-                    <div class="thesis-card-status">${u.status || "Revised"}</div>
-                </div>
-            `;
-        }
-    }
-    rows += "</div>";
-    document.getElementById("PDFFILE").innerHTML = rows;
-
-    // Modal open logic for .thesis-card
-    document.querySelectorAll('.thesis-card').forEach(item => {
-        item.addEventListener('click', function (e) {
-            const filePath = item.getAttribute('data-file');
-            const title = decodeURIComponent(item.getAttribute('data-title'));
-            const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
-            const owner = decodeURIComponent(item.getAttribute('data-owner'));
-            const status = decodeURIComponent(item.getAttribute('data-status'));
-
-            document.getElementById('reviseModalUniqueTitle').textContent = title;
-            document.getElementById('reviseModalUniqueStatus').textContent = status || "Revised";
-            document.getElementById('reviseModalUniqueAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-            document.getElementById('reviseModalUniqueOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
-            document.getElementById('reviseModalUniquePDF').src = filePath + "#toolbar=0";
-            document.getElementById('reviseModalUniqueTitleInput').value = title;
-            document.getElementById('reviseModalUnique').style.display = "flex";
-        });
-    });
-}
-showupload();
-
-// Modal close logic
-document.addEventListener('DOMContentLoaded', function() {
-    const closeBtn = document.getElementById('closeReviseModalUnique');
-    const modal = document.getElementById('reviseModalUnique');
-    const modalPDF = document.getElementById('reviseModalUniquePDF');
-    if (closeBtn && modal && modalPDF) {
-        closeBtn.onclick = function () {
-            modal.style.display = "none";
-            modalPDF.src = "";
-        };
-        modal.onclick = function(e) {
-            if (e.target === modal) {
-                modal.style.display = "none";
-                modalPDF.src = "";
-            }
-        };
-    }
-    // Revision History button
-    const historyBtn = document.getElementById('reviseModalUniqueHistoryBtn');
-    if (historyBtn) {
-        historyBtn.onclick = function() {
-            const title = document.getElementById('reviseModalUniqueTitle').textContent;
-            window.location.href = 'revise_history.php?title=' + encodeURIComponent(title);
-        };
-    }
-});
-
-// Handle update form submit (no backend change needed)
-document.addEventListener('submit', async function(e) {
-    if (e.target && e.target.id === 'reviseModalUniqueUpdateForm') {
-        e.preventDefault();
-        const form = e.target;
-        const formData = new FormData(form);
-        const res = await fetch('../../php/student/updated_revised_file.php', {
-            method: 'POST',
-            body: formData
-        });
-        const result = await res.json();
-        if (result.status === 'success') {
-            Swal.fire({
-                icon: "success",
-                title: "Success",
-                text: result.message,
-                confirmButtonColor: "#1976a5",
-            });
-            document.getElementById('closeReviseModalUnique').click();
-            showupload(); // Refresh the list
-        } else {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: result.message || 'Failed to update file.',
-                confirmButtonColor: "#1976a5",
-            });
-        }
-    }
-});
-
-// Dropdown toggle for avatar
-const avatar = document.querySelector('.nav-avatar');
-if (avatar) {
-    avatar.addEventListener('click', function(e) {
-        e.stopPropagation();
-        this.classList.toggle('open');
-    });
-    document.addEventListener('click', function() {
-        avatar.classList.remove('open');
-    });
-}
-// Profile modal logic
-const profileLink = document.getElementById('profile-link');
-const profileModal = document.getElementById('profile-modal');
-const closeProfileModal = document.getElementById('closeProfileModal');
-if (profileLink && profileModal && closeProfileModal) {
-    profileLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        profileModal.style.display = 'flex';
-        avatar.classList.remove('open');
-    });
-    closeProfileModal.addEventListener('click', function() {
-        profileModal.style.display = 'none';
-    });
-    window.addEventListener('click', function(event) {
-        if (event.target === profileModal) {
-            profileModal.style.display = 'none';
-        }
-    });
-}
-// Logout confirmation modal logic
-const logoutLink = document.getElementById('logout-link');
-const logoutModal = document.getElementById('logout-modal');
-const closeLogoutModal = document.getElementById('closeLogoutModal');
-const confirmLogoutBtn = document.getElementById('confirmLogoutBtn');
-const cancelLogoutBtn = document.getElementById('cancelLogoutBtn');
-if (logoutLink && logoutModal && closeLogoutModal && confirmLogoutBtn && cancelLogoutBtn) {
-    logoutLink.addEventListener('click', function(e) {
-        e.preventDefault();
-        logoutModal.style.display = 'flex';
-        avatar.classList.remove('open');
-    });
-    closeLogoutModal.addEventListener('click', function() {
-        logoutModal.style.display = 'none';
-    });
-    cancelLogoutBtn.addEventListener('click', function(e) {
-        e.preventDefault();
-        logoutModal.style.display = 'none';
-    });
-    confirmLogoutBtn.addEventListener('click', function() {
-        window.location.href = '../../php/logout.php';
-    });
-    window.addEventListener('click', function(event) {
-        if (event.target === logoutModal) {
-            logoutModal.style.display = 'none';
-        }
-    });
-}
-=======
     function capitalize(str) {
         if (!str) return "";
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -1004,7 +813,6 @@ if (logoutLink && logoutModal && closeLogoutModal && confirmLogoutBtn && cancelL
             }
         });
     }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 </script>
 </body>
 </html>

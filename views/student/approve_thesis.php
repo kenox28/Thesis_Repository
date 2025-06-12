@@ -1,5 +1,15 @@
 <?php
 session_start();
+
+// Check if user is logged in as student or super admin in student view
+if (!isset($_SESSION['student_id']) && (!isset($_SESSION['super_admin_id']) || !isset($_SESSION['super_admin_student_view']))) {
+    header("Location: ../student_login.php");
+    exit();
+}
+
+// Include the admin banner
+include 'includes/admin_banner.php';
+
 $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
@@ -12,8 +22,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <style>
-<<<<<<< HEAD
-=======
         .profile-image {
             width: 48px;
             height: 48px;
@@ -29,7 +37,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             box-shadow: 0 4px 16px #1976a555;
             border-color: #2893c7;
         }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         .upload-item {
             background: var(--card-bg);
             border-radius: 12px;
@@ -311,13 +318,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </div>
     </div>
 <script>
-<<<<<<< HEAD
-=======
 function capitalize(str) {
 		if (!str) return "";
 		return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 async function showupload() {
     const res = await fetch("../../php/student/approve_thesis.php");
     const data = await res.json();
@@ -330,33 +334,6 @@ async function showupload() {
         // Only show approved theses
         if (u.status && u.status.toLowerCase() === "approved") {
             const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-<<<<<<< HEAD
-            rows += `
-                <div class="upload-item"
-                    data-file="${filePath}"
-                    data-title="${encodeURIComponent(u.title)}"
-                    data-abstract="${encodeURIComponent(u.abstract)}"
-                    data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-                    data-status="${encodeURIComponent(u.status)}"
-                    style="cursor:pointer;"
-                >
-                    <h3><i class='fas fa-book'></i> ${u.title}</h3>
-                    <p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-                    <div class="author-info">
-                        <i class="fas fa-user-graduate"></i>
-                        <span>${u.lname}, ${u.fname}</span>
-                    </div>
-                    <embed src="${filePath}" type="application/pdf">
-                    <div class="status-badge">
-                        <i class="fas fa-check"></i> ${u.status || "Approved"}
-                    </div>
-                    <div style="margin-top:12px;display:flex;gap:10px;">
-                        <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
-                        <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
-                    </div>
-                </div>
-            `;
-=======
             const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 				rows += `
 					<div class="upload-item"
@@ -387,7 +364,6 @@ async function showupload() {
                         </div>
 					</div>
 				`;
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         }
     }
     rows += "</div>";

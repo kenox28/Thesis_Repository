@@ -1,5 +1,15 @@
 <?php
 session_start();
+
+// Check if user is logged in as student or super admin in student view
+if (!isset($_SESSION['student_id']) && (!isset($_SESSION['super_admin_id']) || !isset($_SESSION['super_admin_student_view']))) {
+    header("Location: ../student_login.php");
+    exit();
+}
+
+// Include the admin banner
+include 'includes/admin_banner.php';
+
 $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
@@ -10,8 +20,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <title>Rejected Theses</title>
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
     <style>
-<<<<<<< HEAD
-=======
     .profile-image {
         width: 48px;
         height: 48px;
@@ -28,7 +36,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         border-color: #2893c7;
     }
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     .modal {
         position: fixed;
         top: 0; left: 0; right: 0; bottom: 0;
@@ -169,10 +176,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <a href="upload.php">Upload Thesis</a>
                 <a href="homepage.php">Pending</a>
                 <a href="approve_thesis.php">Approved</a>
-<<<<<<< HEAD
-=======
                 <a href="approve_title.php">Approved Title</a>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 <a href="rejectpage.php">Rejected</a>
                 <a href="revisepage.php">Revised</a>
 
@@ -249,13 +253,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </div>
     </div>
     <script>
-<<<<<<< HEAD
-=======
     function capitalize(str) {
         if (!str) return "";
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     async function showupload() {
         const res = await fetch("../../php/student/rejectpage.php");
         const data = await res.json();
@@ -268,11 +269,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             // Only show rejected theses
             if (u.status && u.status.toLowerCase() === "rejected") {
                 const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-<<<<<<< HEAD
-=======
                 const profileImg = "../../assets/ImageProfile/" + u.profileImg;
-
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 rows += `
                     <div class="thesis-card"
                         data-file="${filePath}"
@@ -282,9 +279,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         data-status="${encodeURIComponent(u.status)}"
                         style="cursor:pointer;"
                     >
-<<<<<<< HEAD
-                        <div class="thesis-card-title">${u.title}</div>
-=======
                         <div class="author-info">
                             <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
                                 <img src="${profileImg}" alt="Profile Image" class="profile-image">
@@ -296,7 +290,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         <h3 class="thesis-title thesis-card-title" style="cursor:pointer;">
 							<i class='fas fa-book'></i> ${u.title}
 						</h3>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                         <div class="thesis-card-abstract">${u.abstract}</div>
                         <embed src="${filePath}" type="application/pdf" width="300" height="250">
                         <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
