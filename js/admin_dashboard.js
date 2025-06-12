@@ -43,32 +43,12 @@ async function fetchStudents() {
                     <h3>${student.fname} ${student.lname}</h3>
                     <p><strong>ID:</strong> ${student.student_id}</p>
                     <p><strong>Email:</strong> ${student.email}</p>
-					<button class="btn-role" onclick="setRole('${student.student_id}', 'reviewer')">Set Role to Reviewer</button>
                 </div>
             `;
 			container.innerHTML += tile;
 		});
 	} else {
 		alert(result.message);
-	}
-}
-
-async function setRole(id, role) {
-	console.log(id, role);
-	const result = await fetchData("../../php/admin/set_role.php", "POST", {
-		id,
-		role,
-	});
-	if (!result) return;
-
-	if (result.status === "success") {
-		swal.fire({
-			title: "Success",
-			text: result.message,
-			icon: "success",
-		});
-		fetchStudents();
-		fetchReviewers();
 	}
 }
 
@@ -108,8 +88,6 @@ async function fetchReviewers() {
                     <p>${lastSeenText}</p>
                     <p><strong>Approved:</strong> Yes</p>
                     <button class="btn-remove" onclick="removeReviewer('${reviewer.reviewer_id}')">Remove</button>
-					<button class="btn-inactive" onclick="inactiveReviewer('${reviewer.reviewer_id}')">Inactive</button>
-					
                 </div>
             `;
 			approvedContainer.innerHTML += tile;
@@ -133,7 +111,6 @@ async function fetchReviewers() {
                     <p><strong>Approved:</strong> No</p>
                     <button class="btn-approve" onclick="approveReviewer('${reviewer.reviewer_id}')">Approve</button>
                     <button class="btn-remove" onclick="removeReviewer('${reviewer.reviewer_id}')">Remove</button>
-					<button class="btn-role" onclick="setRole('${reviewer.reviewer_id}', 'student')">Set Role to Student</button>
                 </div>
             `;
 			pendingContainer.innerHTML += tile;
@@ -147,23 +124,6 @@ async function approveReviewer(reviewerId) {
 	try {
 		const result = await fetchData(
 			"../../php/admin/approve_reviewer.php",
-			"POST",
-			{ reviewer_id: reviewerId }
-		);
-		if (!result) return;
-
-		alert(result.message);
-		if (result.status === "success") fetchReviewers();
-	} catch (error) {
-		console.error("Error approving reviewer:", error);
-		alert("An error occurred while approving the reviewer.");
-	}
-}
-
-async function inactiveReviewer(reviewerId) {
-	try {
-		const result = await fetchData(
-			"../../php/admin/inactive_reviewer.php",
 			"POST",
 			{ reviewer_id: reviewerId }
 		);
@@ -200,11 +160,7 @@ function setupLogoutHandler() {
 		const result = await fetchData("../../php/admin/admin_logout.php", "POST");
 		if (!result) return;
 
-		swal.fire({
-			title: "Success",
-			text: result.message,
-			icon: "success",
-		});
+		alert(result.message);
 		if (result.status === "success")
 			window.location.href = "../landingpage.php";
 	});

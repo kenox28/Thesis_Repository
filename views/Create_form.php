@@ -39,5 +39,9 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </body>
+<<<<<<< HEAD
+    <script src="../js/CreateAccount.js?v=1.0.1"></script>
+=======
     <script src="../js/CreateAccount.js?v=1.0.2"></script>
+>>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 </html>

@@ -44,7 +44,7 @@ if ($stmt->num_rows > 0) {
 }
 
 // 3. Generate reset link with id and role
-$resetUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/Thesis_Repository/views/scan_qr_reset.php';
+$resetUrl = $_SERVER['REQUEST_SCHEME'].'://'.$_SERVER['HTTP_HOST'].'/thesis_Repository/views/scan_qr_reset.php';
 
 // 4. Save QR code image
 if (preg_match('/^data:image\\/\\w+;base64,/', $qrDataUrl)) {

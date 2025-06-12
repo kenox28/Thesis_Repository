@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../../vendor/autoload.php';
+// require_once '../../vendor/autoload.php';
 include_once '../Database.php';
 
 use PhpOffice\PhpWord\PhpWord;
@@ -8,6 +9,10 @@ use PhpOffice\PhpWord\IOFactory;
 // use Mpdf\Mpdf;
 
 header('Content-Type: application/json');
+
+if (!class_exists('\PhpOffice\PhpWord\PhpWord')) {
+    die('PhpWord is not installed or autoloaded!');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';

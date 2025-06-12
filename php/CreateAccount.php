@@ -8,12 +8,10 @@ use PHPMailer\PHPMailer\Exception;
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+$role = mysqli_real_escape_string($connect, $_POST['Role']);
 $fname = mysqli_real_escape_string($connect, $_POST['fname']);
 $lname = mysqli_real_escape_string($connect, $_POST['lname']);
 $email = mysqli_real_escape_string($connect, $_POST['email']);
-
-// Set password to first name (hashed)
-$password = md5($fname);
 
 // 1. Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -48,9 +46,10 @@ if (!$api_result['format_valid'] || !$api_result['mx_found'] || $api_result['dis
     exit();
 }
 
-// 4. Check if email exists in Student table
+// 4. Check if email exists in both tables
 $check_student = mysqli_query($connect, "SELECT * FROM Student WHERE email = '{$email}'");
-if (mysqli_num_rows($check_student) > 0) {
+$check_reviewer = mysqli_query($connect, "SELECT * FROM reviewer WHERE email = '{$email}'");
+if (mysqli_num_rows($check_student) > 0 || mysqli_num_rows($check_reviewer) > 0) {
     echo json_encode(array(
         'status' => 'failed',
         'message' => 'Email already exists'
@@ -72,7 +71,7 @@ try {
     $mail->addAddress($email);
     $mail->isHTML(true);
     $mail->Subject = 'Welcome to Thesis Repository';
-    $mail->Body    = "Hello $fname $lname,<br><br>Welcome to the Thesis Repository! Your initial password is your first name. Please change it after your first login.";
+    $mail->Body    = "Hello $fname $lname,<br><br>Welcome to the Thesis Repository!";
     $mail->send();
 } catch (Exception $e) {
     echo json_encode([
@@ -92,25 +91,25 @@ if (isset($_FILES['img']) && $_FILES['img']['error'] === UPLOAD_ERR_OK) {
     move_uploaded_file($tempimage, $folder);
 }
 
-$sql1 = "INSERT INTO Student (student_id, fname, lname, email, passw, profileImg) 
-        VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img')";
-$result = mysqli_query($connect, $sql1);
+if ($role === 'Reviewer') {
+    $sql1 = "INSERT INTO reviewer (reviewer_id, fname, lname, email, pass, profileImg, gender, bdate) 
+            VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";
+    $result = mysqli_query($connect, $sql1);
 
-$sql2 = "SELECT * FROM Student WHERE student_id = '$userid'";
-$result1 = mysqli_query($connect, $sql2);
-$row = mysqli_fetch_assoc($result1);
-session_start();
-$_SESSION['student_id'] = $row['student_id'];
-$_SESSION['fname'] = $row['fname'];
-$_SESSION['lname'] = $row['lname'];
-$_SESSION['email'] = $row['email'];
-$_SESSION['profileImg'] = $row['profileImg'];
-if ($result) {
-
-
-    echo json_encode(["status" => "success", "message" => "Successfully created account"]);
-
+    if ($result) {
+        echo json_encode(["status" => "success", "message" => "Successfully created account"]);
+    } else {
+        echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
+    }
 } else {
-    echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
+    $sql1 = "INSERT INTO Student (student_id, fname, lname, email, passw, profileImg, gender, bdate) 
+            VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img', '$gender', '$dateb')";
+    $result = mysqli_query($connect, $sql1);
+
+    if ($result) {
+        echo json_encode(["status" => "success", "message" => "Successfully created account"]);
+    } else {
+        echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
+    }
 }
 ?>

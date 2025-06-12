@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (strtolower($status) === 'continue') {
             // Get the current chapter from POST, default to 1 if not set
             $currentChapter = isset($_POST['chapter']) ? intval($_POST['chapter']) : 1;
-            $nextChapter = strval($currentChapter + 1);
+            $nextChapter = $currentChapter + 1;
             if ($nextChapter == 5) {
                 $statusif5 = 'pending';
                 $sql5 = "UPDATE repoTable SET status = ?, chapter = ? WHERE id = ?";

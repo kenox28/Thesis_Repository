@@ -26,7 +26,7 @@ function capitalize(str) {
 }
 
 async function showupload() {
-	const res = await fetch("../../php/reviewer/reView_thesis.php");
+	const res = await fetch("../../php/reviewer/show_titleproposal.php");
 	const data = await res.json();
 
 	if (data.error) {

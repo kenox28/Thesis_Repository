@@ -24,7 +24,6 @@ if (!empty($email) && !empty($pass)) {
     if ($result_admin && mysqli_num_rows($result_admin) > 0) {
         $row = mysqli_fetch_assoc($result_admin);
         if (md5($pass) === $row['pass']) {
-            
             $_SESSION['admin_id'] = $row['admin_id'];
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
@@ -183,10 +182,14 @@ if (!empty($email) && !empty($pass)) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
+        
+        // Initialize lockout_time and failed_attempts if they're null
+        $lockout_time = isset($row['lockout_time']) ? $row['lockout_time'] : null;
+        $failed_attempts = isset($row['failed_attempts']) ? (int)$row['failed_attempts'] : 0;
 
         // Check if account is locked
-        if ($row['lockout_time'] && strtotime($row['lockout_time']) > time()) {
-            $remaining = strtotime($row['lockout_time']) - time();
+        if ($lockout_time && strtotime($lockout_time) > time()) {
+            $remaining = strtotime($lockout_time) - time();
             $minutes = ceil($remaining / 60);
             echo json_encode([
                 "status" => "failed",
@@ -197,21 +200,6 @@ if (!empty($email) && !empty($pass)) {
 
         // Check password
         if (md5($pass) === $row['passw']) {
-            // Check if password is still the default (first name)
-            if ($row['passw'] === md5($row['fname'])) {
-                // Set session for password reset
-                $_SESSION['student_id'] = $row['student_id'];
-                $_SESSION['fname'] = $row['fname'];
-                $_SESSION['lname'] = $row['lname'];
-                $_SESSION['email'] = $row['email'];
-                $_SESSION['profileImg'] = $row['profileImg'];
-                echo json_encode([
-                    "status" => "reset_required",
-                    "message" => "You must change your password on first login.",
-                    "student_id" => $row['student_id']
-                ]);
-                exit();
-            }
             // Reset failed_attempts and lockout_time
             $reset_sql = "UPDATE student SET failed_attempts = 0, lockout_time = NULL WHERE student_id = '{$row['student_id']}'";
             mysqli_query($connect, $reset_sql);
@@ -229,7 +217,7 @@ if (!empty($email) && !empty($pass)) {
             exit();
         } else {
             // Increment failed_attempts
-            $failed_attempts = $row['failed_attempts'] + 1;
+            $failed_attempts++;
             $lockout = false;
             $lockout_time = null;
 
@@ -259,34 +247,12 @@ if (!empty($email) && !empty($pass)) {
                     $mail->isHTML(true);
                     $mail->Subject = 'Security Alert: Multiple Failed Login Attempts';
                     $mail->Body    = "
-                        <div style='background: linear-gradient(135deg, #e9f0ff 0%, #f7faff 100%); padding: 32px 0; min-height: 100vh;'>
-                          <table width='100%' cellpadding='0' cellspacing='0' style='max-width: 480px; margin: 0 auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(25, 118, 165, 0.10);'>
-                            <tr>
-                              <td style='padding: 32px 32px 24px 32px; text-align: center;'>
-                                <div style='margin-bottom: 18px;'>
-                                  <span style='display: inline-block; background: #ffe082; color: #b28704; border-radius: 50%; width: 54px; height: 54px; line-height: 54px; font-size: 2rem; box-shadow: 0 2px 8px #ffe08255;'>
-                                    &#9888;
-                                  </span>
-                                </div>
-                                <h2 style='color: #d84315; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; font-size: 2rem; font-weight: 800; margin-bottom: 0.5em;'>Security Alert</h2>
-                                <p style='color: #00246b; font-size: 1.1rem; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 1.2em;'>
-                                  Dear {$row['fname']},
-                                </p>
-                                <p style='color: #333; font-size: 1.05rem; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif; margin-bottom: 1.2em;'>
-                                  There have been <b>multiple failed login attempts</b> to your account.<br>
-                                  <span style='color: #d84315; font-weight: 600;'>Your account has been temporarily locked for 30 minutes for your security.</span>
-                                </p>
-                                <br>
-                                <p style='color: #6a7ba2; font-size: 0.98rem; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;'>
-                                  Best regards,<br>EVSU OCC Administration
-                                </p>
-                              </td>
-                            </tr>
-                          </table>
-                          <p style='text-align: center; color: #6a7ba2; font-size: 0.95rem; margin-top: 24px; font-family: Segoe UI, Tahoma, Geneva, Verdana, sans-serif;'>
-                            If you did not request this, you can safely ignore this email.
-                          </p>
-                        </div>
+                        <h2>Security Alert</h2>
+                        <p>Dear {$row['fname']},</p>
+                        <p>There have been multiple failed login attempts to your account. Your account has been temporarily locked for 30 minutes for your security.</p>
+                        <p>If this wasn't you, please reset your password or contact support immediately.</p>
+                        <br>
+                        <p>Best regards,<br>EVSU OCC Administration</p>
                     ";
                     $mail->send();
                 } catch (Exception $e) {
