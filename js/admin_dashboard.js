@@ -326,17 +326,31 @@ async function removeReviewer(reviewerId) {
 }
 
 function setupLogoutHandler() {
-	const logoutButton = document.querySelector(".btn-danger");
+	const logoutButton = document.getElementById("logoutBtn");
 	if (!logoutButton) return;
 
 	logoutButton.addEventListener("click", async (e) => {
 		e.preventDefault();
-		const result = await fetchData("../../php/admin/admin_logout.php", "POST");
-		if (!result) return;
-
-		alert(result.message);
-		if (result.status === "success")
-			window.location.href = "../landingpage.php";
+		if (window.Swal) {
+			Swal.fire({
+				title: 'Logout',
+				text: 'Are you sure you want to logout?',
+				icon: 'question',
+				showCancelButton: true,
+				confirmButtonColor: '#e74c3c',
+				cancelButtonColor: '#3085d6',
+				confirmButtonText: 'Yes, logout',
+				cancelButtonText: 'Cancel'
+			}).then((result) => {
+				if (result.isConfirmed) {
+					window.location.href = "../student_login.php";
+				}
+			});
+		} else {
+			if (confirm('Are you sure you want to logout?')) {
+				window.location.href = "../student_login.php";
+			}
+		}
 	});
 }
 
