@@ -27,7 +27,7 @@ async function CreateFun(e) {
 			title: "Success!",
 			text: data.message,
 		}).then(() => {
-			window.location.href = "../views/student/public_repo.php";
+			window.location.href = "../views/student_login.php";
 		});
 	} else {
 		Swal.fire({
