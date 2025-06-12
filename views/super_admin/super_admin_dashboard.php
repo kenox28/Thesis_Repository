@@ -477,6 +477,7 @@ $uptimePercentage = "99.9%";
                 confirmButtonText: 'Yes, continue'
             }).then((result) => {
                 if (result.isConfirmed) {
+<<<<<<< HEAD
                     // Set super admin student view session before redirect
                     fetch('../../php/set_super_admin_student_view.php')
                         .then(response => response.json())
@@ -495,6 +496,9 @@ $uptimePercentage = "99.9%";
                                 confirmButtonColor: '#1976a5'
                             });
                         });
+=======
+                    window.location.href = '../../views/student_login.php';
+>>>>>>> 022513b1ffd3b67ac5d932cdcda3235d4fbe8e81
                 }
             });
         });

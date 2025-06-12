@@ -12,9 +12,6 @@ $result = mysqli_query($connect, $sql);
 
 $uploads = [];
 while ($row = mysqli_fetch_assoc($result)) {
-<<<<<<< HEAD
-    $uploads[] = $row;  
-=======
     // Fetch profile image for this student
     $student_id = $row['student_id']; // Make sure this matches your column name
     $profileImgQuery = "SELECT profileImg FROM student WHERE student_id = '$student_id'";
@@ -22,7 +19,6 @@ while ($row = mysqli_fetch_assoc($result)) {
     $profileImgRow = $profileImgResult ? $profileImgResult->fetch_assoc() : null;
     $row['profileImg'] = $profileImgRow ? $profileImgRow['profileImg'] : null;
     $uploads[] = $row;
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 }
 
 echo json_encode($uploads);

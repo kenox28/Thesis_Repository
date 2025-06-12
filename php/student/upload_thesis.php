@@ -1,62 +1,7 @@
 <?php
 session_start();
-<<<<<<< HEAD
-include_once "../Database.php"; 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if (isset($_FILES['docfile']) && isset($_POST['abstract']) && isset($_POST['student_id']) && isset($_POST['title'])) {
-        $student_id = $_POST['student_id'];
-        $fname = $_POST['fname'];
-        $lname = $_POST['lname'];
-        $reviewer_id = $_POST['reviewer_id'];
-
-        $abstract = mysqli_real_escape_string($connect, $_POST['abstract']);
-        $title = mysqli_real_escape_string($connect, $_POST['title']);
-
-        $file = $_FILES['docfile'];
-        $fileName = $file['name'];
-        $fileTmpName = $file['tmp_name'];
-        $fileSize = $file['size'];
-        $fileError = $file['error'];
-        $fileType = $file['type'];
-
-        $allowedTypes = ['application/pdf'];
-
-        if (in_array($fileType, $allowedTypes)) {
-            // Set upload directory
-            $uploadDir = '../../assets/thesisfile/';
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0777, true); 
-            }
-
-            $uniqueName = uniqid('', true) . '.' . pathinfo($fileName, PATHINFO_EXTENSION);
-            $destinationPath = $uploadDir . $uniqueName;
-
-            // Move file to the uploads folder
-            if (move_uploaded_file($fileTmpName, $destinationPath)) {
-                // Insert data into the database
-                $sql = "INSERT INTO repoTable (student_id, fname, lname, title, abstract, ThesisFile, reviewer_id, status) 
-                        VALUES ('$student_id', '$fname', '$lname', '$title', '$abstract', '$uniqueName', '$reviewer_id', 'Pending')";
-                if (mysqli_query($connect, $sql)) {
-                    echo json_encode(["status" => "success", "message" => "Thesis uploaded successfully!"]);
-                } else {
-                    echo json_encode(["status" => "failed", "message" => "Database insertion failed."]);
-                }
-            } else {
-                echo json_encode(["status" => "failed", "message" => "Faile upload"]);
-            }
-        } else {
-            echo json_encode(["status" => "failed", "message" => "Only PDF files are allowed."]);
-        }
-    } else {
-        echo json_encode(["status" => "failed", "message" => "Please fill in all the  input."]);
-    }
-} else {
-    echo json_encode(["status" => "failed", "message" => "Invalid."]);
-}
-?>
-=======
 require_once '../../vendor/autoload.php';
+// require_once '../../vendor/autoload.php';
 include_once '../Database.php';
 
 use PhpOffice\PhpWord\PhpWord;
@@ -64,6 +9,10 @@ use PhpOffice\PhpWord\IOFactory;
 // use Mpdf\Mpdf;
 
 header('Content-Type: application/json');
+
+if (!class_exists('\PhpOffice\PhpWord\PhpWord')) {
+    die('PhpWord is not installed or autoloaded!');
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = isset($_POST['title']) ? trim($_POST['title']) : '';
@@ -188,7 +137,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $project_objective = '';
     $significance_of_study = '';
     $system_analysis_and_design = '';
-    $chapter = '1';
+    $chapter = '0';
     $status = 'pending';
     $message = '';
     $member_ids = implode(',', $member_ids);
@@ -210,4 +159,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     echo json_encode(["status" => "failed", "message" => "Invalid request method."]);
     exit;
 }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639

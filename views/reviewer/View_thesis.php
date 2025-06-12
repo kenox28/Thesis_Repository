@@ -714,6 +714,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <nav class="sidebar-nav">
             <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
             <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
+            <a href="proposal_title.php"><i class="fas fa-file-alt"></i>Title Proposal</a>
             <a href="View_thesis.php" class="active"><i class="fas fa-file-alt"></i> Review</a>
             <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
             <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
@@ -796,10 +797,6 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
-<<<<<<< HEAD
-<script src="../../js/view_thesis.js?v=1.0.8"></script>
-=======
-<script src="../../js/view_thesis.js?v=1.0.13"></script>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
+<script src="../../js/view_thesis.js?v=1.0.17"></script>
 </body>
 </html>

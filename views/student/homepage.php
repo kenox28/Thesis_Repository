@@ -30,6 +30,7 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title><?php echo $isAdminView ? 'Student View - Super Admin' : 'Pending Thesis'; ?></title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css?v=1.0.6" />
+<<<<<<< HEAD
 		<?php if ($isAdminView): ?>
 		<style>
 			.admin-view-banner {
@@ -73,6 +74,27 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 		<?php endif; ?>
 	</head>
 	<style>
+=======
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+	</head>
+	<style>
+        
+        .profile-image {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2.5px solid #1976a5;
+            box-shadow: 0 2px 8px #1976a533;
+            margin-right: 10px;
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
+        .profile-image:hover {
+            box-shadow: 0 4px 16px #1976a555;
+            border-color: #2893c7;
+        }
+>>>>>>> 022513b1ffd3b67ac5d932cdcda3235d4fbe8e81
 		#PDFFILE{
 			display: flex;
 			justify-content: center;
@@ -290,7 +312,11 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 					<a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
 					<a href="approve_thesis.php">Approved</a>
+<<<<<<< HEAD
 					<a href="approve_title.php">Approved Title</a>
+=======
+                    <a href="approve_title.php">Approved Title</a>
+>>>>>>> 022513b1ffd3b67ac5d932cdcda3235d4fbe8e81
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 					

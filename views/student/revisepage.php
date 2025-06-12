@@ -1,15 +1,5 @@
 <?php
 session_start();
-
-// Check if user is logged in as student or super admin in student view
-if (!isset($_SESSION['student_id']) && (!isset($_SESSION['super_admin_id']) || !isset($_SESSION['super_admin_student_view']))) {
-    header("Location: ../student_login.php");
-    exit();
-}
-
-// Include the admin banner
-include 'includes/admin_banner.php';
-
 $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])) ? $_SESSION['profileImg'] : 'noprofile.png';
 ?>
 <!DOCTYPE html>
@@ -190,6 +180,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             border: 2px solid #1976a5;
             position: relative;
             overflow: hidden;
+            animation: popIn 0.25s cubic-bezier(.4,2,.6,1) 1;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.95); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
         .revise-modal-unique-header {
             display: flex;
@@ -350,6 +345,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             background: #f4f8ff;
             box-shadow: 0 8px 32px #1976a544;
             border-color: #1976a5;
+        }
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            margin-bottom: 8px;
         }
         .thesis-card-title {
             font-size: 1.25rem;

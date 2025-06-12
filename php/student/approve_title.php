@@ -8,7 +8,7 @@ if (!isset($_SESSION['student_id'])) {
 }
 
 $student_id = $_SESSION['student_id'];
-$sql = "SELECT * FROM repoTable WHERE student_id = ? AND status = 'continue' AND Chapter = '2' ORDER BY created_at DESC";
+$sql = "SELECT * FROM repoTable WHERE student_id = ? AND (status = 'continue' OR status = 'Revised') AND (Chapter = '1' OR Chapter = '2' OR Chapter = '3' OR Chapter = '4') ORDER BY created_at DESC";
 $stmt = $connect->prepare($sql);
 $stmt->bind_param("s", $student_id);
 $stmt->execute();
