@@ -38,6 +38,6 @@ if (!isset($_SESSION['admin_id'])) {
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script src="../../js/admin_dashboard.js?v=1.0.7"></script>
+<script src="../../js/admin_dashboard.js?v=1.0.8"></script>
 </body>
 </html>
