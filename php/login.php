@@ -182,10 +182,14 @@ if (!empty($email) && !empty($pass)) {
 
     if ($result && mysqli_num_rows($result) > 0) {
         $row = mysqli_fetch_assoc($result);
+        
+        // Initialize lockout_time and failed_attempts if they're null
+        $lockout_time = isset($row['lockout_time']) ? $row['lockout_time'] : null;
+        $failed_attempts = isset($row['failed_attempts']) ? (int)$row['failed_attempts'] : 0;
 
         // Check if account is locked
-        if ($row['lockout_time'] && strtotime($row['lockout_time']) > time()) {
-            $remaining = strtotime($row['lockout_time']) - time();
+        if ($lockout_time && strtotime($lockout_time) > time()) {
+            $remaining = strtotime($lockout_time) - time();
             $minutes = ceil($remaining / 60);
             echo json_encode([
                 "status" => "failed",
@@ -228,7 +232,7 @@ if (!empty($email) && !empty($pass)) {
             exit();
         } else {
             // Increment failed_attempts
-            $failed_attempts = $row['failed_attempts'] + 1;
+            $failed_attempts++;
             $lockout = false;
             $lockout_time = null;
 

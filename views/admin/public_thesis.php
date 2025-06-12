@@ -93,7 +93,6 @@ if (!isset($_SESSION['admin_id'])) {
             margin-bottom: 1.5rem;
             font-weight: 700;
         }
-
         .upload-item {
             background:  #95a3e7;
             border-radius: 12px;

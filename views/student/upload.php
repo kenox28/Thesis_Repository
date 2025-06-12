@@ -23,6 +23,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                     <a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
                     <a href="approve_thesis.php">Approved</a>
+					<a href="approve_title.php">Approved Title</a>
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 				</div>
@@ -46,23 +47,14 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						<h1 class="section-title">Upload Thesis</h1>
 					</header>
 					<form action="#" id="thesisForm" enctype="multipart/form-data">
-						<input type="text" name="title" placeholder="Enter a title" required>
-						<textarea
-							required=""
-							name="abstract"
-							class="input"
-							id="captadd"
-							rows="4"
-							placeholder="Enter the abstract" required></textarea>
-
-						<label for="docfile" class="label">UPLOADED THESIS</label>
-						<input
+						<input type="text" name="title" placeholder="Enter the reference title" required>
+						<!-- <textarea
 							required
-							type="file"
-							name="docfile"
-							id="docfile"
+							name="description"
 							class="input"
-							accept="application/pdf" required/>
+							id="description"
+							rows="4"
+							placeholder="Enter the reference description (e.g., author, year, source, etc.)"></textarea> -->
 						<input
 							type="hidden"
 							name="student_id"
@@ -79,15 +71,19 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							type="hidden"
 							name="profileImg"
 							value="<?php echo $_SESSION['profileImg'];?>"/>
-						
 						<select id="reviewerDropdown" name="reviewer_id" required>
 							<option value="">Select Reviewer</option>
 						</select>
+						<label for="memberDropdown">Select Members (hold Ctrl or Cmd to select multiple):</label>
+						<select id="memberDropdown" name="member_ids[]" multiple required style="height: 100px;">
+							<option value="">Select Member</option>
+						</select>
 
 
-						<button type="submit" id="captbtn" class="btn">UPLOAD</button>
+						<button type="submit" id="captbtn" class="btn">Submit Proposal</button>
 					</form>
 				</section>
+				<div id="apaResult" style="margin-top: 2em;"></div>
 			</main>
 		</div>
 		<div id="profile-modal" class="profile-modal">
@@ -121,6 +117,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/upload.js?v=1.0.6"></script>
+		<script src="../../js/upload.js?v=1.0.11"></script>
 	</body>
 </html>

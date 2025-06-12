@@ -1,5 +1,4 @@
 <?php
-session_start();
 include "Database.php";
 require_once __DIR__ . '/../vendor/autoload.php'; // For PHPMailer
 
@@ -12,9 +11,6 @@ ini_set('display_errors', 1);
 $fname = mysqli_real_escape_string($connect, $_POST['fname']);
 $lname = mysqli_real_escape_string($connect, $_POST['lname']);
 $email = mysqli_real_escape_string($connect, $_POST['email']);
-
-// Set password to first name (hashed)
-$password = md5($fname);
 
 // 1. Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

@@ -25,8 +25,30 @@ $student = "CREATE TABLE IF NOT EXISTS Student (
     gender VARCHAR(255),
     bdate VARCHAR(255),
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    role VARCHAR(255) DEFAULT 'student'
 )";
+
+$result_bdate = mysqli_query($connect, "SHOW COLUMNS FROM student LIKE 'bdate'");
+$bdate_exists = ($result_bdate && mysqli_num_rows($result_bdate) > 0);
+
+// Check if 'gender' exists
+$result_gender = mysqli_query($connect, "SHOW COLUMNS FROM student LIKE 'gender'");
+$gender_exists = ($result_gender && mysqli_num_rows($result_gender) > 0);
+
+if ($bdate_exists || $gender_exists) {
+    $drop = [];
+    if ($bdate_exists) $drop[] = "DROP COLUMN bdate";
+    if ($gender_exists) $drop[] = "DROP COLUMN gender";
+    $remove_column = "ALTER TABLE student " . implode(", ", $drop);
+    mysqli_query($connect, $remove_column);
+}
+
+$result = mysqli_query($connect, "SHOW COLUMNS FROM student LIKE 'role'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $alter_student = "ALTER TABLE student ADD COLUMN role VARCHAR(255) DEFAULT 'student'";
+    mysqli_query($connect, $alter_student);
+}
 
 $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -63,7 +85,8 @@ if ($result && mysqli_num_rows($result) == 0) {
 } 
 
 
-$thesisrepo = "CREATE TABLE IF NOT EXISTS repoTable(
+
+$revise_table = "CREATE TABLE IF NOT EXISTS revise_table(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(50),
     fname VARCHAR(50),
@@ -144,15 +167,39 @@ if ($result && mysqli_num_rows($result) === 0) {
     ('ADM003', 'Default', 'Admin', 'russeljhondasigan@gmail.com', '" . md5("russel123456") . "')";
     mysqli_query($connect, $default_admin);
 }
+
+$super_admin = "CREATE TABLE IF NOT EXISTS super_admin (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    super_admin_id VARCHAR(255) NOT NULL UNIQUE,
+    fname VARCHAR(50) NOT NULL,
+    lname VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    pass VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+mysqli_query($connect, $super_admin);
+
+// Check if the default super admin already exists
+$check_super_admin = "SELECT * FROM super_admin";
+$result = mysqli_query($connect, $check_super_admin);
+
+if ($result && mysqli_num_rows($result) === 0) {
+    // Insert default super admin if it doesn't exist
+    $default_super_admin = "INSERT INTO super_admin (super_admin_id, fname, lname, email, pass) VALUES
+    ('SADM001', 'Super', 'Admin', 'superadmin@gmail.com', '" . md5("superadmin123456") . "')";
+    mysqli_query($connect, $default_super_admin);
+}
+
 mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
 mysqli_query($connect, $revise_table);
 mysqli_query($connect, $thesis_history);
 
-if(mysqli_query($connect, $thesisrepo)){
-    // echo "success";
-};
+// if(mysqli_query($connect, $thesisrepo)){
+//     // echo "success";
+// };
 
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'last_active'");
 if ($result && mysqli_num_rows($result) == 0) {
@@ -164,5 +211,3 @@ if ($result && mysqli_num_rows($result) == 0) {
     }
 }
 ?>
-
-

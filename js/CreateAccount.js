@@ -17,7 +17,7 @@ async function CreateFun(e) {
 	try {
 		data = JSON.parse(text);
 	} catch (e) {
-		alert("Server error:\n" + text);
+		console.log("Server error:\n" + text);
 		return;
 	}
 
@@ -27,7 +27,7 @@ async function CreateFun(e) {
 			title: "Success!",
 			text: data.message,
 		}).then(() => {
-			createForm.reset();
+			window.location.href = "../views/student_login.php";
 		});
 	} else {
 		Swal.fire({
