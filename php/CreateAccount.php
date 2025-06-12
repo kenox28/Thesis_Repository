@@ -12,6 +12,9 @@ $fname = mysqli_real_escape_string($connect, $_POST['fname']);
 $lname = mysqli_real_escape_string($connect, $_POST['lname']);
 $email = mysqli_real_escape_string($connect, $_POST['email']);
 
+// Set password to first name (hashed)
+$password = md5($fname);
+
 // 1. Validate email format
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode([
@@ -93,8 +96,13 @@ $sql1 = "INSERT INTO Student (student_id, fname, lname, email, passw, profileImg
         VALUES ('$userid', '$fname', '$lname', '$email', '$password', '$img')";
 $result = mysqli_query($connect, $sql1);
 
+
+
 if ($result) {
+
+
     echo json_encode(["status" => "success", "message" => "Successfully created account"]);
+
 } else {
     echo json_encode(["status" => "failed", "message" => "Failed to create account"]);
 }
