@@ -9,10 +9,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Pending Thesis</title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css?v=1.0.6" />
-<<<<<<< HEAD
-	</head>
-	<style>
-=======
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 	</head>
 	<style>
@@ -32,7 +28,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             box-shadow: 0 4px 16px #1976a555;
             border-color: #2893c7;
         }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		#PDFFILE{
 			display: flex;
 			justify-content: center;
@@ -242,10 +237,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
 					<a href="approve_thesis.php">Approved</a>
-<<<<<<< HEAD
-=======
                     <a href="approve_title.php">Approved Title</a>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 					
@@ -369,11 +361,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 			</div>
 		</div>
-<<<<<<< HEAD
-		<script src="../../js/homepage.js?v=1.0.7"></script>
-=======
 		<script src="../../js/homepage.js?v=1.0.12"></script>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		<script>
 			
 		</script>

@@ -9,22 +9,14 @@ if (!isset($_SESSION['student_id'])) {
 }
 
 // Check if file and title are present
-<<<<<<< HEAD
-if (!isset($_FILES['revised_file']) || !isset($_POST['title'])) {
-    echo json_encode(['status' => 'error', 'message' => 'Missing file or title.']);
-=======
 if (!isset($_FILES['revised_file']) || !isset($_POST['title']) || !isset($_POST['newtitle']) || !isset($_POST['abstract'])) {
     echo json_encode(['status' => 'error', 'message' => 'Missing file, title, new title, or abstract.']);
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     exit;
 }
 
 $title = $_POST['title'];
-<<<<<<< HEAD
-=======
 $newtitle = $_POST['newtitle'];
 $abstract = $_POST['abstract'];
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 $student_id = $_SESSION['student_id'];
 $file = $_FILES['revised_file'];
 
@@ -66,11 +58,7 @@ if (!empty($oldFileName) && file_exists($oldFilePath)) {
 
 // 3. Upload the new file to thesisfile/
 $timestamp = time();
-<<<<<<< HEAD
-$safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $title);
-=======
 $safeTitle = preg_replace('/[^a-zA-Z0-9_-]/', '_', $newtitle);
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 $thesisfileDir = '../../assets/thesisfile/';
 $revisedDir = '../../assets/revised/';
 if (!is_dir($thesisfileDir)) {
@@ -87,23 +75,14 @@ if (move_uploaded_file($file['tmp_name'], $thesisfileTarget)) {
     // Copy the file to revised/ for history
     copy($thesisfileTarget, $revisedTarget);
 
-<<<<<<< HEAD
-    // 4. Update ThesisFile and updated timestamp in repoTable
-    $stmt2 = $connect->prepare("UPDATE repoTable SET ThesisFile=?, updated=NOW(), status='Pending' WHERE title=? AND student_id=?");
-=======
     // 4. Update ThesisFile, title, and abstract in repoTable
     $stmt2 = $connect->prepare("UPDATE repoTable SET ThesisFile=?, title=?, abstract=?, updated=NOW(), status='Pending' WHERE id=? AND student_id=?");
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     if (!$stmt2) {
         echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $connect->error]);
         $connect->close();
         exit;
     }
-<<<<<<< HEAD
-    $stmt2->bind_param("sss", $newFileName, $title, $student_id);
-=======
     $stmt2->bind_param("ssssi", $newFileName, $newtitle, $abstract, $thesis_id, $student_id);
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 
     if ($stmt2->execute()) {
         // 5. Insert into thesis_history (file_name is in revised/)

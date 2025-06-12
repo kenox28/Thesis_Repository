@@ -16,8 +16,6 @@ if (!isset($_SESSION['admin_id'])) {
     <link href="../../assets/css/Admin_Page.css?v=1.0.2" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <style>
-<<<<<<< HEAD
-=======
         .profile-image {
             width: 48px;
             height: 48px;
@@ -34,7 +32,6 @@ if (!isset($_SESSION['admin_id'])) {
             border-color: #2893c7;
         }
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         body {
 	        background-color: var(--off-white);
             
@@ -96,17 +93,6 @@ if (!isset($_SESSION['admin_id'])) {
             margin-bottom: 1.5rem;
             font-weight: 700;
         }
-<<<<<<< HEAD
-        .thesis-cards {
-            display: flex;
-            flex-wrap: wrap;
-            
-            gap: 2rem;
-            justify-content: center;
-        }
-=======
-
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         .upload-item {
             background:  #95a3e7;
             border-radius: 12px;
@@ -323,8 +309,6 @@ if (!isset($_SESSION['admin_id'])) {
                 max-height: 20vh;
             }
         }
-<<<<<<< HEAD
-=======
         #allPublicTheses {
             /* border: 1px solid #00246b; */
             height: 700px;
@@ -337,7 +321,6 @@ if (!isset($_SESSION['admin_id'])) {
             gap: 1.2rem;
             width: 100%;
         }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     </style>
 </head>
 <body>
@@ -348,11 +331,7 @@ if (!isset($_SESSION['admin_id'])) {
             <nav>
                 <a href="admin_dashboard.php">Home</a>
                 <a href="Display_Reviewer.php">Manage Reviewers</a>
-<<<<<<< HEAD
-                <a href="view_reports.php">Publication thesis</a>
-=======
                 <a href="public_thesis.php">Publication thesis</a>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
             </nav>
         </div>
@@ -361,13 +340,6 @@ if (!isset($_SESSION['admin_id'])) {
     <div class="container">
         
         <h1>All Public Thesis</h1>
-<<<<<<< HEAD
-        <div class="student-container" id="allPublicTheses">
-            <!-- Student tiles will be dynamically added here -->
-        </div>
-    </div>
-<script >
-=======
         <div id="allPublicTheses">
             <!-- Student tiles will be dynamically added here -->
         </div>
@@ -382,7 +354,6 @@ if (!isset($_SESSION['admin_id'])) {
         if (!str) return "";
         return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
     }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
     async function showPublicRepo() {
 			const res = await fetch("../../php/student/get_public_repo.php");
 			const data = await res.json();
@@ -394,16 +365,6 @@ if (!isset($_SESSION['admin_id'])) {
 			let rows = "<div class='thesis-cards'>";
 			for (const u of data) {
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-<<<<<<< HEAD
-				rows += `
-					<div class="upload-item" onclick="openModal('${filePath}', '${u.title}', '${u.abstract}', '${u.lname}, ${u.fname}', '${u.Privacy}')">
-						<h3><i class='fas fa-book'></i> ${u.title}</h3>
-						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-						<div class="author-info">
-							<i class="fas fa-user-graduate"></i>
-							<span>${u.lname}, ${u.fname}</span>
-						</div>
-=======
 				const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 				rows += `
 
@@ -417,7 +378,6 @@ if (!isset($_SESSION['admin_id'])) {
 						<h3><i class='fas fa-book'></i> ${u.title}</h3>
 						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 						<embed src="${filePath}" type="application/pdf" width="300" height="250">
 						<div class="status-badge">
 							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}

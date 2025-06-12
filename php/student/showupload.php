@@ -11,10 +11,6 @@ $sql = "SELECT * FROM repoTable WHERE student_id = '$student_id' and status = 'p
 $result = mysqli_query($connect, $sql);
 
 $uploads = [];
-<<<<<<< HEAD
-while ($row = mysqli_fetch_assoc($result)) {
-    $uploads[] = $row;  // Add each row to the uploads array
-=======
 
 while ($row = mysqli_fetch_assoc($result)) {
     // Fetch profile image for this student
@@ -25,7 +21,6 @@ while ($row = mysqli_fetch_assoc($result)) {
     $row['profileImg'] = $profileImgRow ? $profileImgRow['profileImg'] : null;
 
     $uploads[] = $row;
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 }
 
 echo json_encode($uploads);

@@ -23,10 +23,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                     <a href="upload.php">Upload Thesis</a>
 					<a href="homepage.php">Pending</a>
                     <a href="approve_thesis.php">Approved</a>
-<<<<<<< HEAD
-=======
 					<a href="approve_title.php">Approved Title</a>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 					<a href="rejectpage.php">Rejected</a>
 					<a href="revisepage.php">Revised</a>
 				</div>
@@ -50,25 +47,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						<h1 class="section-title">Upload Thesis</h1>
 					</header>
 					<form action="#" id="thesisForm" enctype="multipart/form-data">
-<<<<<<< HEAD
-						<input type="text" name="title" placeholder="Enter a title">
-						<textarea
-							required=""
-							name="abstract"
-							class="input"
-							id="captadd"
-							rows="4"
-							placeholder="Enter the abstract"></textarea>
-
-						<label for="docfile" class="label">UPLOADED THESIS</label>
-						<input
-							required
-							type="file"
-							name="docfile"
-							id="docfile"
-							class="input"
-							accept="application/pdf" />
-=======
 						<input type="text" name="title" placeholder="Enter the reference title" required>
 						<!-- <textarea
 							required
@@ -77,7 +55,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							id="description"
 							rows="4"
 							placeholder="Enter the reference description (e.g., author, year, source, etc.)"></textarea> -->
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 						<input
 							type="hidden"
 							name="student_id"
@@ -94,17 +71,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							type="hidden"
 							name="profileImg"
 							value="<?php echo $_SESSION['profileImg'];?>"/>
-<<<<<<< HEAD
-						
-						<select id="reviewerDropdown" name="reviewer_id">
-							<option value="">Select Reviewer</option>
-						</select>
-
-
-						<button type="submit" id="captbtn" class="btn">UPLOAD</button>
-					</form>
-				</section>
-=======
 						<select id="reviewerDropdown" name="reviewer_id" required>
 							<option value="">Select Reviewer</option>
 						</select>
@@ -118,7 +84,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					</form>
 				</section>
 				<div id="apaResult" style="margin-top: 2em;"></div>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 			</main>
 		</div>
 		<div id="profile-modal" class="profile-modal">
@@ -152,10 +117,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-<<<<<<< HEAD
-		<script src="../../js/upload.js?v=1.0.6"></script>
-=======
-		<script src="../../js/upload.js?v=1.0.10"></script>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
+		<script src="../../js/upload.js?v=1.0.11"></script>
 	</body>
 </html>

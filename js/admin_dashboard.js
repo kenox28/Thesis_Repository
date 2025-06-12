@@ -43,10 +43,6 @@ async function fetchStudents() {
                     <h3>${student.fname} ${student.lname}</h3>
                     <p><strong>ID:</strong> ${student.student_id}</p>
                     <p><strong>Email:</strong> ${student.email}</p>
-<<<<<<< HEAD
-=======
-					<button class="btn-role" onclick="setRole('${student.student_id}', 'reviewer')">Set Role to Reviewer</button>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 </div>
             `;
 			container.innerHTML += tile;
@@ -56,28 +52,6 @@ async function fetchStudents() {
 	}
 }
 
-<<<<<<< HEAD
-=======
-async function setRole(id, role) {
-	console.log(id, role);
-	const result = await fetchData("../../php/admin/set_role.php", "POST", {
-		id,
-		role,
-	});
-	if (!result) return;
-
-	if (result.status === "success") {
-		swal.fire({
-			title: "Success",
-			text: result.message,
-			icon: "success",
-		});
-		fetchStudents();
-		fetchReviewers();
-	}
-}
-
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 async function fetchReviewers() {
 	const result = await fetchData("../../php/admin/get_reviewers.php");
 	if (!result) return;
@@ -114,11 +88,6 @@ async function fetchReviewers() {
                     <p>${lastSeenText}</p>
                     <p><strong>Approved:</strong> Yes</p>
                     <button class="btn-remove" onclick="removeReviewer('${reviewer.reviewer_id}')">Remove</button>
-<<<<<<< HEAD
-=======
-					<button class="btn-inactive" onclick="inactiveReviewer('${reviewer.reviewer_id}')">Inactive</button>
-					
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 </div>
             `;
 			approvedContainer.innerHTML += tile;
@@ -142,10 +111,6 @@ async function fetchReviewers() {
                     <p><strong>Approved:</strong> No</p>
                     <button class="btn-approve" onclick="approveReviewer('${reviewer.reviewer_id}')">Approve</button>
                     <button class="btn-remove" onclick="removeReviewer('${reviewer.reviewer_id}')">Remove</button>
-<<<<<<< HEAD
-=======
-					<button class="btn-role" onclick="setRole('${reviewer.reviewer_id}', 'student')">Set Role to Student</button>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 </div>
             `;
 			pendingContainer.innerHTML += tile;
@@ -172,26 +137,6 @@ async function approveReviewer(reviewerId) {
 	}
 }
 
-<<<<<<< HEAD
-=======
-async function inactiveReviewer(reviewerId) {
-	try {
-		const result = await fetchData(
-			"../../php/admin/inactive_reviewer.php",
-			"POST",
-			{ reviewer_id: reviewerId }
-		);
-		if (!result) return;
-
-		alert(result.message);
-		if (result.status === "success") fetchReviewers();
-	} catch (error) {
-		console.error("Error approving reviewer:", error);
-		alert("An error occurred while approving the reviewer.");
-	}
-}
-
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 async function removeReviewer(reviewerId) {
 	if (!confirm("Are you sure you want to remove this reviewer?")) return;
 
@@ -215,15 +160,7 @@ function setupLogoutHandler() {
 		const result = await fetchData("../../php/admin/admin_logout.php", "POST");
 		if (!result) return;
 
-<<<<<<< HEAD
 		alert(result.message);
-=======
-		swal.fire({
-			title: "Success",
-			text: result.message,
-			icon: "success",
-		});
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		if (result.status === "success")
 			window.location.href = "../landingpage.php";
 	});

@@ -116,10 +116,6 @@
                     required
                     autocomplete="current-password"
                     aria-label="Password"
-<<<<<<< HEAD
-                    minlength="8"
-=======
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 >
             </div>
             <div class="form-options">
@@ -151,8 +147,6 @@
         <div id="forgotPassMsg" class="modal-fp-msg"></div>
       </div>
     </div>
-<<<<<<< HEAD
-=======
 
     <!-- Forced Password Change Modal -->
     <style>
@@ -253,7 +247,6 @@
         <button id="forceResetClose">Close</button>
       </div>
     </div>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 </body>
 <script>
     document.querySelector('.forgot-password').addEventListener('click', function(e) {

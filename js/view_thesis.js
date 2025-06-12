@@ -20,25 +20,6 @@ let totalPageCount = 1;
 let highlightsByPage = {};
 let textAnnotationsByPage = {};
 
-<<<<<<< HEAD
-async function showupload() {
-	try {
-		const res = await fetch("../../php/reviewer/reView_thesis.php");
-		const data = await res.json();
-
-		if (data.error) {
-			document.getElementById(
-				"userTableBody"
-			).innerHTML = `<p>${data.error}</p>`;
-			return;
-		}
-
-		let rows = "";
-		for (const u of data) {
-			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-
-			rows += `
-=======
 function capitalize(str) {
 	if (!str) return "";
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -59,36 +40,23 @@ async function showupload() {
 		const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 
 		rows += `
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 				<div class="upload-item"
 					data-file="${filePath}"
 					data-title="${encodeURIComponent(u.title)}"
 					data-abstract="${encodeURIComponent(u.abstract)}"
 					data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
 					style="margin-bottom: 20px; cursor:pointer;">
-<<<<<<< HEAD
-					<h3>${u.title}</h3>
-					<p>${u.abstract}</p>
-					<embed src="${filePath}" width="600" height="400" type="application/pdf">
-					<div style="display: flex; justify-content: space-between; margin-top: 10px;">
-						<button onclick="updateStatus(${
-							u.id
-						}, 'rejected'); event.stopPropagation();">Reject</button>
-						<button onclick="openReviseModal('${u.id}', '${
-				u.ThesisFile
-			}'); event.stopPropagation();">Revise</button>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'approved'); event.stopPropagation();">Approve</button>
-					</div>
-=======
 					<div class="author-info">
+
+
                         <img src="${profileImg}" alt="Profile Image" class="profile-image">
                         <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
                             ${capitalize(u.lname)}, ${capitalize(u.fname)}
                         </span>
                     </div>
+
 					<h3 class="thesis-title" style="cursor:pointer;">${u.title}</h3>
+					<p>Chapter ${u.Chapter}</p>
 					<p>${u.abstract}</p>
 					<embed src="${filePath}" width="600" height="400" type="application/pdf">
 					<div style="display: flex; justify-content: space-between; margin-top: 10px; flex-wrap: wrap;" class="button-container" >
@@ -100,59 +68,29 @@ async function showupload() {
 						<button onclick="openReviseModal('${u.id}', '${
 			u.ThesisFile
 		}'); event.stopPropagation();">Revise</button>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'approved' ,document.getElementById('inputmessage').value); event.stopPropagation();">Approve</button>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'continue' ,document.getElementById('inputmessage').value); event.stopPropagation();">Continue</button>
+						<button onclick="updateStatus(
+							${u.id},
+							'continue',
+							document.getElementById('inputmessage').value,
+							'${u.Chapter}'
+						); event.stopPropagation();">Continue</button>
+						${
+							parseInt(u.Chapter, 10) === 4
+								? `<button onclick="updateStatus(
+									${u.id},
+									'approved',
+									document.getElementById('inputmessage').value
+								); event.stopPropagation();">Approve</button>`
+								: ""
+						}
 
 					</div>
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 					<button onclick="window.location.href='view_Revise.php?thesis_id=${
 						u.id
 					}'; event.stopPropagation();" style="width: 100%; margin-top: 10px;">Revision History</button>
 				</div>
 			`;
-<<<<<<< HEAD
-		}
-
-		document.getElementById("userTableBody").innerHTML = rows;
-
-		// Add modal open logic for .upload-item
-		document.querySelectorAll(".upload-item").forEach((item) => {
-			item.addEventListener("click", function (e) {
-				// Prevent modal if a button inside was clicked
-				if (e.target.tagName === "BUTTON") return;
-				const filePath = item.getAttribute("data-file");
-				const title = decodeURIComponent(item.getAttribute("data-title"));
-				const abstract = decodeURIComponent(item.getAttribute("data-abstract"));
-				const owner = decodeURIComponent(item.getAttribute("data-owner"));
-
-				document.getElementById("modalTitle").textContent = title;
-				document.getElementById(
-					"modalAbstract"
-				).innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-				document.getElementById(
-					"modalOwner"
-				).innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
-				document.getElementById("modalPDF").src = filePath + "#toolbar=0";
-
-				document.getElementById("thesisModal").style.display = "flex";
-			});
-		});
-	} catch (error) {
-		console.error("Error fetching uploads:", error);
-		document.getElementById(
-			"userTableBody"
-		).innerHTML = `<p>Something went wrong.</p>`;
-	}
-}
-showupload();
-
-async function updateStatus(thesisId, status) {
-=======
 	}
 
 	document.getElementById("userTableBody").innerHTML = rows;
@@ -181,12 +119,25 @@ async function updateStatus(thesisId, status) {
 }
 showupload();
 
-async function updateStatus(thesisId, status, message) {
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
-	let actionText = status === "approved" ? "approve" : "reject";
+async function updateStatus(thesisId, status, message, chapter) {
+	let actionText =
+		status === "approved"
+			? "approve"
+			: status === "continue"
+			? "continue"
+			: "reject";
 	let confirmButtonText =
-		status === "approved" ? "Yes, Approve" : "Yes, Reject";
-	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
+		status === "approved"
+			? "Yes, Approve"
+			: status === "continue"
+			? "Yes, Continue"
+			: "Yes, Reject";
+	let confirmButtonColor =
+		status === "approved"
+			? "#43a047"
+			: status === "continue"
+			? "#1976a5"
+			: "#e53935";
 
 	const result = await Swal.fire({
 		title: `Are you sure you want to ${actionText} this thesis?`,
@@ -203,10 +154,8 @@ async function updateStatus(thesisId, status, message) {
 		const formData = new FormData();
 		formData.append("thesis_id", thesisId);
 		formData.append("status", status);
-<<<<<<< HEAD
-=======
 		formData.append("message", message);
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
+		formData.append("chapter", chapter);
 
 		const res = await fetch("../../php/reviewer/updatethesis_status.php", {
 			method: "POST",

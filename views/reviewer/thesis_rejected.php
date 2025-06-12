@@ -13,8 +13,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <!-- Add Google Fonts in <head> -->
     <link href="https://fonts.googleapis.com/css?family=Poppins:400,600&display=swap" rel="stylesheet">
     <style>
-<<<<<<< HEAD
-=======
         .profile-image {
             width: 48px;
             height: 48px;
@@ -30,7 +28,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             box-shadow: 0 4px 16px #1976a555;
             border-color: rgb(231, 9, 9);
         }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         :root {
             --primary-color: #00246B;
             --secondary-color: #1a3a8f;
@@ -449,7 +446,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <div class="sidebar-profile-role" >REVIEWER</div>
         <nav class="sidebar-nav">
             <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
+            <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>\
+            <a href="proposal_title.php"><i class="fas fa-file-alt"></i>Title Proposal</a>
+
             <a href="View_thesis.php"><i class="fas fa-file-alt"></i> Review</a>
             <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
             <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
@@ -485,13 +484,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     </div>
 </body>
 <script>
-<<<<<<< HEAD
-=======
 function capitalize(str) {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 async function showupload() {
     const res = await fetch("../../php/reviewer/reject_thesis.php");
     const data = await res.json();
@@ -507,10 +503,7 @@ async function showupload() {
     let rows = "";
     for (const u of data) {
         const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-<<<<<<< HEAD
-=======
         const profileImg = "../../assets/ImageProfile/" + u.profileImg;
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
         rows += `
             <div class="upload-item"
                 data-file="${filePath}"
@@ -520,14 +513,6 @@ async function showupload() {
                 data-reason="${encodeURIComponent(u.rejection_reason || '')}"
                 style="cursor:pointer;"
             >
-<<<<<<< HEAD
-                <h3><i class="fas fa-book"></i> ${u.title}</h3>
-                <p><i class="fas fa-quote-left"></i> ${u.abstract}</p>
-                <div class="author-info">
-                    <i class="fas fa-user-graduate"></i>
-                    <span>${u.lname}, ${u.fname}</span>
-                </div>
-=======
                 <div class="author-info">
                     <img src="${profileImg}" alt="Profile Image" class="profile-image">
                     <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
@@ -537,7 +522,6 @@ async function showupload() {
                 <h3><i class="fas fa-book"></i> ${u.title}</h3>
                 <p><i class="fas fa-quote-left"></i> ${u.abstract}</p>
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
                 <embed src="${filePath}" type="application/pdf">
                 <div class="status-badge">
                     <i class="fas fa-times"></i> Rejected

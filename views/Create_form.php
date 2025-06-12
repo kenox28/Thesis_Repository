@@ -17,16 +17,8 @@
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>Create Account</h1>
            
-<<<<<<< HEAD
-            <input type="radio" id="radio1" name="Role" value="Reviewer" required />
-            <label for="radio1">Reviewer</label>
-            
-            <input type="radio" id="radio2" name="Role" value="Student" required />
-            <label for="radio2">Student</label>
-=======
             <!-- Only Student option -->
             <input type="hidden" name="Role" value="Student" />
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 
             <label class="label" for="firstname">First Name</label>
             <input required type="text" name="fname" class="input" id="firstname" />
@@ -39,40 +31,13 @@
             <label class="label" for="email">Email</label>
             <input required type="email" name="email" class="input" id="email" />
             
-<<<<<<< HEAD
-
-            <label class="label" for="password">Password</label>
-            <input required type="password" name="passw" class="input" id="password" />
-            <div id="password-strength-bar-container">
-              <div id="password-strength-bar"></div>
-              <span id="password-strength-label"></span>
-            </div>
-            
-			<label class="label" for="dateb">Birthdate</label>
-            <input required type="date" name="bday" class="input" id="dateb" />
-            
-
-            <input type="radio" id="radio3" name="gender" value="Male" required />
-            <label for="radio3">Male</label>
-
-            <input type="radio" id="radio4" name="gender" value="Female" />
-            <label for="radio4">Female</label>
-            
             <button class="btn" id="login" type="submit">Sign Up</button>
 
-=======
-            <button class="btn" id="login" type="submit">Sign Up</button>
-
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
             <div>
             <a href="student_login.php">Already have an account?</a>
             </div>
             <a href="landingpage.php">Back to home</a>
         </form>
     </body>
-<<<<<<< HEAD
-    <script src="../js/CreateAccount.js?v=1.0.1"></script>
-=======
     <script src="../js/CreateAccount.js?v=1.0.2"></script>
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 </html>

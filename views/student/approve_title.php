@@ -7,7 +7,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Approved Title Theses</title>
+    <title>Thesis Progress</title>
     <link rel="stylesheet" href="../../assets/css/homepage.css" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -498,6 +498,11 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             gap: 12px;
             margin-bottom: 8px;
         }
+        #reviseModalUniqueUpdateForm textarea:disabled {
+            background: #eee !important;
+            color: #888 !important;
+            pointer-events: none !important;
+        }
     </style>
 </head>
 <body>
@@ -510,7 +515,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <a href="public_repo.php">Home</a>
             <a href="upload.php">Upload Thesis</a>
             <a href="homepage.php">Pending</a>
-    <a href="approve_thesis.php">Approved</a>
+    <a href="approve_title.php">Thesis Progress</a>
     <a href="rejectpage.php">Rejected</a>
     <a href="revisepage.php">Revised</a>
             </div>
@@ -530,7 +535,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         </nav>
         <main class="main-content">
             <header>
-                <h1 class="section-title">Revised Theses</h1>
+                <h1 class="section-title">Thesis Progress</h1>
             </header>
             <section>
                 <div id="PDFFILE"></div>
@@ -609,13 +614,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <button id="reviseModalUniqueHistoryBtn" class="revise-modal-unique-history-btn">Revision History</button>
                 <form id="reviseModalUniqueUpdateForm" enctype="multipart/form-data" style="margin: 16px 0; display: flex; flex-direction: column; gap: 14px; align-items: stretch;">
                     <input type="hidden" name="title" id="reviseModalUniqueTitleInput">
-                    <input type="text" name="newtitle" id="reviseModalUniqueNewTitleInput" required placeholder="Title">
-                    <textarea name="introduction" id="reviseModalUniqueIntroductionInput" rows="3" required placeholder="Introduction"></textarea>
-                    <textarea name="project_objective" id="reviseModalUniqueProjectObjectiveInput" rows="3" required placeholder="Project Objective"></textarea>
-                    <textarea name="significance_of_study" id="reviseModalUniqueSignificanceOfStudyInput" rows="3" required placeholder="Significance of Study"></textarea>
-                    <textarea name="system_analysis_and_design" id="reviseModalUniqueSystemAnalysisAndDesignInput" rows="3" required placeholder="System Analysis and Design"></textarea>
-                    
-
+                    <input type="text" name="newtitle" id="reviseModalUniqueNewTitleInput"  placeholder="Title">
+                    <textarea name="introduction" id="reviseModalUniqueIntroductionInput" rows="3"  placeholder="Introduction"></textarea>
+                    <textarea name="project_objective" id="reviseModalUniqueProjectObjectiveInput" rows="3" placeholder="Project Objective"></textarea>
+                    <textarea name="significance_of_study" id="reviseModalUniqueSignificanceOfStudyInput" rows="3"  placeholder="Significance of Study"></textarea>
+                    <textarea name="system_analysis_and_design" id="reviseModalUniqueSystemAnalysisAndDesignInput" rows="3"  placeholder="System Analysis and Design"></textarea>
+                    <input type="hidden" name="chapter" id="reviseModalUniqueChapterInput">
                     <button type="submit" class="revise-modal-unique-upload-btn" style="width:100%;">Update File</button>
                 </form>
                 <iframe id="reviseModalUniquePDF" src="" width="100%" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
@@ -637,24 +641,28 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         }
         let rows = "<div class='thesis-cards'>";
         for (const u of data) {
-            if (u.status && u.status.toLowerCase() === "continue") {
+            if (u.status && (u.status.toLowerCase() === "continue" || u.status.toLowerCase() === "revised")) {
                 const filePath = "../../assets/thesisfile/" + u.ThesisFile;
                 const profileImg = "../../assets/ImageProfile/" + u.profileImg;
                 rows += `
                     <div class="thesis-card"
                         data-file="${filePath}"
                         data-title="${encodeURIComponent(u.title)}"
+                        data-chapter="${u.Chapter}"
                         data-abstract="${encodeURIComponent(u.abstract)}"
                         data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
                         data-status="${encodeURIComponent(u.status)}"
                         data-id="${u.id}"
                         data-introduction="${encodeURIComponent(u.introduction || '')}"
-                        data-project_objective="${encodeURIComponent(u.project_objective || '')}"
+                        data-project_objective="${encodeURIComponent(u.Project_objective || '')}"
                         data-significance_of_study="${encodeURIComponent(u.significance_of_study || '')}"
                         data-system_analysis_and_design="${encodeURIComponent(u.system_analysis_and_design || '')}"
+                        data-chapter="${u.chapter}"
+                        
                         style="cursor:pointer;"
                     >
                         <div class="author-info">
+                        
                             <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
                                 <img src="${profileImg}" alt="Profile Image" class="profile-image">
                             </a>
@@ -665,6 +673,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         <h3 class="thesis-title thesis-card-title" style="cursor:pointer;">
                             <i class='fas fa-book'></i> ${u.title}
                         </h3>
+                        <p>Chapter ${u.Chapter}</p>
                         <div class="thesis-card-abstract">${u.abstract}</div>
                         <embed src="${filePath}" type="application/pdf" width="300" height="250">
                         <div class="thesis-card-owner">${capitalize(u.lname)}, ${capitalize(u.fname)}</div>
@@ -672,6 +681,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                     </div>
                 `;
             }
+            const chapter = u.chapter;
+
         }
         rows += "</div>";
         document.getElementById("PDFFILE").innerHTML = rows;
@@ -688,6 +699,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 const projectObjective = decodeURIComponent(item.getAttribute('data-project_objective'));
                 const significanceOfStudy = decodeURIComponent(item.getAttribute('data-significance_of_study'));
                 const systemAnalysisAndDesign = decodeURIComponent(item.getAttribute('data-system_analysis_and_design'));
+                const chapter = item.getAttribute('data-chapter');
 
                 document.getElementById('reviseModalUniqueTitle').textContent = title;
                 document.getElementById('reviseModalUniqueStatus').textContent = status || "Revised";
@@ -700,7 +712,42 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 document.getElementById('reviseModalUniqueProjectObjectiveInput').value = projectObjective;
                 document.getElementById('reviseModalUniqueSignificanceOfStudyInput').value = significanceOfStudy;
                 document.getElementById('reviseModalUniqueSystemAnalysisAndDesignInput').value = systemAnalysisAndDesign;
+                document.getElementById('reviseModalUniqueChapterInput').value = chapter;
                 document.getElementById('reviseModalUnique').style.display = "flex";
+
+                // Get all the form fields
+                const intro = document.getElementById('reviseModalUniqueIntroductionInput');
+                const projObj = document.getElementById('reviseModalUniqueProjectObjectiveInput');
+                const signif = document.getElementById('reviseModalUniqueSignificanceOfStudyInput');
+                const sysAn = document.getElementById('reviseModalUniqueSystemAnalysisAndDesignInput');
+
+                // Use loose equality to handle both string and number
+                if (chapter === "1") {
+                    setFieldState(intro, true);
+                    setFieldState(projObj, false);
+                    setFieldState(signif, false);
+                    setFieldState(sysAn, false);
+                } else if (chapter === "2") {
+                    setFieldState(intro, true);
+                    setFieldState(projObj, true);
+                    setFieldState(signif, false);
+                    setFieldState(sysAn, false);
+                } else if (chapter === "3") {
+                    setFieldState(intro, true);
+                    setFieldState(projObj, true);
+                    setFieldState(signif, true);
+                    setFieldState(sysAn, false);
+                } else if (chapter === "4") {
+                    setFieldState(intro, true);
+                    setFieldState(projObj, true);
+                    setFieldState(signif, true);
+                    setFieldState(sysAn, true);
+                } else {
+                    setFieldState(intro, true);
+                    setFieldState(projObj, true);
+                    setFieldState(signif, true);
+                    setFieldState(sysAn, true);
+                }
             });
         });
     }
@@ -821,6 +868,15 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 logoutModal.style.display = 'none';
             }
         });
+    }
+
+    function setFieldState(field, enabled) {
+        field.disabled = !enabled;
+        if (enabled) {
+            field.setAttribute('required', 'required');
+        } else {
+            field.removeAttribute('required');
+        }
     }
 </script>
 </body>

@@ -1,25 +1,5 @@
 window.addEventListener("DOMContentLoaded", () => {
 	showdroptdown();
-<<<<<<< HEAD
-});
-document.getElementById("thesisForm").addEventListener("submit", uploadfun);
-
-async function uploadfun(e) {
-	e.preventDefault();
-
-	const fileInput = document.getElementById("docfile");
-	const file = fileInput.files[0];
-	if (!file || file.type !== "application/pdf") {
-		Swal.fire({
-			icon: "error",
-			title: "Invalid File",
-			text: "Please upload a PDF file only.",
-			confirmButtonColor: "#1976a5",
-		});
-		return;
-	}
-
-=======
 	showdorpdownmember();
 });
 document
@@ -29,7 +9,6 @@ document
 async function generateAPAReference(e) {
 	e.preventDefault();
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 	const form = document.getElementById("thesisForm");
 	const formdata = new FormData(form);
 
@@ -43,18 +22,9 @@ async function generateAPAReference(e) {
 	if (result.status === "success") {
 		Swal.fire({
 			icon: "success",
-<<<<<<< HEAD
-			title: "Success!",
-			text: result.message,
-			confirmButtonColor: "#1976a5",
-		}).then(() => {
-			form.reset(); // Clear all input fields
-			showupload();
-=======
 			title: "Successfully Uploaded!",
 			text: result.message,
 			confirmButtonColor: "#1976a5",
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 		});
 	} else {
 		Swal.fire({
@@ -78,8 +48,6 @@ async function showdroptdown() {
 	document.getElementById("reviewerDropdown").innerHTML = options;
 }
 
-<<<<<<< HEAD
-=======
 async function showdorpdownmember() {
 	const res = await fetch("../../php/student/showmember.php");
 	const data = await res.json();
@@ -93,7 +61,6 @@ async function showdorpdownmember() {
 	document.getElementById("memberDropdown").innerHTML = options;
 }
 
->>>>>>> 5c1e57b9ffdeb14cbc469ca190ff7089f52b1639
 // Dropdown toggle for avatar
 const avatar = document.querySelector(".nav-avatar");
 if (avatar) {
