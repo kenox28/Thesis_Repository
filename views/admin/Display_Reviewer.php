@@ -22,7 +22,8 @@ if (!isset($_SESSION['admin_id'])) {
         <div class="container">
             <h1>Manage Reviewers</h1>
             <nav>
-                <a href="admin_dashboard.php">Home</a>
+                <a href="#" class="active">Home</a>
+                <a href="admin_dashboard.php" class="active">Students</a>
                 <a href="Display_Reviewer.php">Manage Reviewers</a>
                 <a href="public_thesis.php">Publication thesis</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>

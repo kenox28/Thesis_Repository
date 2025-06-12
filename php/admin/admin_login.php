@@ -1,30 +1,37 @@
-
 <?php
 session_start();
+include_once "../php/Database.php";
 
-// Load admin credentials from JSON file
-$configPath = "../config/config.json";
-if (!file_exists($configPath)) {
-    die("Configuration file not found.");
-}
-$config = json_decode(file_get_contents($configPath), true);
-
-$admin_email = $config['admin']['email'];
-$admin_password = $config['admin']['password'];
-
-// Get form data
-$email = $_POST['email'] ?? '';
+// Accept login by admin_id or email
+$login = $_POST['login'] ?? '';
 $password = $_POST['password'] ?? '';
 
-// Check credentials
-if ($email === $admin_email && $password === $admin_password) {
-    // Set session for admin
-    $_SESSION['admin_logged_in'] = true;
-    header("Location: ../views/admin_dashboard.php");
-    exit();
-} else {
-    // Redirect back to login with error
-    header("Location: ../views/admin_login.php?error=invalid_credentials");
+if (!$login || !$password) {
+    header("Location: ../views/admin_login.php?error=missing_fields");
     exit();
 }
+
+// Try to find admin by ID or email
+$sql = "SELECT * FROM admin WHERE (admin_id = ? OR email = ?)";
+$stmt = $connect->prepare($sql);
+$stmt->bind_param("ss", $login, $login);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result && $row = $result->fetch_assoc()) {
+    if (md5($password) === $row['pass']) {
+        // Set session for admin
+        $_SESSION['admin_id'] = $row['admin_id'];
+        $_SESSION['fname'] = $row['fname'];
+        $_SESSION['lname'] = $row['lname'];
+        $_SESSION['profileImg'] = $row['profileImg'] ?? 'noprofile.png';
+        $_SESSION['email'] = $row['email'];
+        header("Location: ../views/admin/admin_dashboard.php");
+        exit();
+    }
+}
+
+// Redirect back to login with error
+header("Location: ../views/admin_login.php?error=invalid_credentials");
+exit();
 ?>

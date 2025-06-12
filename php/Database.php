@@ -150,6 +150,7 @@ $admin = "CREATE TABLE IF NOT EXISTS admin (
     lname VARCHAR(50) NOT NULL,
     email VARCHAR(50) NOT NULL UNIQUE,
     pass VARCHAR(255) NOT NULL,
+    profileImg VARCHAR(255) DEFAULT 'noprofile.png',
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
@@ -166,6 +167,13 @@ if ($result && mysqli_num_rows($result) === 0) {
     ('ADM002', 'Default', 'Admin', 'iquenxzx@gmail.com', '" . md5("iquen123456") . "'),
     ('ADM003', 'Default', 'Admin', 'russeljhondasigan@gmail.com', '" . md5("russel123456") . "')";
     mysqli_query($connect, $default_admin);
+}
+
+// Add profileImg column if it doesn't exist
+$result = mysqli_query($connect, "SHOW COLUMNS FROM admin LIKE 'profileImg'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $alter_admin = "ALTER TABLE admin ADD COLUMN profileImg VARCHAR(255) DEFAULT 'noprofile.png'";
+    mysqli_query($connect, $alter_admin);
 }
 
 $super_admin = "CREATE TABLE IF NOT EXISTS super_admin (
