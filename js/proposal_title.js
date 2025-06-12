@@ -55,18 +55,24 @@ async function showupload() {
 					<h3 class="thesis-title" style="cursor:pointer;">${u.title}</h3>
 					<p>${u.abstract}</p>
 					<embed src="${filePath}" width="600" height="400" type="application/pdf">
-					<div style="display: flex; justify-content: space-between; margin-top: 10px; flex-wrap: wrap;" class="button-container" >
-							<input type="text" id="inputmessage" name="message" placeholder="Message">
-							
-						<button onclick="updateStatus(${
-							u.id
-						}, 'rejected' , document.getElementById('inputmessage').value); event.stopPropagation();">Reject</button>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'continue' ,document.getElementById('inputmessage').value); event.stopPropagation();">Continue</button>
-
+					<div style="margin-top: 18px;">
+						<input type="text" id="inputmessage" name="message" placeholder="Message to student..." 
+							style="width: 99%; padding: 10px 14px; border: 1.5px solid #1976a5; border-radius: 6px; font-size: 1rem; outline: none; margin-bottom: 14px;">
+						<div style="display: flex; gap: 12px;">
+							<button onclick="updateStatus(${
+								u.id
+							}, 'rejected', document.getElementById('inputmessage').value); event.stopPropagation();"
+								style="flex:1; background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #e74c3c22; transition: background 0.18s; cursor: pointer;">
+								<i class='fas fa-times-circle'></i> Reject Title
+							</button>
+							<button onclick="updateStatus(${
+								u.id
+							}, 'continue', document.getElementById('inputmessage').value); event.stopPropagation();"
+								style="flex:1; background: #1976a5; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #1976a522; transition: background 0.18s; cursor: pointer;">
+								<i class='fas fa-check-circle'></i> Approve Title
+							</button>
+						</div>
 					</div>
-
 				</div>
 			`;
 	}
@@ -98,10 +104,10 @@ async function showupload() {
 showupload();
 
 async function updateStatus(thesisId, status, message) {
-	let actionText = status === "approved" ? "approve" : "reject";
+	let actionText = status === "rejected" ? "Reject" : "Continue";
 	let confirmButtonText =
-		status === "approved" ? "Yes, Approve" : "Yes, Reject";
-	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
+		status === "continue" ? "Yes, Continue" : "Yes, Reject";
+	let confirmButtonColor = status === "continue" ? "#43a047" : "#e53935";
 
 	const result = await Swal.fire({
 		title: `Are you sure you want to ${actionText} this thesis?`,

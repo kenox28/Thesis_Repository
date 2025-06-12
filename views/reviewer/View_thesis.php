@@ -797,6 +797,6 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
-<script src="../../js/view_thesis.js?v=1.0.17"></script>
+<script src="../../js/view_thesis.js?v=1.0.21"></script>
 </body>
 </html>

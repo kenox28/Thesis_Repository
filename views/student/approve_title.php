@@ -521,13 +521,17 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <div class="nav-logo">
                 <img src="../../assets/icons/logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
             </div>
+
+
             <div class="nav-links">
-            <a href="public_repo.php">Home</a>
-            <a href="upload.php">Upload Thesis</a>
-            <a href="homepage.php">Pending</a>
-    <a href="approve_title.php">Thesis Progress</a>
-    <a href="rejectpage.php">Rejected</a>
-    <a href="revisepage.php">Revised</a>
+            
+                <a href="public_repo.php">Home</a>
+                <a href="upload.php">Upload Thesis</a>
+                <a href="homepage.php">Pending</a>
+                <a href="approve_title.php">Thesis Progress</a>
+                <a href="approve_thesis.php">Approved</a>
+                <a href="rejectpage.php">Rejected</a>
+
             </div>
             <div class="nav-avatar dropdown">
                 <?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -659,7 +663,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         data-file="${filePath}"
                         data-title="${encodeURIComponent(u.title)}"
                         data-chapter="${u.Chapter}"
-                        data-abstract="${encodeURIComponent(u.abstract)}"
+                        data-message="${encodeURIComponent(u.message)}"
                         data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
                         data-status="${encodeURIComponent(u.status)}"
                         data-id="${u.id}"
@@ -684,7 +688,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                             <i class='fas fa-book'></i> ${u.title}
                         </h3>
                         <p>Chapter ${u.Chapter}</p>
-                        <div class="thesis-card-abstract">${u.abstract}</div>
+                        <div class="thesis-card-abstract">${u.message || "No message"}</div>
                         <embed src="${filePath}" type="application/pdf" width="300" height="250">
                         <div class="thesis-card-owner">${capitalize(u.lname)}, ${capitalize(u.fname)}</div>
                         <div class="thesis-card-status">${u.status || "Revised"}</div>

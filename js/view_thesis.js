@@ -39,6 +39,20 @@ async function showupload() {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 
+		let continueBtn = "";
+		if (parseInt(u.Chapter, 10) < 4) {
+			continueBtn = `<button onclick="updateStatus(${u.id}, 'continue', this.closest('.upload-item').querySelector('input[name=message]').value, '${u.Chapter}'); event.stopPropagation();"
+				style="flex:1; background: #1976a5; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #1976a522; transition: background 0.18s; cursor: pointer;">
+				<i class='fas fa-arrow-right'></i> Continue
+			</button>`;
+		}
+		let approveBtn = "";
+		if (parseInt(u.Chapter, 10) === 4) {
+			approveBtn = `<button onclick="updateStatus(${u.id}, 'approved', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
+				style="flex:1; background: #27ae60; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #27ae6022; transition: background 0.18s; cursor: pointer;">
+				<i class='fas fa-check-circle'></i> Approve
+			</button>`;
+		}
 		rows += `
 				<div class="upload-item"
 					data-file="${filePath}"
@@ -47,47 +61,33 @@ async function showupload() {
 					data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
 					style="margin-bottom: 20px; cursor:pointer;">
 					<div class="author-info">
-
-
                         <img src="${profileImg}" alt="Profile Image" class="profile-image">
                         <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
                             ${capitalize(u.lname)}, ${capitalize(u.fname)}
                         </span>
                     </div>
-
 					<h3 class="thesis-title" style="cursor:pointer;">${u.title}</h3>
 					<p>Chapter ${u.Chapter}</p>
 					<p>${u.abstract}</p>
 					<embed src="${filePath}" width="600" height="400" type="application/pdf">
-					<div style="display: flex; justify-content: space-between; margin-top: 10px; flex-wrap: wrap;" class="button-container" >
-							<input type="text" id="inputmessage" name="message" placeholder="Message">
-							
-						<button onclick="updateStatus(${
-							u.id
-						}, 'rejected' , document.getElementById('inputmessage').value); event.stopPropagation();">Reject</button>
-						<button onclick="openReviseModal('${u.id}', '${
+					<div style="margin-top: 18px;">
+						<input type="text" name="message" placeholder="Message to student..." style="width: 98%; padding: 10px 14px; border: 1.5px solid #1976a5; border-radius: 6px; font-size: 1rem; outline: none; margin-bottom: 14px;">
+						<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+							<button onclick="updateStatus(${
+								u.id
+							}, 'rejected', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
+								style="flex:1; background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #e74c3c22; transition: background 0.18s; cursor: pointer;">
+								<i class='fas fa-times-circle'></i> Reject
+							</button>
+							<button onclick="openReviseModal('${u.id}', '${
 			u.ThesisFile
-		}'); event.stopPropagation();">Revise</button>
-						${
-							parseInt(u.Chapter, 10) < 4
-								? `<button onclick="updateStatus(
-									${u.id},
-									'continue',
-									document.getElementById('inputmessage').value,
-									'${u.Chapter}'
-								); event.stopPropagation();">Continue</button>`
-								: ""
-						}
-						${
-							parseInt(u.Chapter, 10) === 4
-								? `<button onclick="updateStatus(
-									${u.id},
-									'approved',
-									document.getElementById('inputmessage').value
-								); event.stopPropagation();">Approve</button>`
-								: ""
-						}
-
+		}'); event.stopPropagation();"
+								style="flex:1; background: #f39c12; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #f39c1222; transition: background 0.18s; cursor: pointer;">
+								<i class='fas fa-edit'></i> Revise
+							</button>
+							${continueBtn}
+							${approveBtn}
+						</div>
 					</div>
 
 					<button onclick="window.location.href='view_Revise.php?thesis_id=${

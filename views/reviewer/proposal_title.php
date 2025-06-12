@@ -724,7 +724,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     </aside>
     <div class="main-content">
         <div class="header">
-            <h1><i class="fas fa-check-circle"></i> Review Theses</h1>
+            <h1><i class="fas fa-check-circle"></i>Title Proposal</h1>
         </div>
         <main>
             <div id="userTableBody"></div>
@@ -797,6 +797,6 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
-<script src="../../js/proposal_title.js?v=1.0.14"></script>
+<script src="../../js/proposal_title.js?v=1.0.18"></script>
 </body>
 </html>

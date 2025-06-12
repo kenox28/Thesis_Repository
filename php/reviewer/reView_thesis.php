@@ -9,7 +9,7 @@ if (!isset($_SESSION['reviewer_id'])) {
 
 $reviewer_id = $_SESSION['reviewer_id'];
 
-$sql = "SELECT * FROM repoTable WHERE reviewer_id = '$reviewer_id' AND status = 'Pending' AND Chapter = '1'";
+$sql = "SELECT * FROM repoTable WHERE reviewer_id = '$reviewer_id' AND status = 'Pending' AND (Chapter = '1' or Chapter = '2' or Chapter = '3' or Chapter = '4')";
 $result = mysqli_query($connect, $sql);
 
 $uploads = [];
