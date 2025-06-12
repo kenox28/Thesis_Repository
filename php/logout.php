@@ -31,11 +31,8 @@ if (isset($_COOKIE[session_name()])) {
 // Destroy the session
 session_destroy();
 
-// Return JSON response
-echo json_encode([
-    "status" => "success",
-    "message" => "Logged out successfully"
-]);
+
+header("location:../views/student_login.php");
 exit();
 
 
