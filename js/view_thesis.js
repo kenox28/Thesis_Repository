@@ -68,12 +68,16 @@ async function showupload() {
 						<button onclick="openReviseModal('${u.id}', '${
 			u.ThesisFile
 		}'); event.stopPropagation();">Revise</button>
-						<button onclick="updateStatus(
-							${u.id},
-							'continue',
-							document.getElementById('inputmessage').value,
-							'${u.Chapter}'
-						); event.stopPropagation();">Continue</button>
+						${
+							parseInt(u.Chapter, 10) < 4
+								? `<button onclick="updateStatus(
+									${u.id},
+									'continue',
+									document.getElementById('inputmessage').value,
+									'${u.Chapter}'
+								); event.stopPropagation();">Continue</button>`
+								: ""
+						}
 						${
 							parseInt(u.Chapter, 10) === 4
 								? `<button onclick="updateStatus(
