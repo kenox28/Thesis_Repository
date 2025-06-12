@@ -1,6 +1,7 @@
 <?php
 session_start();
 include_once "Database.php";
+require_once "Logger.php";
 
 $email = mysqli_real_escape_string($connect, $_POST['email'] ?? '');
 $pass = $_POST['passw'] ?? '';
@@ -15,11 +16,28 @@ if (!empty($email) && !empty($pass)) {
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
             $_SESSION['email'] = $row['email'];
+
+            // Log successful login
+            $logger = new Logger($connect);
+            $logger->logActivity(
+                $row['super_admin_id'],
+                'LOGIN',
+                'Super admin logged in successfully'
+            );
+
             echo json_encode([
                 "status" => "success",
                 "message" => "Super Admin login successful"
             ]);
             exit();
+        } else {
+            // Log failed login attempt
+            $logger = new Logger($connect);
+            $logger->logActivity(
+                $row['super_admin_id'],
+                'LOGIN_FAILED',
+                'Failed login attempt for super admin account'
+            );
         }
     }
     echo json_encode(["status" => "failed", "message" => "Wrong password or email"]);

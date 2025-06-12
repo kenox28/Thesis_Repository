@@ -26,6 +26,11 @@ $thesisQuery = "SELECT COUNT(*) as thesis_count FROM publicRepo";
 $thesisResult = mysqli_query($connect, $thesisQuery);
 $thesisCount = $thesisResult->fetch_assoc()['thesis_count'];
 
+// Count approved reviewers
+$reviewerQuery = "SELECT COUNT(*) as reviewer_count FROM reviewer WHERE approve = 1";
+$reviewerResult = mysqli_query($connect, $reviewerQuery);
+$reviewerCount = $reviewerResult->fetch_assoc()['reviewer_count'];
+
 // Calculate system uptime (you might want to implement your own logic here)
 $uptimePercentage = "99.9%";
 
@@ -330,6 +335,152 @@ $uptimePercentage = "99.9%";
             font-size: 0.9rem;
         }
 
+        /* Student List Modal Styles */
+        .student-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .student-modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 1000px;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .student-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .student-modal-title {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+            margin: 0;
+        }
+
+        .student-search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .student-search {
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            width: 50%;
+            font-size: 1rem;
+            padding-left: 40px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+
+        .loading-spinner {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-color);
+            display: none;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+            background: #f8f9fa;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .student-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .student-card {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 1px solid #e0e0e0;
+        }
+
+        .student-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .student-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-color);
+        }
+
+        .student-info {
+            flex: 1;
+        }
+
+        .student-name {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin: 0 0 5px 0;
+        }
+
+        .student-email {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .student-id {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin: 5px 0 0 0;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 24px;
+            color: #666;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-color);
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             header .container {
@@ -348,6 +499,14 @@ $uptimePercentage = "99.9%";
             }
 
             .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .student-search {
+                width: 100%;
+            }
+            
+            .student-list {
                 grid-template-columns: 1fr;
             }
         }
@@ -429,24 +588,201 @@ $uptimePercentage = "99.9%";
                 <div class="stat-number"><?php echo $adminCount; ?></div>
                 <div class="stat-label">Active Admins</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number"><?php echo $studentCount; ?>+</div>
+            <div class="stat-card" style="cursor: pointer;" onclick="showStudentList()">
+                <div class="stat-number"><?php echo $studentCount; ?></div>
                 <div class="stat-label">Student Users</div>
             </div>
             <div class="stat-card">
-                <div class="stat-number"><?php echo $thesisCount; ?>+</div>
+                <div class="stat-number"><?php echo $thesisCount; ?></div>
                 <div class="stat-label">Thesis Entries</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number"><?php echo $uptimePercentage; ?></div>
-                <div class="stat-label">System Uptime</div>
+            <div class="stat-card" style="cursor: pointer;" onclick="showReviewerList()">
+                <div class="stat-number"><?php echo $reviewerCount; ?></div>
+                <div class="stat-label">Approved Reviewers</div>
+            </div>
+        </div>
+
+        <!-- Student List Modal -->
+        <div id="studentListModal" class="student-modal">
+            <div class="student-modal-content">
+                <span class="close-modal" id="closeStudentModal">&times;</span>
+                <div class="student-modal-header">
+                    <h2 class="student-modal-title">
+                        <i class="fas fa-users"></i>
+                        Student List
+                    </h2>
+                </div>
+                <div class="student-search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="studentSearch" class="student-search" placeholder="Search by name, email, or ID...">
+                    <i class="fas fa-spinner fa-spin loading-spinner" id="searchSpinner"></i>
+                </div>
+                <div id="studentList" class="student-list">
+                    <!-- Students will be loaded here -->
+                </div>
+                <div id="noResults" class="no-results" style="display: none;">
+                    No students found matching your search.
+                </div>
+            </div>
+        </div>
+
+        <!-- Reviewer List Modal -->
+        <div id="reviewerListModal" class="student-modal">
+            <div class="student-modal-content">
+                <span class="close-modal" id="closeReviewerModal">&times;</span>
+                <div class="student-modal-header">
+                    <h2 class="student-modal-title">
+                        <i class="fas fa-user-tie"></i>
+                        Approved Reviewer List
+                    </h2>
+                </div>
+                <div class="student-search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="reviewerSearch" class="student-search" placeholder="Search approved reviewers...">
+                    <i class="fas fa-spinner fa-spin loading-spinner" id="reviewerSearchSpinner"></i>
+                </div>
+                <div id="reviewerList" class="student-list">
+                    <!-- Reviewers will be loaded here -->
+                </div>
+                <div id="noReviewerResults" class="no-results" style="display: none;">
+                    No reviewers found matching your search.
+                </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="https://kit.fontawesome.com/your-font-awesome-kit.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     <script>
+        let searchTimeout = null;
+        const searchSpinner = document.getElementById('searchSpinner');
+        const noResults = document.getElementById('noResults');
+        const studentModal = document.getElementById('studentListModal');
+        const studentList = document.getElementById('studentList');
+        const searchInput = document.getElementById('studentSearch');
+        const reviewerModal = document.getElementById('reviewerListModal');
+        const reviewerList = document.getElementById('reviewerList');
+        const reviewerSearch = document.getElementById('reviewerSearch');
+        const reviewerSearchSpinner = document.getElementById('reviewerSearchSpinner');
+        const noReviewerResults = document.getElementById('noReviewerResults');
+        let reviewerSearchTimeout = null;
+
+        // Function to show student list modal
+        function showStudentList() {
+            studentModal.style.display = 'block';
+            searchInput.value = ''; // Clear search input
+            loadStudents(); // Load initial list
+        }
+
+        // Function to close modal
+        function closeModal() {
+            studentModal.style.display = 'none';
+            studentList.innerHTML = ''; // Clear the list
+            searchInput.value = ''; // Clear search input
+            noResults.style.display = 'none';
+        }
+
+        // Close modal when clicking X or outside
+        document.getElementById('closeStudentModal').addEventListener('click', closeModal);
+        window.addEventListener('click', function(event) {
+            if (event.target === studentModal) {
+                closeModal();
+            }
+        });
+
+        // Load initial students
+        async function loadStudents() {
+            try {
+                searchSpinner.style.display = 'block';
+                const response = await fetch('../../php/search_students.php');
+                if (!response.ok) {
+                    throw new Error('Failed to load students');
+                }
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    renderStudents(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to load students');
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message,
+                    confirmButtonColor: '#1976a5'
+                });
+            } finally {
+                searchSpinner.style.display = 'none';
+            }
+        }
+
+        // Live search functionality
+        searchInput.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.trim();
+            
+            // Clear previous timeout
+            if (searchTimeout) {
+                clearTimeout(searchTimeout);
+            }
+
+            // Show spinner
+            searchSpinner.style.display = 'block';
+
+            // Set new timeout
+            searchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`../../php/search_students.php?search=${encodeURIComponent(searchTerm)}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    const data = await response.json();
+                    console.log('Search response:', data); // Debug log
+
+                    if (data.status === 'success') {
+                        renderStudents(data.data);
+                    } else {
+                        throw new Error(data.message || 'Failed to search students');
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Search Error',
+                        text: error.message,
+                        confirmButtonColor: '#1976a5'
+                    });
+                } finally {
+                    searchSpinner.style.display = 'none';
+                }
+            }, 300);
+        });
+
+        function renderStudents(students) {
+            if (!Array.isArray(students)) {
+                console.error('Expected students to be an array, got:', students);
+                return;
+            }
+
+            noResults.style.display = students.length === 0 ? 'block' : 'none';
+            
+            studentList.innerHTML = students.map(student => `
+                <div class="student-card">
+                    <img src="../../assets/ImageProfile/${student.profileImg || 'noprofile.png'}" 
+                         alt="${student.fname} ${student.lname}" 
+                         class="student-avatar"
+                         onerror="this.src='../../assets/ImageProfile/noprofile.png'">
+                    <div class="student-info">
+                        <h3 class="student-name">${student.fname} ${student.lname}</h3>
+                        <p class="student-email">${student.email}</p>
+                        <p class="student-id">${student.student_id}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
+
         // Handle logout button
         document.getElementById('logoutBtn').addEventListener('click', function() {
             Swal.fire({
@@ -459,7 +795,25 @@ $uptimePercentage = "99.9%";
                 confirmButtonText: 'Yes, logout'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '../../php/logout.php';
+                    // First destroy the session
+                    fetch('../../php/logout.php')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                // Then redirect to landing page
+                                window.location.href = '../../views/landingpage.php';
+                            } else {
+                                throw new Error(data.message || 'Logout failed');
+                            }
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: error.message || 'Failed to logout',
+                                confirmButtonColor: '#1976a5'
+                            });
+                        });
                 }
             });
         });
@@ -477,8 +831,6 @@ $uptimePercentage = "99.9%";
                 confirmButtonText: 'Yes, continue'
             }).then((result) => {
                 if (result.isConfirmed) {
-<<<<<<< HEAD
-                    // Set super admin student view session before redirect
                     fetch('../../php/set_super_admin_student_view.php')
                         .then(response => response.json())
                         .then(data => {
@@ -496,12 +848,122 @@ $uptimePercentage = "99.9%";
                                 confirmButtonColor: '#1976a5'
                             });
                         });
-=======
-                    window.location.href = '../../views/student_login.php';
->>>>>>> 022513b1ffd3b67ac5d932cdcda3235d4fbe8e81
                 }
             });
         });
+
+        // Function to show reviewer list modal
+        function showReviewerList() {
+            reviewerModal.style.display = 'block';
+            reviewerSearch.value = ''; // Clear search input
+            loadReviewers(); // Load initial list
+        }
+
+        // Function to close reviewer modal
+        function closeReviewerModal() {
+            reviewerModal.style.display = 'none';
+            reviewerList.innerHTML = ''; // Clear the list
+            reviewerSearch.value = ''; // Clear search input
+            noReviewerResults.style.display = 'none';
+        }
+
+        // Close reviewer modal when clicking X or outside
+        document.getElementById('closeReviewerModal').addEventListener('click', closeReviewerModal);
+        window.addEventListener('click', function(event) {
+            if (event.target === reviewerModal) {
+                closeReviewerModal();
+            }
+        });
+
+        // Load initial reviewers
+        async function loadReviewers() {
+            try {
+                reviewerSearchSpinner.style.display = 'block';
+                const response = await fetch('../../php/search_reviewers.php');
+                if (!response.ok) {
+                    throw new Error('Failed to load reviewers');
+                }
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    renderReviewers(data.data);
+                } else {
+                    throw new Error(data.message || 'Failed to load reviewers');
+                }
+            } catch (error) {
+                console.error('Load error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: error.message,
+                    confirmButtonColor: '#1976a5'
+                });
+            } finally {
+                reviewerSearchSpinner.style.display = 'none';
+            }
+        }
+
+        // Live search functionality for reviewers
+        reviewerSearch.addEventListener('input', function(e) {
+            const searchTerm = e.target.value.trim();
+            
+            if (reviewerSearchTimeout) {
+                clearTimeout(reviewerSearchTimeout);
+            }
+
+            reviewerSearchSpinner.style.display = 'block';
+
+            reviewerSearchTimeout = setTimeout(async () => {
+                try {
+                    const response = await fetch(`../../php/search_reviewers.php?search=${encodeURIComponent(searchTerm)}`);
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    
+                    const data = await response.json();
+                    console.log('Reviewer search response:', data);
+
+                    if (data.status === 'success') {
+                        renderReviewers(data.data);
+                    } else {
+                        throw new Error(data.message || 'Failed to search reviewers');
+                    }
+                } catch (error) {
+                    console.error('Search error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Search Error',
+                        text: error.message,
+                        confirmButtonColor: '#1976a5'
+                    });
+                } finally {
+                    reviewerSearchSpinner.style.display = 'none';
+                }
+            }, 300);
+        });
+
+        function renderReviewers(reviewers) {
+            if (!Array.isArray(reviewers)) {
+                console.error('Expected reviewers to be an array, got:', reviewers);
+                return;
+            }
+
+            noReviewerResults.style.display = reviewers.length === 0 ? 'block' : 'none';
+            
+            reviewerList.innerHTML = reviewers.map(reviewer => `
+                <div class="student-card">
+                    <img src="../../assets/ImageProfile/noprofile.png" 
+                         alt="${reviewer.fname} ${reviewer.lname}" 
+                         class="student-avatar">
+                    <div class="student-info">
+                        <h3 class="student-name">${reviewer.fname} ${reviewer.lname}</h3>
+                        <p class="student-email">${reviewer.email}</p>
+                        <p class="student-id">Reviewer ID: ${reviewer.reviewer_id}</p>
+                        <p class="last-active">Last Active: ${reviewer.last_active ? new Date(reviewer.last_active).toLocaleString() : 'Never'}</p>
+                    </div>
+                </div>
+            `).join('');
+        }
     </script>
 </body>
 </html> 

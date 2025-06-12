@@ -191,15 +191,25 @@ if ($result && mysqli_num_rows($result) === 0) {
     mysqli_query($connect, $default_super_admin);
 }
 
+// Create activity_logs table with updated structure
+$activity_logs = "CREATE TABLE IF NOT EXISTS activity_logs (
+    log_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(255),
+    user_type ENUM('admin', 'super_admin') NOT NULL,
+    action_type VARCHAR(50) NOT NULL,
+    description TEXT NOT NULL,
+    ip_address VARCHAR(45),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+)";
+
+// Only create the table if it doesn't exist
+mysqli_query($connect, $activity_logs);
+
 mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
 mysqli_query($connect, $revise_table);
 mysqli_query($connect, $thesis_history);
-
-// if(mysqli_query($connect, $thesisrepo)){
-//     // echo "success";
-// };
 
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'last_active'");
 if ($result && mysqli_num_rows($result) == 0) {

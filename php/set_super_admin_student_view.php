@@ -1,25 +1,37 @@
 <?php
 session_start();
+require_once "Database.php";
+require_once "Logger.php";
 
-// Prevent any HTML output
-error_reporting(0);
-header('Content-Type: application/json');
+// Check if user is logged in as super admin
+if (!isset($_SESSION['super_admin_id'])) {
+    echo json_encode([
+        "status" => "error",
+        "message" => "Unauthorized access"
+    ]);
+    exit();
+}
 
 try {
-    // Check if the user is a super admin
-    if (!isset($_SESSION['super_admin_id'])) {
-        throw new Exception('Unauthorized access');
-    }
-
-    // Set special session variables for student view
+    // Set a session variable to indicate super admin is in student view
     $_SESSION['super_admin_student_view'] = true;
-    $_SESSION['student_view_time'] = time();
+    
+    // Log the activity
+    $logger = new Logger($connect);
+    $logger->logActivity(
+        $_SESSION['super_admin_id'],
+        'VIEW',
+        'Super admin switched to student repository view'
+    );
 
-    echo json_encode(['status' => 'success']);
+    echo json_encode([
+        "status" => "success",
+        "message" => "Successfully enabled student view"
+    ]);
 } catch (Exception $e) {
     echo json_encode([
-        'status' => 'error',
-        'message' => $e->getMessage()
+        "status" => "error",
+        "message" => "Failed to enable student view: " . $e->getMessage()
     ]);
 }
 ?>

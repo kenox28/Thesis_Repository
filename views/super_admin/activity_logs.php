@@ -6,6 +6,18 @@ if (!isset($_SESSION['super_admin_id'])) {
     header("Location: ../super_admin_login.php");
     exit();
 }
+
+// Log the page visit
+require_once '../../php/Database.php';
+require_once '../../php/Logger.php';
+
+$logger = new Logger($connect);
+$logger->logActivity(
+    $_SESSION['super_admin_id'],
+    'VIEW',
+    'Accessed activity logs page'
+);
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -124,13 +136,99 @@ if (!isset($_SESSION['super_admin_id'])) {
             text-align: center;
             padding: 20px;
         }
+        .user-type-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .user-type-admin {
+            background: #e3f2fd;
+            color: #1976a5;
+        }
+
+        .user-type-super-admin {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .summary-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1976a5;
+            margin-bottom: 8px;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .action-details {
+            font-size: 14px;
+            color: #666;
+            margin-top: 4px;
+        }
+
+        .filter-group select, .filter-group input {
+            width: 100%;
+        }
+
+        .export-btn {
+            background: #4caf50;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .export-btn:hover {
+            background: #43a047;
+        }
+
+        .clear-filters {
+            background: #f5f5f5;
+            color: #666;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .clear-filters:hover {
+            background: #e0e0e0;
+        }
     </style>
 </head>
 <body>
     <!-- Header Section -->
     <header>
         <div class="container">
-            <h1>Activity Logs</h1>
+            <h1>Activity Monitoring</h1>
             <nav>
                 <a href="super_admin_dashboard.php">Home</a>
                 <a href="manage_admin.php">Manage Admins</a>
@@ -141,21 +239,45 @@ if (!isset($_SESSION['super_admin_id'])) {
     </header>
 
     <div class="container">
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-number" id="totalActivities">0</div>
+                <div class="summary-label">Total Activities</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number" id="activeAdmins">0</div>
+                <div class="summary-label">Active Admins</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number" id="todayActivities">0</div>
+                <div class="summary-label">Today's Activities</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-number" id="criticalActions">0</div>
+                <div class="summary-label">Critical Actions</div>
+            </div>
+        </div>
+
         <div class="logs-container">
             <div class="filters">
                 <div class="filter-group">
                     <label for="adminFilter">Admin</label>
                     <select id="adminFilter" class="filter-input">
-                        <option value="">All Admins</option>
+                        <option value="">All Users</option>
+                        <option value="admin">Admins Only</option>
+                        <option value="super_admin">Super Admins Only</option>
                     </select>
                 </div>
                 <div class="filter-group">
                     <label for="actionFilter">Action Type</label>
                     <select id="actionFilter" class="filter-input">
                         <option value="">All Actions</option>
-                        <option value="create">Create</option>
-                        <option value="update">Update</option>
-                        <option value="delete">Delete</option>
+                        <option value="LOGIN">Login</option>
+                        <option value="LOGOUT">Logout</option>
+                        <option value="CREATE">Create</option>
+                        <option value="UPDATE">Update</option>
+                        <option value="DELETE">Delete</option>
+                        <option value="VIEW">View</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -168,13 +290,20 @@ if (!isset($_SESSION['super_admin_id'])) {
                 </div>
             </div>
 
+            <button class="export-btn" onclick="exportLogs()">
+                <i class="fas fa-download"></i> Export to Excel
+            </button>
+            <button class="clear-filters" onclick="clearFilters()">
+                <i class="fas fa-times"></i> Clear Filters
+            </button>
+
             <div id="loading" class="loading">Loading...</div>
             
             <table class="logs-table">
                 <thead>
                     <tr>
                         <th>Date & Time</th>
-                        <th>Admin</th>
+                        <th>User</th>
                         <th>Action</th>
                         <th>Description</th>
                         <th>IP Address</th>
@@ -206,7 +335,24 @@ if (!isset($_SESSION['super_admin_id'])) {
             loadLogs();
             loadAdminOptions();
             setupFilterListeners();
+            updateSummaryCards();
         });
+
+        async function updateSummaryCards() {
+            try {
+                const response = await fetch('../../php/get_activity_summary.php');
+                const data = await response.json();
+
+                if (data.status === 'success') {
+                    document.getElementById('totalActivities').textContent = data.total_activities;
+                    document.getElementById('activeAdmins').textContent = data.active_admins;
+                    document.getElementById('todayActivities').textContent = data.today_activities;
+                    document.getElementById('criticalActions').textContent = data.critical_actions;
+                }
+            } catch (error) {
+                console.error('Error updating summary:', error);
+            }
+        }
 
         async function loadLogs(page = 1) {
             const loading = document.getElementById('loading');
@@ -219,7 +365,7 @@ if (!isset($_SESSION['super_admin_id'])) {
                 noLogs.style.display = 'none';
 
                 // Get filter values
-                const adminId = document.getElementById('adminFilter').value;
+                const adminFilter = document.getElementById('adminFilter').value;
                 const actionType = document.getElementById('actionFilter').value;
                 const dateFrom = document.getElementById('dateFrom').value;
                 const dateTo = document.getElementById('dateTo').value;
@@ -227,13 +373,12 @@ if (!isset($_SESSION['super_admin_id'])) {
                 // Build query string
                 const params = new URLSearchParams({
                     page: page,
-                    limit: 10
+                    limit: 10,
+                    user_type: adminFilter,
+                    action_type: actionType,
+                    date_from: dateFrom,
+                    date_to: dateTo
                 });
-
-                if (adminId) params.append('admin_id', adminId);
-                if (actionType) params.append('action_type', actionType);
-                if (dateFrom) params.append('date_from', dateFrom);
-                if (dateTo) params.append('date_to', dateTo);
 
                 const response = await fetch(`../../php/get_activity_logs.php?${params.toString()}`);
                 const data = await response.json();
@@ -248,11 +393,15 @@ if (!isset($_SESSION['super_admin_id'])) {
                     } else {
                         logs.forEach(log => {
                             const row = document.createElement('tr');
+                            const userTypeBadge = `<span class="user-type-badge user-type-${log.user_type.toLowerCase()}">${log.user_type}</span>`;
                             row.innerHTML = `
                                 <td>${formatDateTime(log.created_at)}</td>
-                                <td>${log.fname} ${log.lname}</td>
+                                <td>${log.fname} ${log.lname} ${userTypeBadge}</td>
                                 <td><span class="action-type ${log.action_type.toLowerCase()}">${log.action_type}</span></td>
-                                <td>${log.description}</td>
+                                <td>
+                                    ${log.description}
+                                    <div class="action-details">IP: ${log.ip_address}</div>
+                                </td>
                                 <td>${log.ip_address}</td>
                             `;
                             tableBody.appendChild(row);
@@ -260,6 +409,7 @@ if (!isset($_SESSION['super_admin_id'])) {
                     }
 
                     updatePagination(data.data.pagination);
+                    updateSummaryCards();
                 } else {
                     showError('Error', data.message || 'Failed to load activity logs');
                 }
@@ -268,6 +418,36 @@ if (!isset($_SESSION['super_admin_id'])) {
                 showError('Error', 'Failed to load activity logs');
             } finally {
                 loading.style.display = 'none';
+            }
+        }
+
+        function clearFilters() {
+            document.getElementById('adminFilter').value = '';
+            document.getElementById('actionFilter').value = '';
+            document.getElementById('dateFrom').value = '';
+            document.getElementById('dateTo').value = '';
+            loadLogs(1);
+        }
+
+        async function exportLogs() {
+            try {
+                const adminFilter = document.getElementById('adminFilter').value;
+                const actionType = document.getElementById('actionFilter').value;
+                const dateFrom = document.getElementById('dateFrom').value;
+                const dateTo = document.getElementById('dateTo').value;
+
+                const params = new URLSearchParams({
+                    user_type: adminFilter,
+                    action_type: actionType,
+                    date_from: dateFrom,
+                    date_to: dateTo,
+                    export: true
+                });
+
+                window.location.href = `../../php/export_logs.php?${params.toString()}`;
+            } catch (error) {
+                console.error('Error exporting logs:', error);
+                showError('Error', 'Failed to export logs');
             }
         }
 
