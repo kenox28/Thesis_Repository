@@ -1,5 +1,4 @@
 <?php
-// filepath: c:\xampp\htdocs\Thesis_Repository\php\admin\get_students.php
 session_start();
 include_once "../../php/Database.php";
 
