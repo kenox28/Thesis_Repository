@@ -34,6 +34,15 @@
             $stmt_delete->bind_param("i", $id);
             $stmt_delete->execute();
 
+            $stmt_log = $connect->prepare("INSERT INTO activity_logs (user_id, user_type, action_type, description, ip_address) VALUES (?, ?, ?, ?, ?)");
+            $user_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
+            $user_type = 'admin';
+            $action_type = 'Promote';
+            $description = 'Moved from student to reviewer';
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+            $stmt_log->bind_param("sssss", $user_id, $user_type, $action_type, $description, $ip_address);
+            $stmt_log->execute();
+
 
             // Log activity
             $admin_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
@@ -71,6 +80,15 @@
             $stmt_delete = $connect->prepare("DELETE FROM reviewer WHERE reviewer_id = ?");
             $stmt_delete->bind_param("i", $id);
             $stmt_delete->execute();
+
+            $stmt_log = $connect->prepare("INSERT INTO activity_logs (user_id, user_type, action_type, description, ip_address) VALUES (?, ?, ?, ?, ?)");
+            $user_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
+            $user_type = 'admin';
+            $action_type = 'Demote';
+            $description = 'Moved from reviewer to student';
+            $ip_address = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+            $stmt_log->bind_param("sssss", $user_id, $user_type, $action_type, $description, $ip_address);
+            $stmt_log->execute();
 
             // Log activity
             $admin_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;

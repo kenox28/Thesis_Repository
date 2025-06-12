@@ -1,4 +1,5 @@
 <?php
+// filepath: c:\xampp\htdocs\Thesis_Repository\php\admin\get_students.php
 session_start();
 include_once "../../php/Database.php";
 
@@ -14,7 +15,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // Fetch all students
-$sql = "SELECT student_id, fname, lname, email FROM student";
+$sql = "SELECT * FROM student";
 $result = mysqli_query($connect, $sql);
 
 if (!$result) {
@@ -28,5 +29,5 @@ while ($row = mysqli_fetch_assoc($result)) {
     $students[] = $row;
 }
 
-echo json_encode(["status" => "success", "data" => $students]);
+echo json_encode(["status" => "success", "students" => $students]);
 ?>

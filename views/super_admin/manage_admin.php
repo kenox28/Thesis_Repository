@@ -154,7 +154,7 @@ if (!isset($_SESSION['super_admin_id'])) {
             <nav>
                 <a href="super_admin_dashboard.php">Home</a>
                 <a href="manage_admin.php" class="active">Manage Admins</a>
-                <a href="#">System Settings</a>
+                <a href="activity_logs.php">Activity Logs</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">Logout</a>
             </nav>
         </div>

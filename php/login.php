@@ -5,6 +5,7 @@ error_reporting(E_ALL);
 
 session_start();
 include_once "Database.php";
+require_once "Logger.php";
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -24,6 +25,19 @@ if (!empty($email) && !empty($pass)) {
     if ($result_admin && mysqli_num_rows($result_admin) > 0) {
         $row = mysqli_fetch_assoc($result_admin);
         if (md5($pass) === $row['pass']) {
+            // Log successful login before setting session
+            $logger = new Logger($connect);
+            $success = $logger->logActivity(
+                $row['admin_id'],
+                'LOGIN',
+                'Admin logged in successfully'
+            );
+
+            if (!$success) {
+                error_log("Failed to log admin login activity");
+            }
+
+            // Set session variables
             $_SESSION['admin_id'] = $row['admin_id'];
             $_SESSION['fname'] = $row['fname'];
             $_SESSION['lname'] = $row['lname'];
@@ -33,6 +47,20 @@ if (!empty($email) && !empty($pass)) {
             echo json_encode([
                 "status" => "admin",
                 "message" => "Admin login successful",
+            ]);
+            exit();
+        } else {
+            // Log failed login attempt
+            $logger = new Logger($connect);
+            $logger->logActivity(
+                $row['admin_id'],
+                'LOGIN_FAILED',
+                'Failed login attempt for admin account'
+            );
+
+            echo json_encode([
+                "status" => "failed",
+                "message" => "Wrong password or email"
             ]);
             exit();
         }
