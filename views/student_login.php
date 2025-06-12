@@ -239,8 +239,22 @@
         <h2>Change Your Password</h2>
         <div class="force-reset-reminder">For your security, you must change your password before using the system.</div>
         <form id="forceResetForm">
-          <input type="password" name="password" placeholder="New Password" required minlength="8">
-          <input type="password" name="confirm" placeholder="Confirm Password" required minlength="8">
+          <input type="password" name="password" id="forceResetPassword" placeholder="New Password" required minlength="8" maxlength="12">
+          <div id="passwordRequirements" style="font-size:0.95em;color:#888;margin-bottom:4px;text-align:left;">
+            Password must be 8-12 characters, include:
+            <ul id="passwordChecklist" style="list-style:none;padding-left:0;margin:4px 0 0 0;">
+              <li id="req-length" style="color:#888;"><span style="font-weight:bold;">•</span> 8-12 characters</li>
+              <li id="req-upper" style="color:#888;"><span style="font-weight:bold;">•</span> Uppercase letter</li>
+              <li id="req-lower" style="color:#888;"><span style="font-weight:bold;">•</span> Lowercase letter</li>
+              <li id="req-number" style="color:#888;"><span style="font-weight:bold;">•</span> Number</li>
+              <li id="req-symbol" style="color:#888;"><span style="font-weight:bold;">•</span> Symbol</li>
+            </ul>
+          </div>
+          <div id="passwordStrengthMeter" style="width:100%;height:8px;background:#eee;border-radius:4px;margin-bottom:2px;overflow:hidden;">
+            <div id="passwordStrengthBar" style="height:100%;width:0%;background:#e74c3c;transition:width 0.3s;"></div>
+          </div>
+          <span id="passwordStrengthText" style="display:block;margin-bottom:8px;font-size:1.05em;font-weight:600;color:#888;text-align:left;"></span>
+          <input type="password" name="confirm" placeholder="Confirm Password" required minlength="8" maxlength="12">
           <button type="submit">Change Password</button>
         </form>
         <div id="forceResetMsg"></div>
