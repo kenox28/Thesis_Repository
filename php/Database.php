@@ -167,15 +167,39 @@ if ($result && mysqli_num_rows($result) === 0) {
     ('ADM003', 'Default', 'Admin', 'russeljhondasigan@gmail.com', '" . md5("russel123456") . "')";
     mysqli_query($connect, $default_admin);
 }
+
+$super_admin = "CREATE TABLE IF NOT EXISTS super_admin (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    super_admin_id VARCHAR(255) NOT NULL UNIQUE,
+    fname VARCHAR(50) NOT NULL,
+    lname VARCHAR(50) NOT NULL,
+    email VARCHAR(50) NOT NULL UNIQUE,
+    pass VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+)";
+mysqli_query($connect, $super_admin);
+
+// Check if the default super admin already exists
+$check_super_admin = "SELECT * FROM super_admin";
+$result = mysqli_query($connect, $check_super_admin);
+
+if ($result && mysqli_num_rows($result) === 0) {
+    // Insert default super admin if it doesn't exist
+    $default_super_admin = "INSERT INTO super_admin (super_admin_id, fname, lname, email, pass) VALUES
+    ('SADM001', 'Super', 'Admin', 'superadmin@gmail.com', '" . md5("superadmin123456") . "')";
+    mysqli_query($connect, $default_super_admin);
+}
+
 mysqli_query($connect, $reviewer);
 mysqli_query($connect, $student);
 mysqli_query($connect, $publicRepo);
 mysqli_query($connect, $revise_table);
 mysqli_query($connect, $thesis_history);
 
-if(mysqli_query($connect, $thesisrepo)){
-    // echo "success";
-};
+// if(mysqli_query($connect, $thesisrepo)){
+//     // echo "success";
+// };
 
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'last_active'");
 if ($result && mysqli_num_rows($result) == 0) {
