@@ -30,6 +30,7 @@
 
             <label class="label" for="email">Email</label>
             <input required type="email" name="email" class="input" id="email" />
+            <p style="font-size: 12px; color: blue; margin-top: 5px;">Password is the First Name in your first login in the system!</p>
             
             <button class="btn" id="login" type="submit">Sign Up</button>
 
