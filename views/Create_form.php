@@ -14,10 +14,10 @@
         <img src="../assets/icons/home.png" alt="Home Icon">
         </a>
     </header> -->
+
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>Create Account</h1>
            
-            <!-- Only Student option -->
             <input type="hidden" name="Role" value="Student" />
 
             <label class="label" for="firstname">First Name</label>
