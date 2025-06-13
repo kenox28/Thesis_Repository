@@ -510,6 +510,29 @@ $uptimePercentage = "99.9%";
                 grid-template-columns: 1fr;
             }
         }
+
+        .btn-role-glass {
+            background: rgba(202,220,252,0.45);
+            color: #1976a5;
+            border: 1.5px solid #1976a5;
+            font-weight: 600;
+            border-radius: 18px;
+            padding: 0.5rem 1.2rem;
+            margin: 0 0.2rem 0.2rem 0;
+            font-size: 1rem;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 8px #cadcfc22;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-role-glass:hover, .btn-role-glass:focus {
+            background: #1976a5;
+            color: #fff;
+            box-shadow: 0 4px 16px #1976a555;
+        }
     </style>
 </head>
 <body>
@@ -778,6 +801,8 @@ $uptimePercentage = "99.9%";
                         <h3 class="student-name">${student.fname} ${student.lname}</h3>
                         <p class="student-email">${student.email}</p>
                         <p class="student-id">${student.student_id}</p>
+                        <button class="btn-role-glass" onclick="setRole('${student.student_id}', 'reviewer')">Set Role to Reviewer</button>
+                        <button class="btn-role-glass" onclick="setRole('${student.student_id}', 'Faculty')">Set Role to Faculty</button>
                     </div>
                 </div>
             `).join('');
@@ -960,9 +985,49 @@ $uptimePercentage = "99.9%";
                         <p class="student-email">${reviewer.email}</p>
                         <p class="student-id">Reviewer ID: ${reviewer.reviewer_id}</p>
                         <p class="last-active">Last Active: ${reviewer.last_active ? new Date(reviewer.last_active).toLocaleString() : 'Never'}</p>
+                        <button class="btn-role-glass" onclick="setRole('${reviewer.reviewer_id}', 'student')">Set Role to Student</button>
+                        <button class="btn-role-glass" onclick="setRole('${reviewer.reviewer_id}', 'Faculty')">Set Role to Faculty</button>
                     </div>
                 </div>
             `).join('');
+        }
+
+        async function fetchData(url, method = "GET", body = null) {
+            try {
+                const options = {
+                    method,
+                    headers: { "Content-Type": "application/json" },
+                };
+                if (body) options.body = JSON.stringify(body);
+
+                const response = await fetch(url, options);
+                const text = await response.text();
+                return JSON.parse(text);
+            } catch (error) {
+                console.error(`Error fetching from ${url}:`, error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while processing your request.',
+                    confirmButtonColor: '#1976a5'
+                });
+                return null;
+            }
+        }
+
+        async function setRole(id, role) {
+            const result = await fetchData("../../php/admin/set_role.php", "POST", {
+                id,
+                role,
+            });
+            if (!result) return;
+            if (result.status === "success") {
+                Swal.fire({
+                    title: "Success",
+                    text: result.message,
+                    icon: "success",
+                });
+            }
         }
     </script>
 </body>

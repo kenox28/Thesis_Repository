@@ -15,10 +15,11 @@ if (!$id) {
     exit();
 }
 
-$sql = "SELECT r.* 
-        FROM repoTable r
-        JOIN publicRepo p ON r.student_id = p.student_id AND r.ThesisFile = p.ThesisFile
-        WHERE r.student_id = '$id' AND p.Privacy = 'public'";
+// $sql = "SELECT r.* 
+//         FROM repoTable r
+//         JOIN publicRepo p ON r.student_id = p.student_id AND r.ThesisFile = p.ThesisFile
+//         WHERE r.student_id = '$id' AND p.Privacy = 'public' or p.Privacy = 'MEMBERS'";
+$sql = "SELECT * FROM publicRepo WHERE student_id = '$id' AND (Privacy = 'public' OR Privacy = 'MEMBERS')";
 
 $result = mysqli_query($connect, $sql);
 

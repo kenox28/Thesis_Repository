@@ -75,11 +75,15 @@ $stmt->fetch();
 $stmt->close();
 
 $studentFullName = $fname . ' ' . $lname;
-$date = date('Y-m-d');
+$date = date('F Y'); // e.g., June 2025
 
 $phpWord = new PhpWord();
 $fontStyle = ['name' => 'Times New Roman', 'size' => 12];
 $center = ['alignment' => 'center'];
+$paragraphStyle = [
+    'spaceAfter' => 240, // double spacing
+    'lineHeight' => 2.0
+];
 
 // 1. Title Page (APA)
 $titleSection = $phpWord->addSection([
@@ -88,13 +92,20 @@ $titleSection = $phpWord->addSection([
     'marginLeft' => 1440,
     'marginRight' => 1440
 ]);
+
+$header = $titleSection->addHeader();
+$table = $header->addTable(['alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER, 'width' => 100 * 50]);
+$row = $table->addRow();
+$row->addCell(9000); // left cell (empty or for running head)
+$row->addCell(1000)->addPreserveText('{PAGE}', array_merge($fontStyle, ['align' => 'right']));
+
+for ($i = 0; $i < 7; $i++) $titleSection->addTextBreak(1);
+
 $titleSection->addText(strtoupper($newtitle), array_merge($fontStyle, ['bold' => true]), $center);
 $titleSection->addTextBreak(2);
-$titleSection->addText('EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS', $fontStyle, $center);
-$titleSection->addTextBreak(1);
-$titleSection->addText('Computer Studies', $fontStyle, $center);
-$titleSection->addTextBreak(1);
-$titleSection->addText('Bachelor of Science in Information Technology', $fontStyle, $center);
+$titleSection->addText('EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS', $fontStyle, array_merge($center, $paragraphStyle));
+$titleSection->addText('Computer Studies', $fontStyle, array_merge($center, $paragraphStyle));
+$titleSection->addText('Bachelor of Science in Information Technology', $fontStyle, array_merge($center, $paragraphStyle));
 $titleSection->addTextBreak(1);
 $titleSection->addText($date, $fontStyle, $center);
 $titleSection->addTextBreak(2);
@@ -103,6 +114,9 @@ $titleSection->addTextBreak(2);
 $titleSection->addText($membersText, $fontStyle, $center);
 $titleSection->addTextBreak(2);
 
+function toTitleCase($str) {
+    return mb_convert_case($str, MB_CASE_TITLE, "UTF-8");
+}
 
 // 2. Content Section (all content flows naturally)
 $contentSection = $phpWord->addSection([

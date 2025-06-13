@@ -65,14 +65,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => 'Times New Roman',
         'size' => 12,
     ];
+    $paragraphStyle = [
+        'spaceAfter' => 0,
+        'lineHeight' => 2.0 // double spacing
+    ];
     $center = ['alignment' => 'center'];
 
-    // APA Title (bold, title case)
-    $section->addText(strtoupper($title), array_merge($fontStyle, ['bold' => true]), $center);
+    // Remove running head and author note. Only add page number in header.
+    $header = $section->addHeader();
+    $headerTable = $header->addTable(['alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER, 'width' => 100 * 50]);
+    $tableRow = $headerTable->addRow();
+    $tableRow->addCell(9000); // empty cell for left
+    // Add page number (right-aligned)
+    $tableRow->addCell(1000)->addPreserveText('{PAGE}', array_merge($fontStyle, ['align' => 'right']));
+
+    for ($i = 0; $i < 7; $i++) $section->addTextBreak(1);
+
+    function toTitleCase($str) {
+        return mb_convert_case($str, MB_CASE_TITLE, "UTF-8");
+    }
+    $section->addText(toTitleCase($title), array_merge($fontStyle, ['bold' => true]), array_merge($center, $paragraphStyle));
     $section->addTextBreak(2);
-
-    // Student Name (First M. Last)
-
 
     // Affiliation, Department, and Course (all centered, APA style)
     $affiliation = 'EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS';
@@ -85,10 +98,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $section->addText($course, $fontStyle, $center);
     $section->addTextBreak(1);
 
-
-    // Instructor (e.g., Dr. John Smith)
+    // Instructor (e.g., Dr. John Smith) with label
     $instructor = $reviewerName ? $reviewerName : 'Instructor Name';
-    $section->addText($instructor, $fontStyle, $center);
+    $section->addText('Instructor: ' . $instructor, $fontStyle, $center);
     $section->addTextBreak(1);
 
     // Due Date
@@ -103,6 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $section->addText($membersText, $fontStyle, $center);
         $section->addTextBreak(2);
     }
+
 
     $uploadDir = '../../assets/thesisfile/';
     if (!file_exists($uploadDir)) {

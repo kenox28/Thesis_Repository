@@ -28,6 +28,7 @@ $logger->logActivity(
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="../../assets/css/Admin_Page.css?v=1.0.2" rel="stylesheet">
     <style>
+
         body {
             font-family: 'Inter', 'Poppins', Arial, sans-serif;
             background: linear-gradient(135deg, #cadcfc 0%, #e3eaff 100%);
@@ -453,6 +454,28 @@ $logger->logActivity(
         #dashboardWelcome .welcome-role i {
             color:#f7b731;font-size:1.2rem;
         }
+        .btn-role-glass {
+            background: rgba(202,220,252,0.45);
+            color: #1976a5;
+            border: 1.5px solid #1976a5;
+            font-weight: 600;
+            border-radius: 18px;
+            padding: 0.5rem 1.2rem;
+            margin: 0 0.2rem 0.2rem 0;
+            font-size: 1rem;
+            transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 0 2px 8px #cadcfc22;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-role-glass:hover, .btn-role-glass:focus {
+            background: #1976a5;
+            color: #fff;
+            box-shadow: 0 4px 16px #1976a555;
+        }
     </style>
 </head>
 <body>
@@ -480,6 +503,7 @@ $logger->logActivity(
             <a class="sidebar-link" id="nav-approved"><i class="fas fa-user-check"></i> Approved Reviewers</a>
             <a class="sidebar-link" id="nav-pending"><i class="fas fa-user-clock"></i> Pending Reviewers</a>
             <a class="sidebar-link" id="nav-publication"><i class="fas fa-book"></i> Publication Thesis</a>
+            <a class="sidebar-link" id="nav-faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
         </nav>
         <div class="sidebar-logout">
             <button class="sidebar-logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>

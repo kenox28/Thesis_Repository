@@ -190,16 +190,30 @@ if (!empty($email) && !empty($pass)) {
     //                     "status" => "admin",
     //                     "message" => "Admin login successful"
     //                 ]);
+    //                 $logger = new Logger($connect);
+    //                 $logger->logActivity(
+    //                     $row['admin_id'],
+    //                     'LOGIN_SUCCESS',
+    //                     'Admin login successful'
+    //                 );
     //                 exit();
     //             }
     //             sleep($interval);
     //             $waited += $interval;
     //         }
+
+
     //         // If we reach here, QR was not scanned in time
     //         echo json_encode([
     //             "status" => "failed",
     //             "message" => "QR code was not scanned in time. Please try logging in again."
     //         ]);
+    //         $logger = new Logger($connect);
+    //         $logger->logActivity(
+    //             $row['admin_id'],
+    //             'LOGIN_FAILED',
+    //             'Failed login attempt for admin account'
+    //         );
     //         exit();
     //     }
     // }
@@ -348,6 +362,7 @@ if (!empty($email) && !empty($pass)) {
                 $_SESSION['fname'] = $row['fname'];
                 $_SESSION['lname'] = $row['lname'];
                 $_SESSION['email'] = $row['email'];
+                $_SESSION['role'] = $row['role'];
 
                 // Update last_active timestamp
                 $now = date('Y-m-d H:i:s');

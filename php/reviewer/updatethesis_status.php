@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         $stmt3->execute();
                         $stmt3->store_result();
                         if ($stmt3->num_rows === 0) {
-                            // Insert into publicRepo
+                            // Insert main student as 'public'
                             $privacyValue = 'public';
                             $stmt4 = $connect->prepare("INSERT INTO publicRepo (student_id, fname, lname, title, abstract, ThesisFile, reviewer_id, Privacy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
                             if ($stmt4) {
@@ -61,6 +61,53 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             }
                         }
                         $stmt3->close();
+                    }
+
+                    // Insert all members as 'MEMBERS' in publicRepo (always do this)
+                    // Get members_id from repoTable (comma-separated)
+                    $sqlMembers = "SELECT members_id FROM repoTable WHERE id = ?";
+                    $stmtMembers = $connect->prepare($sqlMembers);
+                    if ($stmtMembers) {
+                        $stmtMembers->bind_param("i", $thesis_id);
+                        $stmtMembers->execute();
+                        $resultMembers = $stmtMembers->get_result();
+                        if ($membersRow = $resultMembers->fetch_assoc()) {
+                            $membersList = $membersRow['members_id'];
+                            if (!empty($membersList)) {
+                                $memberIds = array_map('trim', explode(',', $membersList));
+                                foreach ($memberIds as $member_id) {
+                                    // Get member's name
+                                    $sqlName = "SELECT fname, lname FROM student WHERE student_id = ?";
+                                    $stmtName = $connect->prepare($sqlName);
+                                    if ($stmtName) {
+                                        $stmtName->bind_param("s", $member_id);
+                                        $stmtName->execute();
+                                        $resultName = $stmtName->get_result();
+                                        if ($nameRow = $resultName->fetch_assoc()) {
+                                            $memberPrivacy = 'MEMBERS';
+                                            $stmtInsert = $connect->prepare("INSERT INTO publicRepo (student_id, fname, lname, title, abstract, ThesisFile, reviewer_id, Privacy) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                                            if ($stmtInsert) {
+                                                $stmtInsert->bind_param(
+                                                    "ssssssss",
+                                                    $member_id,
+                                                    $nameRow['fname'],
+                                                    $nameRow['lname'],
+                                                    $thesis['title'],
+                                                    $thesis['abstract'],
+                                                    $thesis['ThesisFile'],
+                                                    $thesis['reviewer_id'],
+                                                    $memberPrivacy
+                                                );
+                                                $stmtInsert->execute();
+                                                $stmtInsert->close();
+                                            }
+                                        }
+                                        $stmtName->close();
+                                    }
+                                }
+                            }
+                        }
+                        $stmtMembers->close();
                     }
                 }
             }

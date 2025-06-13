@@ -34,8 +34,12 @@ async function showupload() {
 		return;
 	}
 
+	const currentRole = data.role || "reviewer";
+	console.log(currentRole);
+	const uploads = data.uploads || [];
+
 	let rows = "";
-	for (const u of data) {
+	for (const u of uploads) {
 		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 		const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 
@@ -47,7 +51,7 @@ async function showupload() {
 			</button>`;
 		}
 		let approveBtn = "";
-		if (parseInt(u.Chapter, 10) === 4) {
+		if (parseInt(u.Chapter, 10) === 4 && currentRole === "reviewer") {
 			approveBtn = `<button onclick="updateStatus(${u.id}, 'approved', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
 				style="flex:1; background: #27ae60; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #27ae6022; transition: background 0.18s; cursor: pointer;">
 				<i class='fas fa-check-circle'></i> Approve

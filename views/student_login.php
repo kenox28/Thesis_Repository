@@ -130,7 +130,7 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </main>
-    <script src="../js/login.js?v=1.0.5"></script>
+    <script src="../js/login.js?v=1.0.6"></script>
     <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     
 

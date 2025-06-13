@@ -710,12 +710,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             </form>
         </div>
         <div class="sidebar-profile-name"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?></div>
-        <div class="sidebar-profile-role" >REVIEWER</div>
+        <div class="sidebar-profile-role" ><?php echo ucfirst($_SESSION['role']); ?></div>
         <nav class="sidebar-nav">
             <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
             <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
             <a href="proposal_title.php"><i class="fas fa-file-alt"></i>Title Proposal</a>
-            <a href="View_thesis.php" class="active"><i class="fas fa-file-alt"></i> Review</a>
+            <a href="review.php" class="active"><i class="fas fa-file-alt"></i> Review</a>
             <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
             <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
             <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
@@ -797,6 +797,6 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
-<script src="../../js/view_thesis.js?v=1.0.21"></script>
+<script src="../../js/review.js?v=1.0.21"></script>
 </body>
 </html>
