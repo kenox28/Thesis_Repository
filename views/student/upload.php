@@ -20,6 +20,23 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<title>Upload Thesis</title>
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
+		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<style>
+			.checkbox-list {
+				max-height: 200px;
+				overflow-y: auto;
+				border: 1px solid #cadcfc;
+				border-radius: 8px;
+				padding: 8px;
+				background: #f7faff;
+				margin-bottom: 1em;
+			}
+			.checkbox-list label {
+				display: block;
+				margin-bottom: 4px;
+				cursor: pointer;
+			}
+		</style>
 	</head>
 	<body>
 		<div class="main-bg">
@@ -81,15 +98,16 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 							type="hidden"
 							name="profileImg"
 							value="<?php echo $_SESSION['profileImg'];?>"/>
-						<select id="reviewerDropdown" name="reviewer_id" required>
-							<option value="">Select Reviewer</option>
-						</select>
-						<label for="memberDropdown">Select Members (hold Ctrl or Cmd to select multiple):</label>
-						<select id="memberDropdown" name="member_ids[]" multiple required style="height: 100px;">
-							<option value="">Select Member</option>
-						</select>
-
-
+						<div style="margin-bottom:1.2em;">
+							<label for="reviewerSearch">Search Reviewer:</label>
+							<input type="text" id="reviewerSearch" placeholder="Type to search reviewer..." autocomplete="off" style="width:100%;padding:0.7rem 1.2rem;border-radius:24px;border:1.5px solid #1976a5;font-size:1.08rem;background:#f7faff;outline:none;box-shadow:0 2px 8px #cadcfc22;">
+							<div id="reviewerList" class="checkbox-list"></div>
+						</div>
+						<div style="margin-bottom:1.2em;">
+							<label for="memberSearch">Search Members:</label>
+							<input type="text" id="memberSearch" placeholder="Type to search members..." autocomplete="off" style="width:100%;padding:0.7rem 1.2rem;border-radius:24px;border:1.5px solid #1976a5;font-size:1.08rem;background:#f7faff;outline:none;box-shadow:0 2px 8px #cadcfc22;">
+							<div id="memberList" class="checkbox-list"></div>
+						</div>
 						<button type="submit" id="captbtn" class="btn">Submit Proposal</button>
 					</form>
 				</section>
@@ -127,6 +145,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/upload.js?v=1.0.11"></script>
+		<script src="../../js/upload.js?v=1.0.15"></script>
+
 	</body>
 </html>

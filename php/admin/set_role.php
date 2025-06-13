@@ -17,11 +17,11 @@
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // Student found, move to reviewer
+        // Student found, move to reviewer or faculty
         $stmt->bind_result($fname, $lname, $email, $pass, $img, $role);
         $stmt->fetch();
 
-        // Insert into reviewer
+        // Insert into reviewer or faculty (same table, different role)
         $Approve = 0;
         $last_active = null;
         $stmt_insert = $connect->prepare("INSERT INTO reviewer (reviewer_id, fname, lname, email, pass, profileImg, Approve, last_active, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -38,23 +38,22 @@
             $user_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
             $user_type = 'admin';
             $action_type = 'Promote';
-            $description = 'Moved from student to reviewer';
+            $description = 'Moved from student to ' . $newRole;
             $ip_address = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
             $stmt_log->bind_param("sssss", $user_id, $user_type, $action_type, $description, $ip_address);
             $stmt_log->execute();
 
-
             // Log activity
             $admin_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
             $stmt_log = $connect->prepare("INSERT INTO activity_log_admin (admin_id, activity, date) VALUES (?, ?, ?)");
-            $activity = "Moved from student to reviewer";
+            $activity = "Moved from student to $newRole";
             $date = date("Y-m-d H:i:s");
             $stmt_log->bind_param("sss", $admin_id, $activity, $date);
             $stmt_log->execute();
 
-            echo json_encode(["status" => "success", "message" => "Moved from student to reviewer"]);
+            echo json_encode(["status" => "success", "message" => "Moved from student to $newRole"]);
         } else {
-            echo json_encode(["status" => "failed", "message" => "Failed to insert into reviewer"]);
+            echo json_encode(["status" => "failed", "message" => "Failed to insert into reviewer/faculty"]);
         }
         exit;
     }
@@ -66,7 +65,7 @@
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        // Reviewer found, move to student
+        // Reviewer or faculty found, move to student
         $stmt->bind_result($fname, $lname, $email, $pass, $img, $role);
         $stmt->fetch();
 
@@ -85,7 +84,7 @@
             $user_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
             $user_type = 'admin';
             $action_type = 'Demote';
-            $description = 'Moved from reviewer to student';
+            $description = 'Moved from ' . $role . ' to student';
             $ip_address = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
             $stmt_log->bind_param("sssss", $user_id, $user_type, $action_type, $description, $ip_address);
             $stmt_log->execute();
@@ -93,12 +92,12 @@
             // Log activity
             $admin_id = isset($_SESSION['admin_id']) ? $_SESSION['admin_id'] : null;
             $stmt_log = $connect->prepare("INSERT INTO activity_log_admin (admin_id, activity, date) VALUES (?, ?, ?)");
-            $activity = "Moved from reviewer to student";
+            $activity = "Moved from $role to student";
             $date = date("Y-m-d H:i:s");
             $stmt_log->bind_param("sss", $admin_id, $activity, $date);
             $stmt_log->execute();
 
-            echo json_encode(["status" => "success", "message" => "Moved from reviewer to student"]);
+            echo json_encode(["status" => "success", "message" => "Moved from $role to student"]);
         } else {
             echo json_encode(["status" => "failed", "message" => "Failed to insert into student"]);
         }

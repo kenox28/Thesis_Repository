@@ -218,12 +218,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             background-color: #c0392b;
             transform: translateY(-2px);
         }
-        #userTableBody {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 2rem;
-            padding: 2rem;
-        }
+
 
         
         @media (max-width: 768px) {
@@ -476,12 +471,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             align-items: center;
             gap: 12px;
         }
-        #userTableBody {
+        /* #userTableBody {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
             padding: 2rem 0;
-        }
+        } */
         .upload-item {
             background: linear-gradient(135deg, #fff 60%, #e9f0ff 100%);
             border-radius: 18px;
@@ -693,6 +688,183 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 height: 35vh;
             }
         }
+
+        .proposal-table-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 2rem 1.5rem;
+            margin: 2rem auto;
+            max-width: 1100px;
+        }
+
+        .proposal-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+
+        .proposal-table th {
+            background: #1976a5;
+            color: #fff;
+            font-size: 1.08rem;
+            font-weight: 700;
+            padding: 1rem 0.7rem;
+            border: none;
+        }
+
+        .proposal-table td {
+            padding: 0.9rem 0.7rem;
+            font-size: 1.01rem;
+            border-bottom: 1px solid #e9f0ff;
+            vertical-align: middle;
+        }
+
+        .proposal-table tr:nth-child(even) {
+            background: #f7faff;
+        }
+
+        .proposal-table tr:hover {
+            background: #e9f0ff;
+        }
+
+        .proposal-profile-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #1976a5;
+            box-shadow: 0 2px 8px #cadcfc33;
+            background: #f4f8ff;
+        }
+
+        .btn-action {
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            margin-bottom: 6px;
+            margin-right: 4px;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #cadcfc22;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-action.reject { background: #e74c3c; color: #fff; }
+        .btn-action.reject:hover { background: #c0392b; }
+        .btn-action.approve { background: #1976a5; color: #fff; }
+        .btn-action.approve:hover { background: #155d84; }
+
+        /* Search Bar */
+        .proposal-search-bar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1.2rem;
+        }
+        .proposal-search-bar input {
+            width: 320px;
+            padding: 0.7rem 1.2rem;
+            border-radius: 24px;
+            border: 1.5px solid #1976a5;
+            font-size: 1.08rem;
+            background: #f7faff;
+            outline: none;
+            box-shadow: 0 2px 8px #cadcfc22;
+            transition: border 0.2s;
+        }
+        .proposal-search-bar input:focus {
+            border: 1.5px solid #155d84;
+            background: #fff;
+        }
+
+        /* Table Container */
+        .proposal-table-container {
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.07);
+            padding: 2rem 1.5rem;
+            margin: 2rem auto;
+            max-width: 1100px;
+        }
+
+        /* Scrollable Table Body */
+        #proposalTableScroll {
+            max-height: 500px;
+            overflow-y: auto;
+            border-radius: 0 0 18px 18px;
+            border: 1px solid #e9f0ff;
+            border-top: none;
+        }
+
+        /* Table */
+        .proposal-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            border-radius: 18px;
+            overflow: hidden;
+        }
+        .proposal-table th {
+            background: #1976a5;
+            color: #fff;
+            font-size: 1.08rem;
+            font-weight: 700;
+            padding: 1rem 0.7rem;
+            border: none;
+            position: sticky;
+            top: 0;
+            z-index: 2;
+        }
+        .proposal-table td {
+            padding: 0.9rem 0.7rem;
+            font-size: 1.01rem;
+            border-bottom: 1px solid #e9f0ff;
+            vertical-align: middle;
+            background: #fff;
+        }
+        .proposal-table tr:nth-child(even) td {
+            background: #f7faff;
+        }
+        .proposal-table tr:hover td {
+            background: #e9f0ff;
+        }
+
+        /* Profile Image */
+        .proposal-profile-img {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #1976a5;
+            box-shadow: 0 2px 8px #cadcfc33;
+            background: #f4f8ff;
+        }
+
+        /* Action Buttons */
+        .btn-action {
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 8px 15px;
+            margin-bottom: 6px;
+            margin-right: 4px;
+            cursor: pointer;
+            transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+            box-shadow: 0 2px 8px #cadcfc22;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-action.reject { background: #e74c3c; color: #fff; }
+        .btn-action.reject:hover { background: #c0392b; }
+        .btn-action.approve { background: #1976a5; color: #fff; }
+        .btn-action.approve:hover { background: #155d84; }
     </style>
 </head>
 <body>
@@ -710,12 +882,12 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             </form>
         </div>
         <div class="sidebar-profile-name"><?php echo $_SESSION['fname'] . ' ' . $_SESSION['lname']; ?></div>
-        <div class="sidebar-profile-role" >REVIEWER</div>
+        <div class="sidebar-profile-role" ><?php echo ucfirst($_SESSION['role']); ?></div>
         <nav class="sidebar-nav">
             <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
             <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
             <a href="proposal_title.php" class="active"><i class="fas fa-file-alt"></i>Title Proposal</a>
-            <a href="View_thesis.php" ><i class="fas fa-file-alt"></i> Review</a>
+            <a href="review.php" ><i class="fas fa-file-alt"></i> Review</a>
             <a href="revice.php"><i class="fas fa-file-alt"></i> Revised</a>
             <a href="thesis_approved.php"><i class="fas fa-check-circle"></i> Approved</a>
             <a href="thesis_rejected.php"><i class="fas fa-times-circle"></i> Rejected</a>
@@ -797,6 +969,6 @@ document.getElementById('removeProfileImgBtn').addEventListener('click', async f
     }
 });
 </script>
-<script src="../../js/proposal_title.js?v=1.0.18"></script>
+<script src="../../js/proposal_title.js?v=1.0.20"></script>
 </body>
 </html>

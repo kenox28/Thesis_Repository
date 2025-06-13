@@ -88,144 +88,69 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             border-radius: 20px;
             font-size: 0.9rem;
             margin-top: 1rem;
+			/* margin-left: 1rem; */
+			margin-left: 80%;
         }
 
         .modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,36,107,0.18);
+            background: rgba(0,0,0,0.85);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 3000;
-            overflow-y: auto;
+            overflow: auto;
         }
-
         .modal-content.enhanced-modal {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 8px 40px #1976a522, 0 1.5px 0 #cadcfc;
+            background: transparent;
+            box-shadow: none;
+            border: none;
             padding: 0;
-            max-width: 700px;
-            width: 95vw;
-            max-height: 90vh;
+            max-width: 98vw;
+            max-height: 98vh;
+            width: auto;
+            height: auto;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            border: 2px solid #1976a5;
+            align-items: flex-end;
+            justify-content: center;
             position: relative;
         }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            background: linear-gradient(90deg, #1976a5 60%, #2893c7 100%);
-            padding: 18px 28px 14px 28px;
-            border-bottom: 1.5px solid #e9f0ff;
-        }
-
-        .modal-header h2 {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-icon {
-            background: #fff;
-            color: #1976a5;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px #cadcfc33;
-        }
-
-        .modal-body {
-            padding: 18px 28px 24px 28px;
-            overflow-y: auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .modal-abstract {
-            font-size: 1.05rem;
-            color: #1976a5;
-            background: #f4f8ff;
-            border-radius: 8px;
-            padding: 10px 16px;
-            margin-bottom: 8px;
-            font-style: italic;
-            box-shadow: 0 1px 4px #cadcfc33;
-            border-left: 4px solid #1976a5;
-            word-break: break-word;
-        }
-
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #1a3a8f;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        #modalPDF {
-            width: 100%;
-            height: 55vh;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px #1976a522;
-            margin-top: 8px;
-            border: 1.5px solid #e9f0ff;
-            background: #f7faff;
-        }
-
         .close-button {
             position: absolute;
-            top: 12px;
-            right: 18px;
-            font-size: 2rem;
+            top: 18px;
+            right: 32px;
+            font-size: 2.5rem;
             color: #fff;
             cursor: pointer;
             font-weight: 700;
-            transition: color 0.18s;
             z-index: 10;
-            text-shadow: 0 2px 8px #1976a5cc;
+            background: none;
+            border: none;
+            text-shadow: 0 2px 8px #000;
+            line-height: 1;
         }
-
         .close-button:hover {
             color: #e74c3c;
         }
-
+        #modalPDF {
+            width: 90vw;
+            height: 90vh;
+            border-radius: 12px;
+            border: none;
+            background: #222;
+            box-shadow: 0 2px 12px #0008;
+        }
         @media (max-width: 900px) {
-            .modal-content.enhanced-modal {
-                width: 99vw !important;
-                max-width: 99vw !important;
-                height: 99vh !important;
-                max-height: 99vh !important;
-                padding: 0;
-            }
-            .modal-header, .modal-body {
-                padding: 10px 6px 10px 6px;
-            }
-            .modal-header h2 {
-                font-size: 1.1rem;
-            }
-            .modal-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1.1rem;
-            }
             #modalPDF {
-                height: 35vh;
+                width: 98vw;
+                height: 80vh;
+            }
+            .close-button {
+                top: 8px;
+                right: 12px;
+                font-size: 2rem;
             }
         }
 
@@ -320,17 +245,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<div id="thesisModal" class="modal" style="display:none;">
 			<div class="modal-content enhanced-modal">
 				<span class="close-button" id="closeThesisModal">&times;</span>
-				<div class="modal-header">
-					<div class="modal-icon"><i class="fas fa-book-open"></i></div>
-					<div>
-						<h2 id="modalTitle"></h2>
-						<div class="thesis-card-status" id="modalStatus"></div>
-					</div>
-				</div>
-				<div class="modal-body">
-					<p id="modalAbstract" class="modal-abstract"></p>
-					<div class="author-info" id="modalOwner"></div>
-					<iframe id="modalPDF" src="" width="100%" height="55vh" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
+				<div class="modal-body" style="padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+					<iframe id="modalPDF" src="" style="width:90vw;height:90vh;border-radius:12px;border:none;box-shadow:0 2px 12px #0008;background:#222;"></iframe>
 				</div>
 			</div>
 		</div>
@@ -372,15 +288,16 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 								${capitalize(u.lname)}, ${capitalize(u.fname)}
 							</span>
 						</div>
-						<h3 class="thesis-title" style="cursor:pointer;">
+						<div class="status-badge">
+							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
+						</div>
+						<h3 class="thesis-title" style="cursor:pointer;display:flex;align-items:center;gap:8px;">
 							<i class='fas fa-book'></i> ${u.title}
 						</h3>
 						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 
 						<embed src="${filePath}" type="application/pdf" width="300" height="250">
-						<div class="status-badge">
-							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
-						</div>
+
 					</div>
 				`;
 			}
@@ -391,15 +308,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			document.querySelectorAll('.upload-item').forEach(item => {
 				item.addEventListener('click', function (e) {
 					const filePath = item.getAttribute('data-file');
-					const title = decodeURIComponent(item.getAttribute('data-title'));
-					const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
-					const owner = decodeURIComponent(item.getAttribute('data-owner'));
-					const privacy = decodeURIComponent(item.getAttribute('data-privacy'));
-
-					document.getElementById('modalTitle').textContent = title;
-					document.getElementById('modalStatus').textContent = privacy || "Public";
-					document.getElementById('modalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-					document.getElementById('modalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
 					document.getElementById('modalPDF').src = filePath + "#toolbar=0";
 					document.getElementById('thesisModal').style.display = "flex";
 				});
