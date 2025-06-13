@@ -1,0 +1,205 @@
+{
+	"tables": [
+		{
+			"name": "activity_logs",
+			"columns": [
+				{
+					"name": "log_id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "user_id", "type": "varchar(255)" },
+				{ "name": "user_type", "type": "enum('admin','super_admin')" },
+				{ "name": "action_type", "type": "varchar(50)" },
+				{ "name": "description", "type": "text" },
+				{ "name": "ip_address", "type": "varchar(45)" },
+				{ "name": "created_at", "type": "timestamp" }
+			]
+		},
+		{
+			"name": "activity_log_admin",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "admin_id", "type": "varchar(255)" },
+				{ "name": "activity", "type": "varchar(255)" },
+				{ "name": "date", "type": "datetime" }
+			]
+		},
+		{
+			"name": "admin",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "admin_id", "type": "varchar(255)", "unique": true },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "email", "type": "varchar(50)", "unique": true },
+				{ "name": "pass", "type": "varchar(255)" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated_at", "type": "datetime" },
+				{ "name": "profileImg", "type": "varchar(255)" }
+			]
+		},
+		{
+			"name": "publicrepo",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "student_id", "type": "varchar(50)" },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "title", "type": "varchar(255)" },
+				{ "name": "abstract", "type": "varchar(255)" },
+				{ "name": "ThesisFile", "type": "varchar(255)" },
+				{ "name": "reviewer_id", "type": "varchar(255)" },
+				{ "name": "Privacy", "type": "varchar(255)" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated", "type": "datetime" }
+			]
+		},
+		{
+			"name": "repotable",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "student_id", "type": "varchar(50)" },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "title", "type": "varchar(255)" },
+				{ "name": "abstract", "type": "varchar(255)" },
+				{ "name": "ThesisFile", "type": "varchar(255)" },
+				{ "name": "reviewer_id", "type": "varchar(255)" },
+				{ "name": "status", "type": "varchar(50)" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated", "type": "datetime" },
+				{ "name": "introduction", "type": "varchar(1000)" },
+				{ "name": "Project_objective", "type": "varchar(1000)" },
+				{ "name": "significance_of_study", "type": "varchar(1000)" },
+				{ "name": "system_analysis_and_design", "type": "varchar(1000)" },
+				{ "name": "Chapter", "type": "varchar(1000)" },
+				{ "name": "message", "type": "varchar(1000)" },
+				{ "name": "members_id", "type": "varchar(1000)" }
+			]
+		},
+		{
+			"name": "reviewer",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "reviewer_id", "type": "varchar(255)" },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "email", "type": "varchar(50)" },
+				{ "name": "pass", "type": "varchar(50)" },
+				{ "name": "profileImg", "type": "varchar(255)" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated", "type": "datetime" },
+				{ "name": "Approve", "type": "tinyint(1)" },
+				{ "name": "last_active", "type": "datetime" },
+				{ "name": "role", "type": "varchar(255)" }
+			]
+		},
+		{
+			"name": "revise_table",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "student_id", "type": "varchar(50)" },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "title", "type": "varchar(255)" },
+				{ "name": "abstract", "type": "varchar(50)" },
+				{ "name": "ThesisFile", "type": "varchar(50)" },
+				{ "name": "reviewer_id", "type": "varchar(255)" },
+				{ "name": "status", "type": "varchar(50)" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated", "type": "datetime" }
+			]
+		},
+		{
+			"name": "student",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "student_id", "type": "varchar(255)" },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "email", "type": "varchar(50)" },
+				{ "name": "passw", "type": "varchar(50)" },
+				{ "name": "profileImg", "type": "varchar(255)" },
+				{ "name": "failed_attempts", "type": "int" },
+				{ "name": "lockout_time", "type": "datetime" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated", "type": "datetime" },
+				{ "name": "role", "type": "varchar(255)" }
+			]
+		},
+		{
+			"name": "super_admin",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "super_admin_id", "type": "varchar(255)", "unique": true },
+				{ "name": "fname", "type": "varchar(50)" },
+				{ "name": "lname", "type": "varchar(50)" },
+				{ "name": "email", "type": "varchar(50)", "unique": true },
+				{ "name": "pass", "type": "varchar(255)" },
+				{ "name": "created_at", "type": "datetime" },
+				{ "name": "updated_at", "type": "datetime" }
+			]
+		},
+		{
+			"name": "thesis_history",
+			"columns": [
+				{
+					"name": "id",
+					"type": "int",
+					"primaryKey": true,
+					"autoIncrement": true
+				},
+				{ "name": "thesis_id", "type": "int" },
+				{ "name": "student_id", "type": "varchar(50)" },
+				{ "name": "revision_num", "type": "int" },
+				{ "name": "file_name", "type": "varchar(255)" },
+				{ "name": "revised_by", "type": "varchar(255)" },
+				{ "name": "revised_at", "type": "datetime" },
+				{ "name": "status", "type": "varchar(50)" },
+				{ "name": "notes", "type": "text" }
+			]
+		}
+	]
+}
