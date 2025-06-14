@@ -80,6 +80,12 @@ if ($result && mysqli_num_rows($result) == 0) {
     mysqli_query($connect, $add_column);
 } 
 
+$result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'permissions'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE reviewer ADD COLUMN permissions VARCHAR(255) DEFAULT 'view'";
+    mysqli_query($connect, $add_column);
+}
+
 $revise_table = "CREATE TABLE IF NOT EXISTS revise_table(
     id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     student_id VARCHAR(50),

@@ -363,6 +363,7 @@ if (!empty($email) && !empty($pass)) {
                 $_SESSION['lname'] = $row['lname'];
                 $_SESSION['email'] = $row['email'];
                 $_SESSION['role'] = $row['role'];
+                $_SESSION['permissions'] = $row['permissions'];
 
                 // Update last_active timestamp
                 $now = date('Y-m-d H:i:s');
