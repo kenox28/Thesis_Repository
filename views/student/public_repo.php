@@ -56,8 +56,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		font-weight: 800;
 		letter-spacing: 0.5px;
 		margin-bottom: 0.7rem;
-		display: flex;
-		align-items: center;
+            display: flex;
+            align-items: center;
 		gap: 10px;
 	}
 	.archive-search {
@@ -79,7 +79,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		padding: 9px 12px 9px 2.1rem;
 		border-radius: 7px;
 		border: 1.2px solid #b5c7d3;
-		font-size: 1rem;
+            font-size: 1rem;
 		outline: none;
 		background: #fff;
 		box-shadow: none;
@@ -89,22 +89,22 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		border: 1.5px solid #1976a5;
 	}
 	.thesis-cards {
-		display: flex;
+            display: flex;
 		flex-wrap: wrap;
 		gap: 1.5rem;
-		justify-content: center;
+            justify-content: center;
 		margin-top: 1.2rem;
 	}
 	.upload-item {
 		background: #fff;
 		border-radius: 12px;
 		border: 1px solid #e3eafc;
-		box-shadow: none;
+            box-shadow: none;
 		padding: 1.3rem 1.1rem 1.1rem 1.1rem;
 		width: 320px;
-		max-width: 98vw;
-		display: flex;
-		flex-direction: column;
+            max-width: 98vw;
+            display: flex;
+            flex-direction: column;
 		gap: 0.7rem;
 		align-items: flex-start;
 		transition: box-shadow 0.18s, border 0.18s;
@@ -135,7 +135,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		display: inline-block;
 		background: #f1f5fa;
 		color: #1976a5;
-		border-radius: 12px;
+            border-radius: 12px;
 		font-size: 0.85rem;
 		font-weight: 600;
 		padding: 2px 14px;
@@ -176,15 +176,15 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		color: #fff;
 		border: 1px solid #1976a5;
 	}
-	.profile-image {
+        .profile-image {
 		width: 38px;
 		height: 38px;
-		border-radius: 50%;
-		object-fit: cover;
+            border-radius: 50%;
+            object-fit: cover;
 		border: 2px solid #b5c7d3;
-		background: #f4f8ff;
-		transition: box-shadow 0.2s, border-color 0.2s;
-	}
+            background: #f4f8ff;
+            transition: box-shadow 0.2s, border-color 0.2s;
+        }
 	@media (max-width: 600px) {
 		.header-archive {
 			padding: 1rem 0 0.7rem 0;
@@ -204,7 +204,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			width: 98vw;
 			padding: 0.7rem 0.3rem 0.7rem 0.3rem;
 		}
-	}
+        }
 	</style>
 	<body>
 		<div class="main-bg">

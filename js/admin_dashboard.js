@@ -11,8 +11,7 @@ function setupSidebarNavigation() {
 	const navLinks = {
 		dashboard: document.getElementById("nav-dashboard"),
 		students: document.getElementById("nav-students"),
-		approved: document.getElementById("nav-approved"),
-		pending: document.getElementById("nav-pending"),
+		reviewers: document.getElementById("nav-reviewers"),
 		publication: document.getElementById("nav-publication"),
 		faculty: document.getElementById("nav-faculty"),
 	};
@@ -42,10 +41,8 @@ function showSection(section) {
 		dashboardMain.style.display = "none";
 		if (section === "students") {
 			renderStudentsSection();
-		} else if (section === "approved") {
-			renderReviewersSection(true);
-		} else if (section === "pending") {
-			renderReviewersSection(false);
+		} else if (section === "reviewers") {
+			renderReviewersSection();
 		} else if (section === "publication") {
 			loadPublicationThesisSection();
 		} else if (section === "faculty") {
@@ -70,15 +67,9 @@ function updateDashboardWidgets() {
 			document.getElementById("widgetStudents").textContent =
 				studentsData.students ? studentsData.students.length : 0;
 			if (reviewersData.data) {
-				const approved = reviewersData.data.filter(
-					(r) => r.approve == 1
-				).length;
-				const pending = reviewersData.data.filter((r) => r.approve == 0).length;
-				document.getElementById("widgetApproved").textContent = approved;
-				document.getElementById("widgetPending").textContent = pending;
+				document.getElementById("widgetReviewers").textContent = reviewersData.data.length;
 			} else {
-				document.getElementById("widgetApproved").textContent = 0;
-				document.getElementById("widgetPending").textContent = 0;
+				document.getElementById("widgetReviewers").textContent = 0;
 			}
 			document.getElementById("widgetThesis").textContent =
 				thesisData && Array.isArray(thesisData) ? thesisData.length : 0;
@@ -210,44 +201,36 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // REVIEWERS SECTION
-function renderReviewersSection(approved) {
+function renderReviewersSection() {
 	const dashboardContent = document.getElementById("dashboardContent");
 	dashboardContent.innerHTML = `
 		<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:1.2rem;margin-top:0.5rem;position:relative;">
 			<div style="position:absolute;top:-30px;right:-30px;width:90px;height:90px;background:linear-gradient(135deg,#1976a5 0%,#cadcfc 100%);opacity:0.10;border-radius:50%;z-index:0;"></div>
 			<div style="position:absolute;bottom:-30px;left:-30px;width:90px;height:90px;background:linear-gradient(135deg,#cadcfc 0%,#1976a5 100%);opacity:0.10;border-radius:50%;z-index:0;"></div>
 			<div style="position:relative;z-index:1;background:rgba(255,255,255,0.22);backdrop-filter:blur(10px);border-radius:22px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.10);padding:1.2rem 2.2rem;min-width:320px;max-width:480px;width:100%;display:flex;align-items:center;gap:0.7rem;">
-				<i class='fas ${
-					approved ? "fa-user-check" : "fa-user-clock"
-				}' style='font-size:1.5rem;color:#1976a5;'></i>
-				<span style="font-size:1.35rem;font-weight:700;color:#1976a5;letter-spacing:1px;">${
-					approved ? "APPROVED REVIEWERS" : "PENDING REVIEWERS"
-				}</span>
+				<i class='fas fa-user-check' style='font-size:1.5rem;color:#1976a5;'></i>
+				<span style="font-size:1.35rem;font-weight:700;color:#1976a5;letter-spacing:1px;">REVIEWERS</span>
 			</div>
 		</div>
 		<div class="reviewers-search-bar" style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);padding:1.2rem 0 1.2rem 0;margin-bottom:2.2rem;display:flex;justify-content:center;align-items:center;gap:1rem;box-shadow:0 2px 12px #cadcfc22;">
 			<input id="reviewersSearchInput" type="text" placeholder="Search reviewers by name, ID, or email..." style="width:340px;padding:0.8rem 1.2rem;border-radius:24px;border:none;font-size:1.08rem;background:rgba(255,255,255,0.7);box-shadow:0 2px 8px #cadcfc22;outline:none;">
 			<button id="reviewersSearchClear" style="background:none;border:none;color:#1976a5;font-size:1.2rem;cursor:pointer;display:none;"><i class="fas fa-times-circle"></i></button>
 		</div>
-		<div id="reviewersGrid" class="reviewers-grid" style="display:flex;flex-direction:column;align-items:center;gap:2.2rem;width:100%;"></div>
+		<div id="reviewersGrid" class="reviewers-grid" style="width:100%;"></div>
 	`;
 	fetch("../../php/admin/get_reviewers.php")
 		.then((r) => r.json())
 		.then((data) => {
 			if (data.status === "success" && data.data) {
-				const reviewers = data.data.filter((r) =>
-					approved ? r.approve == 1 : r.approve == 0
-				);
+				const reviewers = data.data;
 				if (reviewers.length === 0) {
 					document.getElementById(
 						"reviewersGrid"
-					).innerHTML = `<div class="no-students">No ${
-						approved ? "approved" : "pending"
-					} reviewers found.</div>`;
+					).innerHTML = `<div class="no-students">No reviewers found.</div>`;
 					return;
 				}
-				renderReviewerCards(reviewers, approved);
-				setupReviewersSearch(reviewers, approved);
+				renderReviewerTable(reviewers);
+				setupReviewersSearchTable(reviewers);
 			} else {
 				document.getElementById("reviewersGrid").innerHTML =
 					'<div class="error-message">Failed to load reviewers. Please try again later.</div>';
@@ -259,16 +242,56 @@ function renderReviewersSection(approved) {
 		});
 }
 
-function renderReviewerCards(reviewers, approved) {
+function renderReviewerTable(reviewers) {
 	const grid = document.getElementById("reviewersGrid");
-	grid.innerHTML = "";
-	reviewers.forEach((reviewer) => {
-		const card = createReviewerCard(reviewer, approved);
-		grid.appendChild(card);
+	grid.innerHTML = '';
+	if (!reviewers.length) {
+		grid.innerHTML = '<div class="no-students">No reviewers found.</div>';
+		return;
+	}
+	let table = `<div style=\"overflow-x:auto;width:100%;margin-left:0.5rem;\">
+		<table class=\"reviewers-table\" style=\"width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;box-shadow:0 2px 8px #cadcfc22;font-size:1rem;\">
+			<thead>
+				<tr style=\"background:#f7faff;\">
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">ID</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Name</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Email</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Last Active</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Role</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Permissions</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Actions</th>
+				</tr>
+			</thead>
+			<tbody>`;
+	reviewers.forEach(reviewer => {
+		table += `<tr style=\"border-bottom:1px solid #e3eafc;transition:background 0.15s;\" onmouseover=\"this.style.background='#f3f8fd'\" onmouseout=\"this.style.background=''\">
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${reviewer.reviewer_id}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;font-weight:600;color:#1976a5;text-align:left;\">${reviewer.fname} ${reviewer.lname}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${reviewer.email}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${reviewer.last_active ? new Date(reviewer.last_active).toLocaleString() : 'Never logged in'}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
+				<select style=\"padding:0.25rem 0.7rem;border-radius:8px;border:1px solid #b5c7d3;background:#f7faff;font-size:0.98rem;\" onchange=\"setRole('${reviewer.reviewer_id}', this.value)\">
+					<option value=\"reviewer\" ${reviewer.role === 'reviewer' ? 'selected' : ''}>Reviewer</option>
+					<option value=\"student\" ${reviewer.role === 'student' ? 'selected' : ''}>Student</option>
+					<option value=\"Faculty\" ${reviewer.role === 'Faculty' ? 'selected' : ''}>Faculty</option>
+				</select>
+			</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
+				<button onclick=\"openPermissionsModal('${reviewer.reviewer_id}', '${reviewer.permissions || 'view'}')\">Set</button>
+			</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
+				<div style=\"display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;\">
+					<button onclick=\"removeReviewer('${reviewer.reviewer_id}')\" class=\"pill-btn pill-btn-red\">Remove</button>
+					<button onclick=\"approveReviewer('${reviewer.reviewer_id}')\" class=\"pill-btn pill-btn-blue\">Approve</button>
+				</div>
+			</td>
+		</tr>`;
 	});
+	table += `</tbody></table></div>`;
+	grid.innerHTML = table;
 }
 
-function setupReviewersSearch(reviewers, approved) {
+function setupReviewersSearchTable(reviewers) {
 	const input = document.getElementById("reviewersSearchInput");
 	const clearBtn = document.getElementById("reviewersSearchClear");
 	input.addEventListener("input", function () {
@@ -280,71 +303,14 @@ function setupReviewersSearch(reviewers, approved) {
 				r.reviewer_id.toLowerCase().includes(val) ||
 				r.email.toLowerCase().includes(val)
 		);
-		renderReviewerCards(filtered, approved);
+		renderReviewerTable(filtered);
 	});
 	clearBtn.addEventListener("click", function () {
 		input.value = "";
 		clearBtn.style.display = "none";
-		renderReviewerCards(reviewers, approved);
+		renderReviewerTable(reviewers);
 		input.focus();
 	});
-}
-
-function createReviewerCard(reviewer, approved) {
-	const card = document.createElement("div");
-	card.className = "reviewer-card";
-	card.style = `background:rgba(255,255,255,0.22);backdrop-filter:blur(12px);border-radius:22px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);padding:2.2rem 2.2rem 1.5rem 2.2rem;width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center;transition:box-shadow 0.2s,transform 0.2s;margin-bottom:1.2rem;position:relative;border:1.5px solid #cadcfc55;`;
-	card.onmouseover = () => {
-		card.style.boxShadow = "0 12px 32px 0 rgba(31,38,135,0.22)";
-		card.style.transform = "translateY(-4px) scale(1.03)";
-	};
-	card.onmouseout = () => {
-		card.style.boxShadow = "0 8px 32px 0 rgba(31,38,135,0.18)";
-		card.style.transform = "none";
-	};
-	const lastSeenText = reviewer.last_active
-		? `Last seen: ${new Date(reviewer.last_active).toLocaleString()}`
-		: "Never logged in";
-	card.innerHTML = `
-		<div class="reviewer-header" style="display:flex;align-items:center;gap:1.2rem;width:100%;margin-bottom:1.1rem;">
-			<img src="../../assets/ImageProfile/${
-				reviewer.profileImg || "default.png"
-			}" alt="${reviewer.fname} ${
-		reviewer.lname
-	}" class="reviewer-avatar" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #1976a5;box-shadow:0 2px 8px #cadcfc33;background:#f4f8ff;">
-			<div style="flex:1;">
-				<div style="font-size:1.18rem;font-weight:700;color:#1976a5;letter-spacing:0.2px;">${
-					reviewer.fname
-				} ${reviewer.lname}</div>
-				<div style="font-size:0.98rem;color:#666;margin-top:2px;">${
-					reviewer.reviewer_id
-				}</div>
-				<div style="font-size:0.98rem;color:#666;">${reviewer.email}</div>
-			</div>
-		</div>
-		<div style="font-size:0.98rem;color:#444;margin-bottom:0.7rem;">${lastSeenText}</div>
-		
-		<div style="font-size:1.01rem;font-weight:600;color:#1976a5;margin-bottom:0.7rem;">Approved: <span style="color:#1976a5;">${
-			approved ? "Yes" : "No"
-		}</span></div>
-			<div style="display:flex;gap:0.7rem;width:100%;justify-content:center;flex-wrap:wrap;">
-				<button class="btn-role-glass" onclick="setRole('${
-					reviewer.reviewer_id
-				}', 'Faculty')">Set Role to Faculty</button>
-				<button class="btn-role-glass" onclick="setRole('${
-					reviewer.reviewer_id
-				}', 'student')">Set Role to Student</button>
-				<button onclick="removeReviewer('${
-					reviewer.reviewer_id
-				}')" class="pill-btn pill-btn-red">Remove</button>
-				${
-					approved
-						? `<button onclick="inactiveReviewer('${reviewer.reviewer_id}')" class="pill-btn pill-btn-gray">Inactive</button>`
-						: `<button onclick="approveReviewer('${reviewer.reviewer_id}')" class="pill-btn pill-btn-blue">Approve</button>`
-				}
-			</div>
-	`;
-	return card;
 }
 
 async function fetchData(url, method = "GET", body = null) {
@@ -606,25 +572,6 @@ async function setRole(id, role) {
 		});
 		showSection(currentSection);
 		updateDashboardWidgets();
-	}
-}
-
-async function inactiveReviewer(reviewerId) {
-	try {
-		const result = await fetchData(
-			"../../php/admin/inactive_reviewer.php",
-			"POST",
-			{ reviewer_id: reviewerId }
-		);
-		if (!result) return;
-		alert(result.message);
-		if (result.status === "success") {
-			showSection(currentSection);
-			updateDashboardWidgets();
-		}
-	} catch (error) {
-		console.error("Error approving reviewer:", error);
-		alert("An error occurred while approving the reviewer.");
 	}
 }
 
@@ -942,3 +889,47 @@ async function approveFaculty(facultyId) {
 		alert("An error occurred while approving the faculty.");
 	}
 }
+
+// Add modal HTML to the page (if not present)
+if (!document.getElementById('permissionsModal')) {
+	const modal = document.createElement('div');
+	modal.id = 'permissionsModal';
+	modal.style.display = 'none';
+	modal.innerHTML = `
+		<div style='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;justify-content:center;'>
+			<form id='permissionsForm' style='background:#fff;padding:2rem 2.5rem;border-radius:16px;box-shadow:0 2px 16px #0002;display:flex;flex-direction:column;gap:1.2rem;min-width:260px;'>
+				<h3 style='margin:0 0 1rem 0;font-size:1.2rem;color:#1976a5;'>Set Reviewer Permissions</h3>
+				<label><input type='checkbox' name='perm' value='view'> View</label>
+				<label><input type='checkbox' name='perm' value='approve'> Approve</label>
+				<label><input type='checkbox' name='perm' value='revise'> Revise</label>
+				<label><input type='checkbox' name='perm' value='reject'> Reject</label>
+				<input type='hidden' id='permReviewerId'>
+				<div style='display:flex;gap:1rem;justify-content:flex-end;'>
+					<button type='button' onclick='document.getElementById("permissionsModal").style.display="none"'>Cancel</button>
+					<button type='submit'>Save</button>
+				</div>
+			</form>
+		</div>
+	`;
+	document.body.appendChild(modal);
+}
+window.openPermissionsModal = function(reviewerId, permissions) {
+	document.getElementById('permissionsModal').style.display = 'block';
+	document.getElementById('permReviewerId').value = reviewerId;
+	const perms = (permissions || 'view').split(',');
+	document.querySelectorAll('#permissionsForm input[type=checkbox]').forEach(cb => {
+		cb.checked = perms.includes(cb.value);
+	});
+};
+document.getElementById('permissionsForm').onsubmit = async function(e) {
+	e.preventDefault();
+	const reviewerId = document.getElementById('permReviewerId').value;
+	const perms = Array.from(document.querySelectorAll('#permissionsForm input[type=checkbox]:checked')).map(cb => cb.value);
+	await fetch('../../php/admin/set_reviewer_permissions.php', {
+		method: 'POST',
+		headers: {'Content-Type': 'application/json'},
+		body: JSON.stringify({ reviewer_id: reviewerId, permissions: perms.join(',') })
+	});
+	document.getElementById('permissionsModal').style.display = 'none';
+	showSection('reviewers');
+};

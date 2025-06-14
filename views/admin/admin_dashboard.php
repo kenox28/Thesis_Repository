@@ -500,8 +500,7 @@ $logger->logActivity(
         <nav class="sidebar-nav">
             <a class="sidebar-link active" id="nav-dashboard"><i class="fas fa-home"></i> Dashboard</a>
             <a class="sidebar-link" id="nav-students"><i class="fas fa-user-graduate"></i> Students</a>
-            <a class="sidebar-link" id="nav-approved"><i class="fas fa-user-check"></i> Approved Reviewers</a>
-            <a class="sidebar-link" id="nav-pending"><i class="fas fa-user-clock"></i> Pending Reviewers</a>
+            <a class="sidebar-link" id="nav-reviewers"><i class="fas fa-user-check"></i> Reviewers</a>
             <a class="sidebar-link" id="nav-publication"><i class="fas fa-book"></i> Publication Thesis</a>
             <a class="sidebar-link" id="nav-faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
         </nav>
@@ -529,13 +528,8 @@ $logger->logActivity(
                 </div>
                 <div class="widget-card">
                     <div class="widget-icon"><i class="fas fa-user-check"></i></div>
-                    <div class="widget-title">Approved Reviewers</div>
-                    <div class="widget-value" id="widgetApproved">0</div>
-                </div>
-                <div class="widget-card">
-                    <div class="widget-icon"><i class="fas fa-user-clock"></i></div>
-                    <div class="widget-title">Pending Reviewers</div>
-                    <div class="widget-value" id="widgetPending">0</div>
+                    <div class="widget-title">Total Reviewers</div>
+                    <div class="widget-value" id="widgetReviewers">0</div>
                 </div>
                 <div class="widget-card">
                     <div class="widget-icon"><i class="fas fa-book"></i></div>

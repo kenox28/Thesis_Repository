@@ -359,5 +359,7 @@ document.getElementById('profileImgInput').addEventListener('change', async func
         alert(data.error || 'Upload failed.');
     }
 });
+
+window.PERMISSIONS = <?php echo json_encode(explode(',', $_SESSION['permissions'] ?? 'view')); ?>;
 </script>
 </html>
