@@ -264,13 +264,6 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 				<div class="nav-links">
 					<a href="public_repo.php">Home</a>
 					<a href="upload.php">Upload Thesis</a>
-					<a href="homepage.php">Pending</a>
-                    <a href="approve_title.php">Thesis Progress</a>
-					<a href="approve_thesis.php">Approved</a>
-                    <!-- <a href="approve_title.php">Approved Title</a> -->
-					<a href="rejectpage.php">Rejected</a>
-					<!-- <a href="revisepage.php">Revised</a> -->
-					
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php if (!$isAdminView): ?>
@@ -287,6 +280,10 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 					<div class="dropdown-content">
 						<?php if (!$isAdminView): ?>
 							<a href="#" id="profile-link">Profile</a>
+							<a href="homepage.php">Pending</a>
+							<a href="approve_title.php">Thesis Progress</a>
+							<a href="approve_thesis.php">Approved</a>
+							<a href="rejectpage.php">Rejected</a>
 						<?php endif; ?>
 						<a href="#" id="logout-link">Logout</a>
 					</div>

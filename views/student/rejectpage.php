@@ -174,12 +174,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <div class="nav-links">
                 <a href="public_repo.php">Home</a>
                 <a href="upload.php">Upload Thesis</a>
-                <a href="homepage.php">Pending</a>
-                <a href="approve_title.php">Thesis Progress</a>
-                <a href="approve_thesis.php">Approved</a>
-                <a href="rejectpage.php">Rejected</a>
-                <!-- <a href="revisepage.php">Revised</a> -->
-
             </div>
             <div class="nav-avatar dropdown">
                 <?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -191,6 +185,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <span class="avatar-name"><?php echo $_SESSION['fname'][0]; ?><?php echo $_SESSION['lname'][0]; ?></span>
                 <div class="dropdown-content">
                     <a href="#" id="profile-link">Profile</a>
+                    <a href="homepage.php">Pending</a>
+                    <a href="approve_title.php">Thesis Progress</a>
+                    <a href="approve_thesis.php">Approved</a>
+                    <a href="rejectpage.php">Rejected</a>
                     <a href="#" id="logout-link">Logout</a>
                 </div>
             </div>
