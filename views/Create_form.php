@@ -14,10 +14,10 @@
         <img src="../assets/icons/home.png" alt="Home Icon">
         </a>
     </header> -->
+
         <form action="#" method="POST" id="CreateForm" enctype="multipart/form-data">
             <h1>Create Account</h1>
            
-            <!-- Only Student option -->
             <input type="hidden" name="Role" value="Student" />
 
             <label class="label" for="firstname">First Name</label>
@@ -30,6 +30,7 @@
 
             <label class="label" for="email">Email</label>
             <input required type="email" name="email" class="input" id="email" />
+            <p style="font-size: 12px; color: blue; margin-top: 5px;">Password is the First Name in your first login in the system!</p>
             
             <button class="btn" id="login" type="submit">Sign Up</button>
 
@@ -39,5 +40,5 @@
             <a href="landingpage.php">Back to home</a>
         </form>
     </body>
-    <script src="../js/CreateAccount.js?v=1.0.2"></script>
+    <script src="../js/CreateAccount.js?v=1.0.3"></script>
 </html>

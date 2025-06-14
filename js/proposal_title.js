@@ -34,74 +34,124 @@ async function showupload() {
 		return;
 	}
 
-	let rows = "";
-	for (const u of data) {
-		const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-		const profileImg = "../../assets/ImageProfile/" + u.profileImg;
+	const permissions = data.permissions || [];
+	const uploads = data.uploads || [];
 
-		rows += `
-				<div class="upload-item"
-					data-file="${filePath}"
-					data-title="${encodeURIComponent(u.title)}"
-					data-abstract="${encodeURIComponent(u.abstract)}"
-					data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
-					style="margin-bottom: 20px; cursor:pointer;">
-					<div class="author-info">
-                        <img src="${profileImg}" alt="Profile Image" class="profile-image">
-                        <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
-                            ${capitalize(u.lname)}, ${capitalize(u.fname)}
-                        </span>
-                    </div>
-					<h3 class="thesis-title" style="cursor:pointer;">${u.title}</h3>
-					<p>${u.abstract}</p>
-					<embed src="${filePath}" width="600" height="400" type="application/pdf">
-					<div style="display: flex; justify-content: space-between; margin-top: 10px; flex-wrap: wrap;" class="button-container" >
-							<input type="text" id="inputmessage" name="message" placeholder="Message">
-							
-						<button onclick="updateStatus(${
-							u.id
-						}, 'rejected' , document.getElementById('inputmessage').value); event.stopPropagation();">Reject</button>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'continue' ,document.getElementById('inputmessage').value); event.stopPropagation();">Continue</button>
+	console.log("Permissions received:", permissions);
 
-					</div>
+	// Add search bar and table container
+	let html = `
+	<div style="display:flex;justify-content:flex-end;margin-bottom:1.2rem;">
+		<input id="proposalSearchInput" type="text" placeholder="Search by name or title..." style="width:320px;padding:0.7rem 1.2rem;border-radius:24px;border:1.5px solid #1976a5;font-size:1.08rem;background:#f7faff;outline:none;box-shadow:0 2px 8px #cadcfc22;">
+	</div>
+	<div class="proposal-table-container">
+		<table class="proposal-table">
+			<thead>
+				<tr>
+					<th>Profile</th>
+					<th>Name</th>
+					<th>Title</th>
+					<th>Message</th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+		</table>
+		<div id="proposalTableScroll" style="max-height:500px;overflow-y:auto;">
+			<table class="proposal-table" style="border-top:none;">
+				<tbody id="proposalTableBody"></tbody>
+			</table>
+		</div>
+	</div>`;
+	document.getElementById("userTableBody").innerHTML = html;
 
-				</div>
+	// Render table rows
+	function renderRows(filteredData) {
+		let rows = "";
+		for (const u of filteredData) {
+			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+			const profileImg = "../../assets/ImageProfile/" + u.profileImg;
+			const rowId = `rowmsg_${u.id}`;
+			let rejectBtn = "";
+			if (permissions.includes("reject")) {
+				rejectBtn = `<button onclick="updateStatus(${u.id}, 'rejected', document.getElementById('${rowId}').value); event.stopPropagation();" class="btn-action reject"><i class='fas fa-times-circle'></i> Reject </button>`;
+			}
+			let approveBtn = "";
+			if (permissions.includes("approve")) {
+				approveBtn = `<button onclick="updateStatus(${u.id}, 'continue', document.getElementById('${rowId}').value); event.stopPropagation();" class="btn-action approve"><i class='fas fa-check-circle'></i> Approve </button>`;
+			}
+			rows += `
+				<tr>
+					<td style="text-align:center;">
+						<img src="${profileImg}" alt="Profile Image" class="proposal-profile-img">
+					</td>
+					<td style="font-weight:600;color:#1976a5;">
+						${capitalize(u.lname)}, ${capitalize(u.fname)}
+					</td>
+					<td style="cursor:pointer;color:#1976a5;font-weight:600;" class="thesis-title"
+						data-title="${encodeURIComponent(u.title)}"
+						data-abstract="${encodeURIComponent(u.abstract)}"
+						data-owner="${encodeURIComponent(u.lname + ", " + u.fname)}"
+						data-file="${filePath}">
+						${u.title}
+					</td>
+					<td>
+						<input type="text" id="${rowId}" name="message" placeholder="Message to student..."
+							style="width:99%;padding:7px 10px;border:1.5px solid #1976a5;border-radius:6px;font-size:1rem;outline:none;">
+					</td>
+					<td>
+						${rejectBtn}
+						${approveBtn}
+					</td>
+				</tr>
 			`;
+		}
+		document.getElementById("proposalTableBody").innerHTML = rows;
+
+		// Add modal open logic for .thesis-title
+		document.querySelectorAll(".thesis-title").forEach((titleElem) => {
+			titleElem.addEventListener("click", function (e) {
+				const item = titleElem;
+				const filePath = item.getAttribute("data-file");
+				const title = decodeURIComponent(item.getAttribute("data-title"));
+				const abstract = decodeURIComponent(item.getAttribute("data-abstract"));
+				const owner = decodeURIComponent(item.getAttribute("data-owner"));
+
+				document.getElementById("modalTitle").textContent = title;
+				document.getElementById(
+					"modalAbstract"
+				).innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
+				document.getElementById(
+					"modalOwner"
+				).innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+				document.getElementById("modalPDF").src = filePath + "#toolbar=0";
+
+				document.getElementById("thesisModal").style.display = "flex";
+			});
+		});
 	}
 
-	document.getElementById("userTableBody").innerHTML = rows;
+	renderRows(uploads);
 
-	// Add modal open logic for .upload-item
-	document.querySelectorAll(".thesis-title").forEach((titleElem) => {
-		titleElem.addEventListener("click", function (e) {
-			const item = titleElem.closest(".upload-item");
-			const filePath = item.getAttribute("data-file");
-			const title = decodeURIComponent(item.getAttribute("data-title"));
-			const abstract = decodeURIComponent(item.getAttribute("data-abstract"));
-			const owner = decodeURIComponent(item.getAttribute("data-owner"));
-
-			document.getElementById("modalTitle").textContent = title;
-			document.getElementById(
-				"modalAbstract"
-			).innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-			document.getElementById(
-				"modalOwner"
-			).innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
-			document.getElementById("modalPDF").src = filePath + "#toolbar=0";
-
-			document.getElementById("thesisModal").style.display = "flex";
+	// Search functionality
+	document
+		.getElementById("proposalSearchInput")
+		.addEventListener("input", function () {
+			const val = this.value.trim().toLowerCase();
+			const filtered = uploads.filter(
+				(u) =>
+					`${u.lname}, ${u.fname}`.toLowerCase().includes(val) ||
+					(u.title && u.title.toLowerCase().includes(val))
+			);
+			renderRows(filtered);
 		});
-	});
 }
 showupload();
 
 async function updateStatus(thesisId, status, message) {
-	let actionText = status === "approved" ? "approve" : "reject";
+	let actionText = status === "rejected" ? "Reject" : "Continue";
 	let confirmButtonText =
-		status === "approved" ? "Yes, Approve" : "Yes, Reject";
-	let confirmButtonColor = status === "approved" ? "#43a047" : "#e53935";
+		status === "continue" ? "Yes, Continue" : "Yes, Reject";
+	let confirmButtonColor = status === "continue" ? "#43a047" : "#e53935";
 
 	const result = await Swal.fire({
 		title: `Are you sure you want to ${actionText} this thesis?`,

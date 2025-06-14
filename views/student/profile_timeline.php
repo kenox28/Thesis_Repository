@@ -164,6 +164,7 @@
         flex-direction: column;
         align-items: center;
         width: 100%;
+        height: 100%;
         max-width: 320px;
         margin: 32px auto 0 auto;
         background: #fff;
@@ -217,7 +218,7 @@
         }
     }
     .profile-status {
-        display: flex;
+        display: none;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -843,10 +844,10 @@
                 <a href="public_repo.php">Home</a>
                 <a href="upload.php">Upload Thesis</a>
                 <a href="homepage.php">Pending</a>
+                <a href="approve_title.php">Thesis Progress</a>
                 <a href="approve_thesis.php">Approved</a>
-                <a href="approve_title.php">Approved Title</a>
                 <a href="rejectpage.php">Rejected</a>
-                <a href="revisepage.php">Revised</a>
+                <!-- <a href="revisepage.php">Revised</a> -->
             </div>
             <div class="nav-avatar dropdown">
                 <?php $hasProfileImg = isset($profileImgs) && $profileImgs !== 'noprofile.png' && !empty($profileImgs); ?>
@@ -983,40 +984,37 @@
         }
         let rows = "<div class='thesis-cards'>";
         for (const u of data) {
-            // Only show approved theses
-            if (u.status && u.status.toLowerCase() === "approved") {
-                const filePath = "../../assets/thesisfile/" + u.ThesisFile;
-                const profileImg = "../../assets/ImageProfile/" + u.profileImg;
-                    rows += `
-                        <div class="upload-item"
-                            data-file="${filePath}"
-                            data-title="${encodeURIComponent(u.title)}"
-                            data-abstract="${encodeURIComponent(u.abstract)}"
-                            data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-                            data-privacy="${encodeURIComponent(u.Privacy)}"
-                            style="cursor:pointer;"
-                        >
-                            <div class="author-info">
-                                <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">  
-                                    <img src="${profileImg}" alt="Profile Image" class="profile-image">
-                                </a>
-                                <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
-                                    ${capitalize(u.lname)}, ${capitalize(u.fname)}
-                                </span>
-                            </div>
-                            <h3 class="thesis-title" style="cursor:pointer;">
-                                <i class='fas fa-book'></i> ${u.title}
-                            </h3>
-                            <p id="abstract"><i class='fas fa-quote-left'></i> ${u.abstract}</p>
+            const filePath = "../../assets/thesisfile/" + u.ThesisFile;
+            const profileImg = "../../assets/ImageProfile/" + u.profileImg;
+            rows += `
+                <div class="upload-item"
+                    data-file="${filePath}"
+                    data-title="${encodeURIComponent(u.title)}"
+                    data-abstract="${encodeURIComponent(u.abstract)}"
+                    data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
+                    data-privacy="${encodeURIComponent(u.Privacy)}"
+                    style="cursor:pointer;"
+                >
+                    <div class="author-info">
+                        <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">  
+                            <img src="${profileImg}" alt="Profile Image" class="profile-image">
+                        </a>
+                        <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+                            ${capitalize(u.lname)}, ${capitalize(u.fname)}
+                        </span>
+                    </div>
+                    <h3 class="thesis-title" style="cursor:pointer;">
+                        <i class='fas fa-book'></i> ${u.title}
+                    </h3>
+                    <p id="abstract"><i class='fas fa-quote-left'></i> ${u.abstract}</p>
 
-                            <iframe src="${filePath}#toolbar=0&navpanes=0&scrollbar=0" width="300" height="250" style="border-radius:8px;border:1.5px solid #e9f0ff;"></iframe>
-                            <div style="margin-top:12px;display:flex;gap:10px;">
-                                <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
-                                <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
-                            </div>
-                        </div>
-                    `;
-            }
+                    <iframe src="${filePath}#toolbar=0&navpanes=0&scrollbar=0" width="300" height="250" style="border-radius:8px;border:1.5px solid #e9f0ff;"></iframe>
+                    <div style="margin-top:12px;display:flex;gap:10px;">
+                        <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
+                        <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
+                    </div>
+                </div>
+            `;
         }
         rows += "</div>";
         document.getElementById("profile-timeline").innerHTML = rows;

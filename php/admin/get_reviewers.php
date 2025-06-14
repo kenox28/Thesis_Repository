@@ -15,7 +15,7 @@ if (!isset($_SESSION['admin_id'])) {
 }
 
 // Fetch all reviewers
-$sql = "SELECT reviewer_id, fname, lname, email, approve, last_active FROM reviewer";
+$sql = "SELECT reviewer_id, fname, lname, email, Approve, last_active, profileImg, role, permissions FROM reviewer";
 $result = mysqli_query($connect, $sql);
 
 if (!$result) {

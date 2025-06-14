@@ -9,7 +9,7 @@ if (!isset($_SESSION['reviewer_id'])) {
 
 $reviewer_id = $_SESSION['reviewer_id'];
 
-$sql = "SELECT * FROM repoTable WHERE reviewer_id = '$reviewer_id' AND status = 'Pending' AND Chapter = '0'";
+$sql = "SELECT * FROM repoTable WHERE JSON_CONTAINS(reviewer_id, '\"$reviewer_id\"') AND status = 'Pending' AND Chapter = '0' ORDER BY id DESC";
 $result = mysqli_query($connect, $sql);
 
 $uploads = [];
@@ -23,7 +23,22 @@ if ($result) {
         $row['profileImg'] = $profileImgRow ? $profileImgRow['profileImg'] : null;
         $uploads[] = $row;
     }
-    echo json_encode($uploads);
+    $permRes = mysqli_query($connect, "SELECT permissions FROM reviewer WHERE reviewer_id = '$reviewer_id'");
+    $permRow = $permRes ? mysqli_fetch_assoc($permRes) : null;
+    $permissions = [];
+    if ($permRow && $permRow['permissions']) {
+        $permVal = $permRow['permissions'];
+        $decoded = json_decode($permVal, true);
+        if (is_array($decoded)) {
+            $permissions = $decoded;
+        } else {
+            $permissions = array_map('trim', explode(',', $permVal));
+        }
+    }
+    echo json_encode([
+        "uploads" => $uploads,
+        "permissions" => $permissions
+    ]);
 } else {
     echo json_encode(["error" => "Query failed"]);
 }

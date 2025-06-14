@@ -32,217 +32,178 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Public Repository</title>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 	</head>
 	<style>
-
-		.upload-item {
-            background: var(--card-bg);
+	body {
+		background: #f7faff;
+		min-height: 100vh;
+		font-family: 'Segoe UI', Arial, sans-serif;
+	}
+	.header-archive {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 2.2rem 0 1.2rem 0;
+		background: none;
+		border-bottom: none;
+		margin-bottom: 1.5rem;
+	}
+	.header-archive h1 {
+		color: #1976a5;
+		font-size: 2rem;
+		font-weight: 800;
+		letter-spacing: 0.5px;
+		margin-bottom: 0.7rem;
+            display: flex;
+            align-items: center;
+		gap: 10px;
+	}
+	.archive-search {
+		width: 520px;
+		max-width: 98vw;
+		position: relative;
+	}
+	.archive-search .input-icon {
+		position: absolute;
+		left: 14px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: #1976a5;
+		font-size: 1.1rem;
+		z-index: 2;
+	}
+	.archive-search input {
+		width: 100%;
+		padding: 9px 12px 9px 2.1rem;
+		border-radius: 7px;
+		border: 1.2px solid #b5c7d3;
+            font-size: 1rem;
+		outline: none;
+		background: #fff;
+		box-shadow: none;
+		transition: border 0.2s;
+	}
+	.archive-search input:focus {
+		border: 1.5px solid #1976a5;
+	}
+	.thesis-cards {
+            display: flex;
+		flex-wrap: wrap;
+		gap: 1.5rem;
+            justify-content: center;
+		margin-top: 1.2rem;
+	}
+	.upload-item {
+		background: #fff;
+		border-radius: 12px;
+		border: 1px solid #e3eafc;
+            box-shadow: none;
+		padding: 1.3rem 1.1rem 1.1rem 1.1rem;
+		width: 320px;
+            max-width: 98vw;
+            display: flex;
+            flex-direction: column;
+		gap: 0.7rem;
+		align-items: flex-start;
+		transition: box-shadow 0.18s, border 0.18s;
+	}
+	.upload-item:hover {
+		box-shadow: 0 4px 16px #1976a522;
+		border: 1.5px solid #b5c7d3;
+	}
+	.upload-item .profile-image {
+		width: 28px;
+		height: 28px;
+		border-radius: 50%;
+		object-fit: cover;
+		border: 1.2px solid #b5c7d3;
+		background: #f4f8ff;
+		margin-right: 8px;
+	}
+	.upload-item .author-info {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		color: #1976a5;
+		font-weight: 600;
+		font-size: 0.97rem;
+		margin-bottom: 0.1rem;
+	}
+	.upload-item .status-badge {
+		display: inline-block;
+		background: #f1f5fa;
+		color: #1976a5;
             border-radius: 12px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .upload-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-        }
-
-        .upload-item h3 {
-            color: var(--primary-color);
-            margin-top: 0;
-            font-size: 1.4rem;
-            border-bottom: 2px solid var(--secondary-color);
-            padding-bottom: 0.5rem;
-        }
-
-        .upload-item p {
-            color: #666;
-            line-height: 1.6;
-            margin: 1rem 0;
-        }
-
-        .upload-item embed {
-            width: 100%;
-            height: 300px;
-            border-radius: 8px;
-            margin-top: 1rem;
-        }
-
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #1a3a8f;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 1rem;
-			font-size: uppercase;
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.3rem 0.8rem;
-            background-color: var(--success-color);
-            color: white;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            margin-top: 1rem;
-        }
-
-        .modal {
-            position: fixed;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: rgba(0,36,107,0.18);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 3000;
-            overflow-y: auto;
-        }
-
-        .modal-content.enhanced-modal {
-            background: #fff;
-            border-radius: 18px;
-            box-shadow: 0 8px 40px #1976a522, 0 1.5px 0 #cadcfc;
-            padding: 0;
-            max-width: 700px;
-            width: 95vw;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 2px solid #1976a5;
-            position: relative;
-        }
-
-        .modal-header {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-            background: linear-gradient(90deg, #1976a5 60%, #2893c7 100%);
-            padding: 18px 28px 14px 28px;
-            border-bottom: 1.5px solid #e9f0ff;
-        }
-
-        .modal-header h2 {
-            color: #fff;
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin: 0 0 4px 0;
-            letter-spacing: 0.5px;
-        }
-
-        .modal-icon {
-            background: #fff;
-            color: #1976a5;
-            border-radius: 50%;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.5rem;
-            box-shadow: 0 2px 8px #cadcfc33;
-        }
-
-        .modal-body {
-            padding: 18px 28px 24px 28px;
-            overflow-y: auto;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .modal-abstract {
-            font-size: 1.05rem;
-            color: #1976a5;
-            background: #f4f8ff;
-            border-radius: 8px;
-            padding: 10px 16px;
-            margin-bottom: 8px;
-            font-style: italic;
-            box-shadow: 0 1px 4px #cadcfc33;
-            border-left: 4px solid #1976a5;
-            word-break: break-word;
-        }
-
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #1a3a8f;
-            font-weight: 500;
-            margin-bottom: 8px;
-            font-size: 1rem;
-        }
-
-        #modalPDF {
-            width: 100%;
-            height: 55vh;
-            border-radius: 10px;
-            box-shadow: 0 2px 12px #1976a522;
-            margin-top: 8px;
-            border: 1.5px solid #e9f0ff;
-            background: #f7faff;
-        }
-
-        .close-button {
-            position: absolute;
-            top: 12px;
-            right: 18px;
-            font-size: 2rem;
-            color: #fff;
-            cursor: pointer;
-            font-weight: 700;
-            transition: color 0.18s;
-            z-index: 10;
-            text-shadow: 0 2px 8px #1976a5cc;
-        }
-
-        .close-button:hover {
-            color: #e74c3c;
-        }
-
-        @media (max-width: 900px) {
-            .modal-content.enhanced-modal {
-                width: 99vw !important;
-                max-width: 99vw !important;
-                height: 99vh !important;
-                max-height: 99vh !important;
-                padding: 0;
-            }
-            .modal-header, .modal-body {
-                padding: 10px 6px 10px 6px;
-            }
-            .modal-header h2 {
-                font-size: 1.1rem;
-            }
-            .modal-icon {
-                width: 32px;
-                height: 32px;
-                font-size: 1.1rem;
-            }
-            #modalPDF {
-                height: 35vh;
-            }
-        }
-
+		font-size: 0.85rem;
+		font-weight: 600;
+		padding: 2px 14px;
+		margin: 0.2rem 0 0.2rem 0.2rem;
+		box-shadow: none;
+		border: 1px solid #e3eafc;
+	}
+	.upload-item .thesis-title {
+		color: #0d47a1;
+		font-size: 1.08rem;
+		font-weight: 700;
+		margin: 0.2rem 0 0.2rem 0;
+		display: block;
+	}
+	.upload-item .thesis-abstract {
+		color: #444;
+		line-height: 1.5;
+		margin: 0.2rem 0 0.1rem 0;
+		font-size: 0.97rem;
+		font-style: italic;
+		display: block;
+	}
+	.upload-item .view-btn {
+		margin-top: 0.7rem;
+		background: none;
+		color: #1976a5;
+		border: 1px solid #b5c7d3;
+		border-radius: 6px;
+		padding: 0.4rem 1.1rem;
+		font-size: 0.97rem;
+		font-weight: 600;
+		cursor: pointer;
+		transition: background 0.18s, color 0.18s, border 0.18s;
+		align-self: flex-start;
+	}
+	.upload-item .view-btn:hover {
+		background: #1976a5;
+		color: #fff;
+		border: 1px solid #1976a5;
+	}
         .profile-image {
-            width: 48px;
-            height: 48px;
+		width: 38px;
+		height: 38px;
             border-radius: 50%;
             object-fit: cover;
-            border: 2.5px solid #1976a5;
-            box-shadow: 0 2px 8px #1976a533;
-            margin-right: 10px;
+		border: 2px solid #b5c7d3;
             background: #f4f8ff;
             transition: box-shadow 0.2s, border-color 0.2s;
         }
-        .profile-image:hover {
-            box-shadow: 0 4px 16px #1976a555;
-            border-color: #2893c7;
+	@media (max-width: 600px) {
+		.header-archive {
+			padding: 1rem 0 0.7rem 0;
+			border-radius: 0 0 10px 10px;
+		}
+		.header-archive h1 {
+			font-size: 1.1rem;
+			gap: 6px;
+		}
+		.archive-search {
+			width: 98vw;
+		}
+		.thesis-cards {
+			gap: 0.7rem;
+		}
+		.upload-item {
+			width: 98vw;
+			padding: 0.7rem 0.3rem 0.7rem 0.3rem;
+		}
         }
 	</style>
 	<body>
@@ -253,12 +214,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 				<div class="nav-links">
 					<a href="public_repo.php">Home</a>
-					<a href="upload.php">Upload Thesis</a>
-					<a href="homepage.php">Pending</a>
-					<a href="approve_thesis.php">Approved</a>
-					<a href="approve_title.php">Approved Title</a>
-					<a href="rejectpage.php">Rejected</a>
-					<a href="revisepage.php">Revised</a>
+					<a href="upload.php">Upload Documents</a>
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -270,17 +226,23 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<span class="avatar-name"><?php echo $_SESSION['fname'][0]; ?><?php echo $_SESSION['lname'][0]; ?></span>
 					<div class="dropdown-content">
 						<a href="#" id="profile-link">Profile</a>
+						<a href="homepage.php">Pending</a>
+						<a href="approve_title.php">Thesis Progress</a>
+						<a href="approve_thesis.php">Approved</a>
+						<a href="rejectpage.php">Rejected</a>
 						<a href="#" id="logout-link">Logout</a>
 					</div>
 				</div>
 			</nav>
 
 			<main class="main-content">
-				<header style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; flex-direction: column;">
-					<h1 class="section-title" style="margin-bottom: 0;">Public Theses Repository</h1>
-					<input type="text" id="searchInput" placeholder="Search by title, author, or abstract..." 
-						style="padding: 8px 14px; border-radius: 6px; border: 1.5px solid #1976a5; width: 320px; max-width: 90%; font-size: 1rem; margin-top: 12px;">
-				</header>
+				<div class="header-archive">
+					<h1><i class="fa-solid fa-book-open"></i> Student Thesis Archive</h1>
+					<div class="archive-search">
+						<span class="input-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+						<input type="text" id="searchInput" placeholder="Search by title, author, or abstract...">
+					</div>
+				</div>
 				<section>
 					<div id="PDFFILE"></div>
 				</section>
@@ -320,17 +282,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<div id="thesisModal" class="modal" style="display:none;">
 			<div class="modal-content enhanced-modal">
 				<span class="close-button" id="closeThesisModal">&times;</span>
-				<div class="modal-header">
-					<div class="modal-icon"><i class="fas fa-book-open"></i></div>
-					<div>
-						<h2 id="modalTitle"></h2>
-						<div class="thesis-card-status" id="modalStatus"></div>
-					</div>
-				</div>
-				<div class="modal-body">
-					<p id="modalAbstract" class="modal-abstract"></p>
-					<div class="author-info" id="modalOwner"></div>
-					<iframe id="modalPDF" src="" width="100%" height="55vh" style="border-radius:12px;box-shadow:0 2px 12px #1976a522;margin-top:18px;border:2px solid #e9f0ff;"></iframe>
+				<div class="modal-body" style="padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
+					<iframe id="modalPDF" src="" style="width:90vw;height:90vh;border-radius:12px;border:none;box-shadow:0 2px 12px #0008;background:#222;"></iframe>
 				</div>
 			</div>
 		</div>
@@ -356,31 +309,17 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 				const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 				rows += `
-					<div class="upload-item"
-						data-file="${filePath}"
-						data-title="${encodeURIComponent(u.title)}"
-						data-abstract="${encodeURIComponent(u.abstract)}"
-						data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-						data-privacy="${encodeURIComponent(u.Privacy)}"
-						style="cursor:pointer;"
-					>
+					<div class="upload-item">
 						<div class="author-info">
 							<a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
 								<img src="${profileImg}" alt="Profile Image" class="profile-image">
 							</a>
-							<span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
-								${capitalize(u.lname)}, ${capitalize(u.fname)}
-							</span>
+							<span>${capitalize(u.lname)}, ${capitalize(u.fname)}</span>
 						</div>
-						<h3 class="thesis-title" style="cursor:pointer;">
-							<i class='fas fa-book'></i> ${u.title}
-						</h3>
-						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-
-						<embed src="${filePath}" type="application/pdf" width="300" height="250">
-						<div class="status-badge">
-							<i class="fas fa-check"></i> ${u.Privacy || 'Public'}
-						</div>
+						<span class="status-badge">${u.Privacy || 'Public'}</span>
+						<div class="thesis-title">${u.title}</div>
+						<div class="thesis-abstract">${u.abstract}</div>
+						<button class="view-btn" onclick="event.stopPropagation(); window.open('${filePath}', '_blank');">View PDF</button>
 					</div>
 				`;
 			}
@@ -391,15 +330,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 			document.querySelectorAll('.upload-item').forEach(item => {
 				item.addEventListener('click', function (e) {
 					const filePath = item.getAttribute('data-file');
-					const title = decodeURIComponent(item.getAttribute('data-title'));
-					const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
-					const owner = decodeURIComponent(item.getAttribute('data-owner'));
-					const privacy = decodeURIComponent(item.getAttribute('data-privacy'));
-
-					document.getElementById('modalTitle').textContent = title;
-					document.getElementById('modalStatus').textContent = privacy || "Public";
-					document.getElementById('modalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-					document.getElementById('modalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
 					document.getElementById('modalPDF').src = filePath + "#toolbar=0";
 					document.getElementById('thesisModal').style.display = "flex";
 				});

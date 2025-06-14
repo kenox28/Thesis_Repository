@@ -20,21 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = isset($_POST['student_id']) ? $_POST['student_id'] : '';
     $fname = isset($_POST['fname']) ? $_POST['fname'] : '';
     $lname = isset($_POST['lname']) ? $_POST['lname'] : '';
-    $reviewer_id = isset($_POST['reviewer_id']) ? $_POST['reviewer_id'] : '';
+    $reviewer_ids = isset($_POST['reviewer_ids']) ? $_POST['reviewer_ids'] : [];
+    if (!is_array($reviewer_ids)) {
+        $reviewer_ids = [$reviewer_ids];
+    }
     $member_ids = isset($_POST['member_ids']) ? $_POST['member_ids'] : [];
     $date = date('Y-m-d');
     if (!is_array($member_ids)) {
         $member_ids = [$member_ids];
     }
 
-    if (empty($title) || empty($student_id) || empty($fname) || empty($lname) || empty($reviewer_id)) {
+    if (empty($title) || empty($student_id) || empty($fname) || empty($lname) || empty($reviewer_ids)) {
         echo json_encode(["status" => "failed", "message" => "Please fill in all the input."]);
         exit;
     }
 
     // Example: fetch reviewer name
     $reviewerName = '';
-    $reviewerQuery = mysqli_query($connect, "SELECT fname, lname FROM Reviewer WHERE reviewer_id = '$reviewer_id'");
+    $reviewerQuery = mysqli_query($connect, "SELECT fname, lname FROM Reviewer WHERE reviewer_id = '$reviewer_ids[0]'");
     if ($reviewerQuery && $row = mysqli_fetch_assoc($reviewerQuery)) {
         $reviewerName = $row['fname'] . ' ' . $row['lname'];
     }
@@ -65,42 +68,54 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'name' => 'Times New Roman',
         'size' => 12,
     ];
+    $paragraphStyle = [
+        'spaceAfter' => 0,
+        'lineHeight' => 2.0 // double spacing
+    ];
     $center = ['alignment' => 'center'];
 
-    // APA Title (bold, title case)
-    $section->addText(strtoupper($title), array_merge($fontStyle, ['bold' => true]), $center);
+    // Remove running head and author note. Only add page number in header.
+    $header = $section->addHeader();
+    $headerTable = $header->addTable(['alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER, 'width' => 100 * 50]);
+    $tableRow = $headerTable->addRow();
+    $tableRow->addCell(9000); // empty cell for left
+    // Add page number (right-aligned)
+    $tableRow->addCell(1000)->addPreserveText('{PAGE}', array_merge($fontStyle, ['align' => 'right']));
+
+    for ($i = 0; $i < 7; $i++) $section->addTextBreak(1);
+    // Title (centered, not bold, not all caps, capitalize first letter)
+    $section->addText(ucwords($title), array_merge($fontStyle, ['size' => 14]), $center);
     $section->addTextBreak(2);
-
-    // Student Name (First M. Last)
-
-
-    // Affiliation, Department, and Course (all centered, APA style)
-    $affiliation = 'EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS';
-    $department = 'Computer Studies';
-    $course = 'Bachelor of Science in Information Technology';
-    $section->addText($affiliation, $fontStyle, $center);
+    // University name (bold, all caps, centered)
+    $section->addText('EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS', array_merge($fontStyle, ['bold' => true, 'size' => 13]), $center);
+    $section->addTextBreak(2);
+    $section->addText('Computer Studies', $fontStyle, $center);
     $section->addTextBreak(1);
-    $section->addText($department, $fontStyle, $center);
+    $section->addText('Bachelor of Science in Information Technology', $fontStyle, $center);
     $section->addTextBreak(1);
-    $section->addText($course, $fontStyle, $center);
+    // Reviewer(s)
+    $section->addText('Reviewer:', $fontStyle, $center);
     $section->addTextBreak(1);
-
-
-    // Instructor (e.g., Dr. John Smith)
-    $instructor = $reviewerName ? $reviewerName : 'Instructor Name';
-    $section->addText($instructor, $fontStyle, $center);
+    if (!empty($reviewer_ids)) {
+        foreach ($reviewer_ids as $rid) {
+            $rid = $connect->real_escape_string($rid);
+            $reviewerQuery = mysqli_query($connect, "SELECT fname, lname FROM reviewer WHERE reviewer_id = '$rid' LIMIT 1");
+            if ($reviewerQuery && $row = mysqli_fetch_assoc($reviewerQuery)) {
+                $section->addText($row['fname'] . ' ' . $row['lname'], $fontStyle, $center);
+            }
+        }
+    }
     $section->addTextBreak(1);
-
-    // Due Date
     $section->addText($date, $fontStyle, $center);
     $section->addTextBreak(2);
-
     $section->addText($studentFullName, $fontStyle, $center);
     $section->addTextBreak(1);
-
     // Members (if any)
-    if ($membersText) {
-        $section->addText($membersText, $fontStyle, $center);
+    if (!empty($memberNames)) {
+        $section->addText('With members:', $fontStyle, $center);
+        foreach ($memberNames as $member) {
+            $section->addText($member, $fontStyle, $center);
+        }
         $section->addTextBreak(2);
     }
 
@@ -108,16 +123,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
+
     $uniqueBase = uniqid('apa_', true);
     $docxName = $uniqueBase . '.docx';
     $docxPath = $uploadDir . $docxName;
     $writer = IOFactory::createWriter($phpWord, 'Word2007');
     $writer->save($docxPath);
 
-    // Path to LibreOffice executable
     $libreOfficePath = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
 
-    // Command to convert DOCX to PDF
     $command = "\"$libreOfficePath\" --headless --convert-to pdf --outdir \"$uploadDir\" \"$docxPath\"";
     exec($command, $output, $resultCode);
 
@@ -141,7 +155,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'pending';
     $message = '';
     $member_ids = implode(',', $member_ids);
-    mysqli_stmt_bind_param($stmt, 'sssssssssssssss', $student_id, $fname, $lname, $title, $abstract, $introduction, $project_objective, $significance_of_study, $system_analysis_and_design, $chapter, $message, $member_ids, $pdfName, $reviewer_id, $status);
+    $reviewer_ids_json = json_encode($reviewer_ids);
+    mysqli_stmt_bind_param($stmt, 'sssssssssssssss', $student_id, $fname, $lname, $title, $abstract, $introduction, $project_objective, $significance_of_study, $system_analysis_and_design, $chapter, $message, $member_ids, $pdfName, $reviewer_ids_json, $status);
     $success = mysqli_stmt_execute($stmt);
 
     if ($success) {
