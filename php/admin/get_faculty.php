@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once '../Database.php';
 
 header('Content-Type: application/json');
@@ -13,6 +17,10 @@ if ($result) {
     }
     echo json_encode(['status' => 'success', 'faculty' => $faculty]);
 } else {
-    echo json_encode(['status' => 'error', 'message' => 'Failed to fetch faculty']);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Failed to fetch faculty',
+        'error' => mysqli_error($connect)
+    ]);
 }
 ?>

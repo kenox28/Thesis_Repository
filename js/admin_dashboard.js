@@ -337,9 +337,11 @@ function createReviewerCard(reviewer, approved) {
 				<button onclick="removeReviewer('${
 					reviewer.reviewer_id
 				}')" class="pill-btn pill-btn-red">Remove</button>
-				<button onclick="inactiveReviewer('${
-					reviewer.reviewer_id
-				}')" class="pill-btn pill-btn-gray">Inactive</button>
+				${
+					approved
+						? `<button onclick="inactiveReviewer('${reviewer.reviewer_id}')" class="pill-btn pill-btn-gray">Inactive</button>`
+						: `<button onclick="approveReviewer('${reviewer.reviewer_id}')" class="pill-btn pill-btn-blue">Approve</button>`
+				}
 			</div>
 	`;
 	return card;
@@ -821,18 +823,41 @@ function renderFacultyCards(faculty) {
 			"../../assets/ImageProfile/" + (member.profileImg || "noprofile.png");
 		card.innerHTML = `
 			<div style="display:flex;align-items:center;gap:1.2rem;width:100%;margin-bottom:1.1rem;">
-				<img src="${profileImg}" alt="${member.fname} ${member.lname}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #1976a5;box-shadow:0 2px 8px #cadcfc33;background:#f4f8ff;">
+				<img src="${profileImg}" alt="${member.fname} ${
+			member.lname
+		}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #1976a5;box-shadow:0 2px 8px #cadcfc33;background:#f4f8ff;">
 				<div style="flex:1;">
-					<div style="font-size:1.18rem;font-weight:700;color:#1976a5;letter-spacing:0.2px;">${member.fname} ${member.lname}</div>
-					<div style="font-size:0.98rem;color:#666;margin-top:2px;">${member.reviewer_id}</div>
+					<div style="font-size:1.18rem;font-weight:700;color:#1976a5;letter-spacing:0.2px;">${
+						member.fname
+					} ${member.lname}</div>
+					<div style="font-size:0.98rem;color:#666;margin-top:2px;">${
+						member.reviewer_id
+					}</div>
 					<div style="font-size:0.98rem;color:#666;">${member.email}</div>
 				</div>
 			</div>
+			<div style="font-size:0.98rem;color:${
+				member.Approve == 1 ? "#1976a5" : "#e74c3c"
+			};font-weight:600;">
+				Approved: <span style="color:#1976a5;">${
+					member.Approve == 1 ? "Yes" : "No"
+				}</span>
+			</div>
 			<div style="display:flex;gap:0.7rem;width:100%;justify-content:center;flex-wrap:wrap;">
-				<button class="btn-role-glass" onclick="setRole('${member.reviewer_id}', 'reviewer')">Set Role to Reviewer</button>
-				<button class="btn-role-glass" onclick="setRole('${member.reviewer_id}', 'student')">Set Role to Student</button>
-				<button onclick="removeReviewer('${member.reviewer_id}')" class="pill-btn pill-btn-red">Remove</button>
-				<button onclick="inactiveReviewer('${member.reviewer_id}')" class="pill-btn pill-btn-gray">Inactive</button>
+				<button class="btn-role-glass" onclick="setRole('${
+					member.reviewer_id
+				}', 'reviewer')">Set Role to Reviewer</button>
+				<button class="btn-role-glass" onclick="setRole('${
+					member.reviewer_id
+				}', 'student')">Set Role to Student</button>
+				<button onclick="removeReviewer('${
+					member.reviewer_id
+				}')" class="pill-btn pill-btn-red">Remove</button>
+				${
+					member.Approve == 1
+						? `<button onclick="inactiveReviewer('${member.reviewer_id}')" class="pill-btn pill-btn-gray">Inactive</button>`
+						: `<button onclick="approveFaculty('${member.reviewer_id}')" class="pill-btn pill-btn-blue">Approve</button>`
+				}
 			</div>
 		`;
 		grid.appendChild(card);
@@ -897,4 +922,23 @@ async function showdorpdownmember() {
 		placeholder: "Select Member(s)",
 		allowClear: true,
 	});
+}
+
+async function approveFaculty(facultyId) {
+	try {
+		const result = await fetchData(
+			"../../php/admin/approve_faculty.php",
+			"POST",
+			{ reviewer_id: facultyId }
+		);
+		if (!result) return;
+		alert(result.message);
+		if (result.status === "success") {
+			showSection(currentSection);
+			updateDashboardWidgets();
+		}
+	} catch (error) {
+		console.error("Error approving faculty:", error);
+		alert("An error occurred while approving the faculty.");
+	}
 }
