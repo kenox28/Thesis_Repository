@@ -550,7 +550,7 @@ $logger->logActivity(
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../js/admin_dashboard.js?v=1.0.10"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.13"></script>
     <script>
     // Show camera/trash icons on hover
     const wrapper = document.querySelector('.profile-img-wrapper');
