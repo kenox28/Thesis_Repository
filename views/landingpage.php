@@ -9,6 +9,7 @@
 <body>
     <nav class="navbar">
         <div class="navbar-content">
+            
             <a href="#" class="logo">Thesis Repository</a>
 
             <div class="nav-links">
