@@ -14,7 +14,7 @@ $roleResult = mysqli_query($connect, "SELECT role FROM reviewer WHERE reviewer_i
 $roleRow = $roleResult ? mysqli_fetch_assoc($roleResult) : null;
 $currentRole = $roleRow ? $roleRow['role'] : 'reviewer';
 
-$sql = "SELECT * FROM repoTable WHERE reviewer_id = '$reviewer_id' AND status = 'Pending' AND (Chapter = '1' or Chapter = '2' or Chapter = '3' or Chapter = '4')";
+$sql = "SELECT * FROM repoTable WHERE JSON_CONTAINS(reviewer_id, '\"$reviewer_id\"') AND status = 'Pending' AND (Chapter = '1' or Chapter = '2' or Chapter = '3' or Chapter = '4')";
 $result = mysqli_query($connect, $sql);
 
 $uploads = [];
