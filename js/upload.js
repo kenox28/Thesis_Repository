@@ -12,16 +12,15 @@ async function generateAPAReference(e) {
 	// Remove any previous hidden inputs
 	document.querySelectorAll(".dynamic-hidden").forEach((el) => el.remove());
 
-	// Ensure checked reviewer is included
-	const reviewer = document.querySelector('input[name="reviewer"]:checked');
-	if (reviewer) {
+	// Ensure all checked reviewers are included
+	window.checkedReviewers.forEach((reviewerId) => {
 		const hiddenReviewer = document.createElement("input");
 		hiddenReviewer.type = "hidden";
-		hiddenReviewer.name = "reviewer_id";
-		hiddenReviewer.value = reviewer.value;
+		hiddenReviewer.name = "reviewer_ids[]";
+		hiddenReviewer.value = reviewerId;
 		hiddenReviewer.className = "dynamic-hidden";
 		document.getElementById("thesisForm").appendChild(hiddenReviewer);
-	}
+	});
 
 	// Ensure all checked members are included
 	window.checkedMembers.forEach((memberId) => {
@@ -38,10 +37,10 @@ async function generateAPAReference(e) {
 
 	// --- Frontend validation ---
 	const title = formdata.get("title");
-	const reviewerVal = formdata.get("reviewer_id");
+	const reviewerVals = formdata.getAll("reviewer_ids[]");
 	const members = formdata.getAll("member_ids[]");
 
-	if (!title || !reviewerVal || !members.length) {
+	if (!title || reviewerVals.length !== 3 || !members.length) {
 		Swal.fire({
 			icon: "error",
 			title: "Error!",
@@ -96,31 +95,39 @@ async function loadReviewers() {
 			document.getElementById("reviewerList").innerHTML = filtered
 				.map(
 					(u) =>
-						`<label><input type="checkbox" name="reviewers[]" value="${u.reviewer_id}" ${window.checkedReviewers.has(u.reviewer_id) ? 'checked' : ''}> <span class="fa-solid fa-user"></span> ${u.reviewer_name} <span class="fa-solid fa-check-circle"></span></label>`
+						`<label><input type="checkbox" name="reviewers[]" value="${
+							u.reviewer_id
+						}" ${
+							window.checkedReviewers.has(u.reviewer_id) ? "checked" : ""
+						}> <span class="fa-solid fa-user"></span> ${
+							u.reviewer_name
+						} <span class="fa-solid fa-check-circle"></span></label>`
 				)
 				.join("");
 
 			// Add event listeners to reviewer checkboxes
-			document.querySelectorAll('#reviewerList input[type="checkbox"]').forEach((cb) => {
-				cb.addEventListener("change", function () {
-					if (this.checked) {
-						if (window.checkedReviewers.size >= 3) {
-							this.checked = false;
-							Swal.fire({
-								icon: "warning",
-								title: "Limit reached!",
-								text: "You can only select up to 3 reviewers.",
-								confirmButtonColor: "#1976a5",
-							});
-							return;
+			document
+				.querySelectorAll('#reviewerList input[type="checkbox"]')
+				.forEach((cb) => {
+					cb.addEventListener("change", function () {
+						if (this.checked) {
+							if (window.checkedReviewers.size >= 3) {
+								this.checked = false;
+								Swal.fire({
+									icon: "warning",
+									title: "Limit reached!",
+									text: "You can only select up to 3 reviewers.",
+									confirmButtonColor: "#1976a5",
+								});
+								return;
+							}
+							window.checkedReviewers.add(this.value);
+						} else {
+							window.checkedReviewers.delete(this.value);
 						}
-						window.checkedReviewers.add(this.value);
-					} else {
-						window.checkedReviewers.delete(this.value);
-					}
-					updateSelectedReviewersContainer();
+						updateSelectedReviewersContainer();
+					});
 				});
-			});
 			updateSelectedReviewersContainer();
 		});
 	// Initial render (empty search)
@@ -265,42 +272,51 @@ if (
 }
 
 function getAvatarOrInitials(name, imgUrl) {
-	if (imgUrl && imgUrl !== 'noprofile.png') {
+	if (imgUrl && imgUrl !== "noprofile.png") {
 		return `<img src="../../assets/ImageProfile/${imgUrl}" class="avatar-chip" alt="avatar" onerror="this.style.display='none'">`;
 	} else if (name) {
-		const initials = name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+		const initials = name
+			.split(" ")
+			.map((n) => n[0])
+			.join("")
+			.substring(0, 2)
+			.toUpperCase();
 		return `<span class="avatar-chip"><i class="fa-solid fa-user"></i></span>`;
 	}
 	return `<span class="avatar-chip"><i class="fa-solid fa-user"></i></span>`;
 }
 
 function updateSelectedReviewersContainer() {
-	const container = document.getElementById('selectedReviewersContainer');
-	const searchBox = document.getElementById('reviewerSearch');
-	const listBox = document.getElementById('reviewerList');
+	const container = document.getElementById("selectedReviewersContainer");
+	const searchBox = document.getElementById("reviewerSearch");
+	const listBox = document.getElementById("reviewerList");
 	const limit = 3;
-	container.innerHTML = '';
+	container.innerHTML = "";
 	const selected = Array.from(window.checkedReviewers);
-	selected.forEach(id => {
-		const reviewer = window.allReviewers.find(r => r.reviewer_id == id);
+	selected.forEach((id) => {
+		const reviewer = window.allReviewers.find((r) => r.reviewer_id == id);
 		if (reviewer) {
-			const item = document.createElement('div');
-			item.className = 'selected-item';
-			item.innerHTML = getAvatarOrInitials(reviewer.reviewer_name, reviewer.profileImg) + reviewer.reviewer_name;
-			const btn = document.createElement('button');
-			btn.className = 'remove-btn';
-			btn.innerHTML = '&times;';
-			btn.onclick = function() {
+			const item = document.createElement("div");
+			item.className = "selected-item";
+			item.innerHTML =
+				getAvatarOrInitials(reviewer.reviewer_name, reviewer.profileImg) +
+				reviewer.reviewer_name;
+			const btn = document.createElement("button");
+			btn.className = "remove-btn";
+			btn.innerHTML = "&times;";
+			btn.onclick = function () {
 				window.checkedReviewers.delete(id);
 				updateSelectedReviewersContainer();
 				// Uncheck in the list
-				document.querySelectorAll('#reviewerList input[type="checkbox"]').forEach(cb => {
-					if (cb.value == id) cb.checked = false;
-				});
+				document
+					.querySelectorAll('#reviewerList input[type="checkbox"]')
+					.forEach((cb) => {
+						if (cb.value == id) cb.checked = false;
+					});
 				// Show search/list if less than limit
 				if (window.checkedReviewers.size < limit) {
-					searchBox.style.display = '';
-					listBox.style.display = '';
+					searchBox.style.display = "";
+					listBox.style.display = "";
 				}
 			};
 			item.appendChild(btn);
@@ -308,43 +324,49 @@ function updateSelectedReviewersContainer() {
 		}
 	});
 	if (window.checkedReviewers.size >= limit) {
-		searchBox.style.display = 'none';
-		listBox.style.display = 'none';
+		searchBox.style.display = "none";
+		listBox.style.display = "none";
 	} else {
-		searchBox.style.display = '';
-		listBox.style.display = '';
+		searchBox.style.display = "";
+		listBox.style.display = "";
 	}
 }
 
 function updateSelectedCollaboratorsContainer() {
-	const container = document.getElementById('selectedCollaboratorsContainer');
-	const searchBox = document.getElementById('memberSearch');
-	const listBox = document.getElementById('memberList');
+	const container = document.getElementById("selectedCollaboratorsContainer");
+	const searchBox = document.getElementById("memberSearch");
+	const listBox = document.getElementById("memberList");
 	const limit = 3;
-	container.innerHTML = '';
+	container.innerHTML = "";
 	const selected = Array.from(window.checkedMembers);
-	selected.forEach(id => {
-		const member = window.allMembers.find(m => m.student_id == id);
+	selected.forEach((id) => {
+		const member = window.allMembers.find((m) => m.student_id == id);
 		if (member) {
-			const item = document.createElement('div');
-			item.className = 'selected-item';
-			item.innerHTML = getAvatarOrInitials(member.student_name, member.profileImg) + member.student_name;
-			const btn = document.createElement('button');
-			btn.className = 'remove-btn';
-			btn.innerHTML = '&times;';
-			btn.onclick = function() {
+			const item = document.createElement("div");
+			item.className = "selected-item";
+			item.innerHTML =
+				getAvatarOrInitials(member.student_name, member.profileImg) +
+				member.student_name;
+			const btn = document.createElement("button");
+			btn.className = "remove-btn";
+			btn.innerHTML = "&times;";
+			btn.onclick = function () {
 				window.checkedMembers.delete(id);
 				updateSelectedCollaboratorsContainer();
 				// Uncheck in the list
-				document.querySelectorAll('#memberList input[type="checkbox"]').forEach(cb => {
-					if (cb.value == id) cb.checked = false;
-				});
+				document
+					.querySelectorAll('#memberList input[type="checkbox"]')
+					.forEach((cb) => {
+						if (cb.value == id) cb.checked = false;
+					});
 				// Optionally, re-render to remove from top if not in search
-				renderMemberList(document.getElementById("memberSearch").value.trim().toLowerCase());
+				renderMemberList(
+					document.getElementById("memberSearch").value.trim().toLowerCase()
+				);
 				// Show search/list if less than limit
 				if (window.checkedMembers.size < limit) {
-					searchBox.style.display = '';
-					listBox.style.display = '';
+					searchBox.style.display = "";
+					listBox.style.display = "";
 				}
 			};
 			item.appendChild(btn);
@@ -352,10 +374,10 @@ function updateSelectedCollaboratorsContainer() {
 		}
 	});
 	if (window.checkedMembers.size >= limit) {
-		searchBox.style.display = 'none';
-		listBox.style.display = 'none';
+		searchBox.style.display = "none";
+		listBox.style.display = "none";
 	} else {
-		searchBox.style.display = '';
-		listBox.style.display = '';
+		searchBox.style.display = "";
+		listBox.style.display = "";
 	}
 }

@@ -20,21 +20,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $student_id = isset($_POST['student_id']) ? $_POST['student_id'] : '';
     $fname = isset($_POST['fname']) ? $_POST['fname'] : '';
     $lname = isset($_POST['lname']) ? $_POST['lname'] : '';
-    $reviewer_id = isset($_POST['reviewer_id']) ? $_POST['reviewer_id'] : '';
+    $reviewer_ids = isset($_POST['reviewer_ids']) ? $_POST['reviewer_ids'] : [];
+    if (!is_array($reviewer_ids)) {
+        $reviewer_ids = [$reviewer_ids];
+    }
     $member_ids = isset($_POST['member_ids']) ? $_POST['member_ids'] : [];
     $date = date('Y-m-d');
     if (!is_array($member_ids)) {
         $member_ids = [$member_ids];
     }
 
-    if (empty($title) || empty($student_id) || empty($fname) || empty($lname) || empty($reviewer_id)) {
+    if (empty($title) || empty($student_id) || empty($fname) || empty($lname) || empty($reviewer_ids)) {
         echo json_encode(["status" => "failed", "message" => "Please fill in all the input."]);
         exit;
     }
 
     // Example: fetch reviewer name
     $reviewerName = '';
-    $reviewerQuery = mysqli_query($connect, "SELECT fname, lname FROM Reviewer WHERE reviewer_id = '$reviewer_id'");
+    $reviewerQuery = mysqli_query($connect, "SELECT fname, lname FROM Reviewer WHERE reviewer_id = '$reviewer_ids[0]'");
     if ($reviewerQuery && $row = mysqli_fetch_assoc($reviewerQuery)) {
         $reviewerName = $row['fname'] . ' ' . $row['lname'];
     }
@@ -121,18 +124,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
+
+
+
+
+
+
+
     $uniqueBase = uniqid('apa_', true);
     $docxName = $uniqueBase . '.docx';
     $docxPath = $uploadDir . $docxName;
     $writer = IOFactory::createWriter($phpWord, 'Word2007');
     $writer->save($docxPath);
 
-    // Path to LibreOffice executable
     $libreOfficePath = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
 
-    // Command to convert DOCX to PDF
     $command = "\"$libreOfficePath\" --headless --convert-to pdf --outdir \"$uploadDir\" \"$docxPath\"";
     exec($command, $output, $resultCode);
+
+
 
     $pdfName = pathinfo($docxName, PATHINFO_FILENAME) . '.pdf';
     $pdfPath = $uploadDir . $pdfName;
@@ -154,7 +164,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $status = 'pending';
     $message = '';
     $member_ids = implode(',', $member_ids);
-    mysqli_stmt_bind_param($stmt, 'sssssssssssssss', $student_id, $fname, $lname, $title, $abstract, $introduction, $project_objective, $significance_of_study, $system_analysis_and_design, $chapter, $message, $member_ids, $pdfName, $reviewer_id, $status);
+    $reviewer_ids_json = json_encode($reviewer_ids);
+    mysqli_stmt_bind_param($stmt, 'sssssssssssssss', $student_id, $fname, $lname, $title, $abstract, $introduction, $project_objective, $significance_of_study, $system_analysis_and_design, $chapter, $message, $member_ids, $pdfName, $reviewer_ids_json, $status);
     $success = mysqli_stmt_execute($stmt);
 
     if ($success) {

@@ -198,6 +198,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						<h1 class="section-title"><i class="fa-solid fa-upload"></i> Upload Documents</h1>
 					</header>
 					<form action="#" id="thesisForm" enctype="multipart/form-data" style="width:100%;">
+						<input type="hidden" name="student_id" value="<?php echo $_SESSION['student_id']; ?>">
+						<input type="hidden" name="fname" value="<?php echo $_SESSION['fname']; ?>">
+						<input type="hidden" name="lname" value="<?php echo $_SESSION['lname']; ?>">
 						<div class="input-group">
 							<!-- <span class="input-icon"><i class="fa-solid fa-heading"></i></span> -->
 							<input type="text" name="title" placeholder="Enter Thesis Title" required class="modern-search" style="margin-bottom:1.2rem;">
@@ -259,7 +262,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/upload.js?v=1.0.15"></script>
+		<script src="../../js/upload.js?v=1.0.16"></script>
 
 	</body>
 </html>
