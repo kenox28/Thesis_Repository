@@ -41,12 +41,9 @@ async function generateAPAReference(e) {
 	const members = formdata.getAll("member_ids[]");
 
 	if (!title || reviewerVals.length !== 3 || !members.length) {
-		Swal.fire({
-			icon: "error",
-			title: "Error!",
-			text: "Please fill in all the required inputs.",
-			confirmButtonColor: "#1976a5",
-		});
+		console.log("title", title);
+		console.log("reviewerVals", reviewerVals);
+		console.log("members", members);
 		return;
 	}
 	// --- End validation ---

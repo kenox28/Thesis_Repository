@@ -502,7 +502,6 @@ $logger->logActivity(
             <a class="sidebar-link" id="nav-students"><i class="fas fa-user-graduate"></i> Students</a>
             <a class="sidebar-link" id="nav-reviewers"><i class="fas fa-user-check"></i> Reviewers</a>
             <a class="sidebar-link" id="nav-publication"><i class="fas fa-book"></i> Publication Thesis</a>
-            <a class="sidebar-link" id="nav-faculty"><i class="fas fa-chalkboard-teacher"></i> Faculty</a>
         </nav>
         <div class="sidebar-logout">
             <button class="sidebar-logout-btn" id="logoutBtn"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -544,7 +543,7 @@ $logger->logActivity(
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../js/admin_dashboard.js?v=1.0.14"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.17"></script>
     <script>
     // Show camera/trash icons on hover
     const wrapper = document.querySelector('.profile-img-wrapper');

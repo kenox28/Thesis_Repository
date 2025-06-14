@@ -23,7 +23,7 @@ if (!$reviewer_id) {
 // Update the 'approved' column in the reviewer table
 $sql = "UPDATE reviewer SET approve = 0 WHERE reviewer_id = '$reviewer_id'";
 if (mysqli_query($connect, $sql)) {
-    echo json_encode(["status" => "success", "message" => "Reviewer approved successfully"]);
+    echo json_encode(["status" => "success", "message" => "Reviewer inactive successfully"]);
 } else {
     echo json_encode(["status" => "error", "message" => "SQL Error: " . mysqli_error($connect)]);
 }

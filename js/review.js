@@ -35,7 +35,7 @@ async function showupload() {
 	}
 
 	const currentRole = data.role || "reviewer";
-	console.log(currentRole);
+	const permissions = data.permissions || [];
 	const uploads = data.uploads || [];
 
 	let rows = "";
@@ -44,17 +44,35 @@ async function showupload() {
 		const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 
 		let continueBtn = "";
-		if (parseInt(u.Chapter, 10) < 4) {
+		if (parseInt(u.Chapter, 10) < 4 && permissions.includes("approve")) {
 			continueBtn = `<button onclick="updateStatus(${u.id}, 'continue', this.closest('.upload-item').querySelector('input[name=message]').value, '${u.Chapter}'); event.stopPropagation();"
 				style="flex:1; background: #1976a5; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #1976a522; transition: background 0.18s; cursor: pointer;">
 				<i class='fas fa-arrow-right'></i> Continue
 			</button>`;
 		}
 		let approveBtn = "";
-		if (parseInt(u.Chapter, 10) === 4 && currentRole === "reviewer") {
+		if (
+			parseInt(u.Chapter, 10) === 4 &&
+			currentRole === "reviewer" &&
+			permissions.includes("approve")
+		) {
 			approveBtn = `<button onclick="updateStatus(${u.id}, 'approved', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
 				style="flex:1; background: #27ae60; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #27ae6022; transition: background 0.18s; cursor: pointer;">
 				<i class='fas fa-check-circle'></i> Approve
+			</button>`;
+		}
+		let rejectBtn = "";
+		if (permissions.includes("reject")) {
+			rejectBtn = `<button onclick="updateStatus(${u.id}, 'rejected', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
+				style="flex:1; background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #e74c3c22; transition: background 0.18s; cursor: pointer;">
+				<i class='fas fa-times-circle'></i> Reject
+			</button>`;
+		}
+		let reviseBtn = "";
+		if (permissions.includes("revise")) {
+			reviseBtn = `<button onclick="openReviseModal('${u.id}', '${u.ThesisFile}'); event.stopPropagation();"
+				style="flex:1; background: #f39c12; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #f39c1222; transition: background 0.18s; cursor: pointer;">
+				<i class='fas fa-edit'></i> Revise
 			</button>`;
 		}
 		rows += `
@@ -77,18 +95,8 @@ async function showupload() {
 					<div style="margin-top: 18px;">
 						<input type="text" name="message" placeholder="Message to student..." style="width: 98%; padding: 10px 14px; border: 1.5px solid #1976a5; border-radius: 6px; font-size: 1rem; outline: none; margin-bottom: 14px;">
 						<div style="display: flex; gap: 12px; flex-wrap: wrap;">
-							<button onclick="updateStatus(${
-								u.id
-							}, 'rejected', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
-								style="flex:1; background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #e74c3c22; transition: background 0.18s; cursor: pointer;">
-								<i class='fas fa-times-circle'></i> Reject
-							</button>
-							<button onclick="openReviseModal('${u.id}', '${
-			u.ThesisFile
-		}'); event.stopPropagation();"
-								style="flex:1; background: #f39c12; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #f39c1222; transition: background 0.18s; cursor: pointer;">
-								<i class='fas fa-edit'></i> Revise
-							</button>
+							${rejectBtn}
+							${reviseBtn}
 							${continueBtn}
 							${approveBtn}
 						</div>

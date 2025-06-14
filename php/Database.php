@@ -64,6 +64,13 @@ $reviewer = "CREATE TABLE IF NOT EXISTS reviewer (
     updated DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 )";
 
+$result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'permissions'");
+if ($result && mysqli_num_rows($result) == 0) {
+    $add_column = "ALTER TABLE reviewer ADD COLUMN permissions VARCHAR(255) DEFAULT 'view'";
+    mysqli_query($connect, $add_column);
+}
+
+
 $result = mysqli_query($connect, "SHOW COLUMNS FROM reviewer LIKE 'Approve'");
 
 if ($result === false) {

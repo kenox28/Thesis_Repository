@@ -34,6 +34,11 @@ async function showupload() {
 		return;
 	}
 
+	const permissions = data.permissions || [];
+	const uploads = data.uploads || [];
+
+	console.log("Permissions received:", permissions);
+
 	// Add search bar and table container
 	let html = `
 	<div style="display:flex;justify-content:flex-end;margin-bottom:1.2rem;">
@@ -66,6 +71,14 @@ async function showupload() {
 			const filePath = "../../assets/thesisfile/" + u.ThesisFile;
 			const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 			const rowId = `rowmsg_${u.id}`;
+			let rejectBtn = "";
+			if (permissions.includes("reject")) {
+				rejectBtn = `<button onclick="updateStatus(${u.id}, 'rejected', document.getElementById('${rowId}').value); event.stopPropagation();" class="btn-action reject"><i class='fas fa-times-circle'></i> Reject </button>`;
+			}
+			let approveBtn = "";
+			if (permissions.includes("approve")) {
+				approveBtn = `<button onclick="updateStatus(${u.id}, 'continue', document.getElementById('${rowId}').value); event.stopPropagation();" class="btn-action approve"><i class='fas fa-check-circle'></i> Approve </button>`;
+			}
 			rows += `
 				<tr>
 					<td style="text-align:center;">
@@ -86,14 +99,8 @@ async function showupload() {
 							style="width:99%;padding:7px 10px;border:1.5px solid #1976a5;border-radius:6px;font-size:1rem;outline:none;">
 					</td>
 					<td>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'rejected', document.getElementById('${rowId}').value); event.stopPropagation();"
-							class="btn-action reject"><i class='fas fa-times-circle'></i> Reject </button>
-						<button onclick="updateStatus(${
-							u.id
-						}, 'continue', document.getElementById('${rowId}').value); event.stopPropagation();"
-							class="btn-action approve"><i class='fas fa-check-circle'></i> Approve </button>
+						${rejectBtn}
+						${approveBtn}
 					</td>
 				</tr>
 			`;
@@ -123,14 +130,14 @@ async function showupload() {
 		});
 	}
 
-	renderRows(data);
+	renderRows(uploads);
 
 	// Search functionality
 	document
 		.getElementById("proposalSearchInput")
 		.addEventListener("input", function () {
 			const val = this.value.trim().toLowerCase();
-			const filtered = data.filter(
+			const filtered = uploads.filter(
 				(u) =>
 					`${u.lname}, ${u.fname}`.toLowerCase().includes(val) ||
 					(u.title && u.title.toLowerCase().includes(val))

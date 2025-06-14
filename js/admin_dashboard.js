@@ -13,7 +13,6 @@ function setupSidebarNavigation() {
 		students: document.getElementById("nav-students"),
 		reviewers: document.getElementById("nav-reviewers"),
 		publication: document.getElementById("nav-publication"),
-		faculty: document.getElementById("nav-faculty"),
 	};
 	Object.entries(navLinks).forEach(([section, link]) => {
 		if (link) {
@@ -47,8 +46,6 @@ function showSection(section) {
 			renderReviewersSection();
 		} else if (section === "publication") {
 			loadPublicationThesisSection();
-		} else if (section === "faculty") {
-			renderFacultySection();
 		}
 	}
 }
@@ -168,9 +165,6 @@ function renderStudentCards(students) {
 					<option value=\"reviewer\" ${
 						student.role === "reviewer" ? "selected" : ""
 					}>Reviewer</option>
-					<option value=\"Faculty\" ${
-						student.role === "Faculty" ? "selected" : ""
-					}>Faculty</option>
 				</select>
 			</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
@@ -314,9 +308,6 @@ function renderReviewerTable(reviewers) {
 					<option value=\"student\" ${
 						reviewer.role === "student" ? "selected" : ""
 					}>Student</option>
-					<option value=\"Faculty\" ${
-						reviewer.role === "Faculty" ? "selected" : ""
-					}>Faculty</option>
 				</select>
 			</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
@@ -329,9 +320,11 @@ function renderReviewerTable(reviewers) {
 					<button onclick=\"removeReviewer('${
 						reviewer.reviewer_id
 					}')\" class=\"pill-btn pill-btn-red\">Remove</button>
-					<button onclick=\"approveReviewer('${
-						reviewer.reviewer_id
-					}')\" class=\"pill-btn pill-btn-blue\">Approve</button>
+					${
+						reviewer.Approve == 1
+							? `<button onclick=\"inactiveReviewer('${reviewer.reviewer_id}')\" class=\"pill-btn pill-btn-gray\">Inactive</button>`
+							: `<button onclick=\"approveReviewer('${reviewer.reviewer_id}')\" class=\"pill-btn pill-btn-blue\">Approve</button>`
+					}
 				</div>
 			</td>
 		</tr>`;
@@ -391,7 +384,12 @@ async function approveReviewer(reviewerId) {
 			{ reviewer_id: reviewerId }
 		);
 		if (!result) return;
-		alert(result.message);
+		Swal.fire({
+			icon: "success",
+			title: "Success",
+			text: result.message,
+			confirmButtonColor: "#1976a5",
+		});
 		if (result.status === "success") {
 			showSection(currentSection);
 			updateDashboardWidgets();
@@ -770,172 +768,27 @@ function setupThesisSearch(theses) {
 	});
 }
 
-function renderFacultySection() {
-	const dashboardContent = document.getElementById("dashboardContent");
-	dashboardContent.innerHTML = `
-		<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;margin-bottom:1.2rem;margin-top:0.5rem;position:relative;">
-			<div style="position:absolute;top:-30px;right:-30px;width:90px;height:90px;background:linear-gradient(135deg,#1976a5 0%,#cadcfc 100%);opacity:0.10;border-radius:50%;z-index:0;"></div>
-			<div style="position:absolute;bottom:-30px;left:-30px;width:90px;height:90px;background:linear-gradient(135deg,#cadcfc 0%,#1976a5 100%);opacity:0.10;border-radius:50%;z-index:0;"></div>
-			<div style="position:relative;z-index:1;background:rgba(255,255,255,0.22);backdrop-filter:blur(10px);border-radius:22px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.10);padding:1.2rem 2.2rem;min-width:320px;max-width:480px;width:100%;display:flex;align-items:center;gap:0.7rem;">
-				<i class='fas fa-chalkboard-teacher' style='font-size:1.5rem;color:#1976a5;'></i>
-				<span style="font-size:1.35rem;font-weight:700;color:#1976a5;letter-spacing:1px;">FACULTY MEMBERS</span>
-			</div>
-		</div>
-		<div class="faculty-search-bar" style="position:sticky;top:0;z-index:20;background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);padding:1.2rem 0 1.2rem 0;margin-bottom:2.2rem;display:flex;justify-content:center;align-items:center;gap:1rem;box-shadow:0 2px 12px #cadcfc22;">
-			<input id="facultySearchInput" type="text" placeholder="Search faculty by name, ID, or email..." style="width:340px;padding:0.8rem 1.2rem;border-radius:24px;border:none;font-size:1.08rem;background:rgba(255,255,255,0.7);box-shadow:0 2px 8px #cadcfc22;outline:none;">
-			<button id="facultySearchClear" style="background:none;border:none;color:#1976a5;font-size:1.2rem;cursor:pointer;display:none;"><i class="fas fa-times-circle"></i></button>
-		</div>
-		<div id="facultyGrid" class="faculty-grid" style="display:flex;flex-direction:column;align-items:center;gap:2.2rem;width:100%;"></div>
-	`;
-	fetch("../../php/admin/get_faculty.php")
-		.then((r) => r.json())
-		.then((data) => {
-			if (
-				data.status === "success" &&
-				data.faculty &&
-				data.faculty.length > 0
-			) {
-				renderFacultyCards(data.faculty);
-				setupFacultySearch(data.faculty);
-			} else {
-				document.getElementById("facultyGrid").innerHTML =
-					'<div class="no-students">No faculty members found.</div>';
-			}
-		})
-		.catch((err) => {
-			document.getElementById("facultyGrid").innerHTML =
-				'<div class="error-message">Failed to load faculty. Please try again later.</div>';
-		});
-}
-
-function renderFacultyCards(faculty) {
-	const grid = document.getElementById("facultyGrid");
-	grid.innerHTML = "";
-	faculty.forEach((member) => {
-		const card = document.createElement("div");
-		card.className = "faculty-glass-card";
-		card.style = `background:rgba(255,255,255,0.22);backdrop-filter:blur(8px);border-radius:22px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);padding:2.2rem 2.2rem 1.5rem 2.2rem;width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center;transition:box-shadow 0.2s,transform 0.2s;margin-bottom:1.2rem;position:relative;`;
-		const profileImg =
-			"../../assets/ImageProfile/" + (member.profileImg || "noprofile.png");
-		card.innerHTML = `
-			<div style="display:flex;align-items:center;gap:1.2rem;width:100%;margin-bottom:1.1rem;">
-				<img src="${profileImg}" alt="${member.fname} ${
-			member.lname
-		}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #1976a5;box-shadow:0 2px 8px #cadcfc33;background:#f4f8ff;">
-				<div style="flex:1;">
-					<div style="font-size:1.18rem;font-weight:700;color:#1976a5;letter-spacing:0.2px;">${
-						member.fname
-					} ${member.lname}</div>
-					<div style="font-size:0.98rem;color:#666;margin-top:2px;">${
-						member.reviewer_id
-					}</div>
-					<div style="font-size:0.98rem;color:#666;">${member.email}</div>
-				</div>
-			</div>
-			<div style="font-size:0.98rem;color:${
-				member.Approve == 1 ? "#1976a5" : "#e74c3c"
-			};font-weight:600;">
-				Approved: <span style="color:#1976a5;">${
-					member.Approve == 1 ? "Yes" : "No"
-				}</span>
-			</div>
-			<div style="display:flex;gap:0.7rem;width:100%;justify-content:center;flex-wrap:wrap;">
-				<button class="btn-role-glass" onclick="setRole('${
-					member.reviewer_id
-				}', 'reviewer')">Set Role to Reviewer</button>
-				<button class="btn-role-glass" onclick="setRole('${
-					member.reviewer_id
-				}', 'student')">Set Role to Student</button>
-				<button onclick="removeReviewer('${
-					member.reviewer_id
-				}')" class="pill-btn pill-btn-red">Remove</button>
-				${
-					member.Approve == 1
-						? `<button onclick="inactiveReviewer('${member.reviewer_id}')" class="pill-btn pill-btn-gray">Inactive</button>`
-						: `<button onclick="approveFaculty('${member.reviewer_id}')" class="pill-btn pill-btn-blue">Approve</button>`
-				}
-			</div>
-		`;
-		grid.appendChild(card);
-	});
-}
-
-function setupFacultySearch(faculty) {
-	const input = document.getElementById("facultySearchInput");
-	const clearBtn = document.getElementById("facultySearchClear");
-	input.addEventListener("input", function () {
-		const val = input.value.trim().toLowerCase();
-		clearBtn.style.display = val ? "inline" : "none";
-		const filtered = faculty.filter(
-			(f) =>
-				(f.fname + " " + f.lname).toLowerCase().includes(val) ||
-				f.reviewer_id.toLowerCase().includes(val) ||
-				f.email.toLowerCase().includes(val)
-		);
-		renderFacultyCards(filtered);
-	});
-	clearBtn.addEventListener("click", function () {
-		input.value = "";
-		clearBtn.style.display = "none";
-		renderFacultyCards(faculty);
-		input.focus();
-	});
-}
-
-// Optionally, add a viewFaculty function for modal/details
-window.viewFaculty = function (facultyId) {
-	// You can implement a modal or details fetch here, similar to viewStudent
-	alert("View details for faculty ID: " + facultyId);
-};
-
-async function showdroptdown() {
-	const res = await fetch("../../php/student/showreviewer.php");
-	const data = await res.json();
-
-	let options = "";
-	for (const u of data) {
-		options += `<option value="${u.reviewer_id}">${u.reviewer_name}</option>`;
-	}
-	document.getElementById("reviewerDropdown").innerHTML = options;
-	// Initialize Select2 here
-	$("#reviewerDropdown").select2({
-		placeholder: "Select Reviewer(s)",
-		allowClear: true,
-	});
-}
-
-async function showdorpdownmember() {
-	const res = await fetch("../../php/student/showmember.php");
-	const data = await res.json();
-
-	let options = "";
-	for (const u of data) {
-		options += `<option value="${u.student_id}">${u.student_name}</option>`;
-	}
-	document.getElementById("memberDropdown").innerHTML = options;
-	// Initialize Select2 here
-	$("#memberDropdown").select2({
-		placeholder: "Select Member(s)",
-		allowClear: true,
-	});
-}
-
-async function approveFaculty(facultyId) {
+async function inactiveReviewer(reviewerId) {
 	try {
 		const result = await fetchData(
-			"../../php/admin/approve_faculty.php",
+			"../../php/admin/inactive_reviewer.php",
 			"POST",
-			{ reviewer_id: facultyId }
+			{ reviewer_id: reviewerId }
 		);
 		if (!result) return;
-		alert(result.message);
+		Swal.fire({
+			icon: "success",
+			title: "Success",
+			text: result.message,
+			confirmButtonColor: "#1976a5",
+		});
 		if (result.status === "success") {
 			showSection(currentSection);
 			updateDashboardWidgets();
 		}
 	} catch (error) {
-		console.error("Error approving faculty:", error);
-		alert("An error occurred while approving the faculty.");
+		console.error("Error setting reviewer inactive:", error);
+		alert("An error occurred while setting the reviewer inactive.");
 	}
 }
 
@@ -962,6 +815,8 @@ if (!document.getElementById("permissionsModal")) {
 	`;
 	document.body.appendChild(modal);
 }
+
+// Make the function global so inline onclick works
 window.openPermissionsModal = function (reviewerId, permissions) {
 	document.getElementById("permissionsModal").style.display = "block";
 	document.getElementById("permReviewerId").value = reviewerId;
@@ -972,6 +827,7 @@ window.openPermissionsModal = function (reviewerId, permissions) {
 			cb.checked = perms.includes(cb.value);
 		});
 };
+
 document.getElementById("permissionsForm").onsubmit = async function (e) {
 	e.preventDefault();
 	const reviewerId = document.getElementById("permReviewerId").value;
