@@ -524,17 +524,17 @@ $logger->logActivity(
                 <div class="widget-card">
                     <div class="widget-icon"><i class="fas fa-user-graduate"></i></div>
                     <div class="widget-title">Total Students</div>
-                    <div class="widget-value" id="widgetStudents">0</div>
+                    <div class="widget-value"><span id="widgetStudents"></span></div>
                 </div>
                 <div class="widget-card">
                     <div class="widget-icon"><i class="fas fa-user-check"></i></div>
                     <div class="widget-title">Total Reviewers</div>
-                    <div class="widget-value" id="widgetReviewers">0</div>
+                    <div class="widget-value" id="widgetReviewers"><span id="widgetReviewers"></span></div>
                 </div>
                 <div class="widget-card">
                     <div class="widget-icon"><i class="fas fa-book"></i></div>
                     <div class="widget-title">Total Thesis</div>
-                    <div class="widget-value" id="widgetThesis">0</div>
+                    <div class="widget-value" id="widgetThesis"><span id="widgetThesis"></span></div>
                 </div>
             </div>
         </div>
@@ -544,7 +544,7 @@ $logger->logActivity(
         </div>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../../js/admin_dashboard.js?v=1.0.13"></script>
+    <script src="../../js/admin_dashboard.js?v=1.0.14"></script>
     <script>
     // Show camera/trash icons on hover
     const wrapper = document.querySelector('.profile-img-wrapper');

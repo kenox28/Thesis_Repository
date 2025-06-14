@@ -16,13 +16,15 @@ function setupSidebarNavigation() {
 		faculty: document.getElementById("nav-faculty"),
 	};
 	Object.entries(navLinks).forEach(([section, link]) => {
-		link.addEventListener("click", () => {
-			document
-				.querySelectorAll(".sidebar-link")
-				.forEach((l) => l.classList.remove("active"));
-			link.classList.add("active");
-			showSection(section);
-		});
+		if (link) {
+			link.addEventListener("click", () => {
+				document
+					.querySelectorAll(".sidebar-link")
+					.forEach((l) => l.classList.remove("active"));
+				link.classList.add("active");
+				showSection(section);
+			});
+		}
 	});
 }
 
@@ -64,10 +66,14 @@ function updateDashboardWidgets() {
 				reviewersData,
 				thesisData,
 			});
-			document.getElementById("widgetStudents").textContent =
-				studentsData.students ? studentsData.students.length : 0;
+			const widgetStudents = document.getElementById("widgetStudents");
+			if (widgetStudents)
+				widgetStudents.textContent = studentsData.students
+					? studentsData.students.length
+					: 0;
 			if (reviewersData.data) {
-				document.getElementById("widgetReviewers").textContent = reviewersData.data.length;
+				document.getElementById("widgetReviewers").textContent =
+					reviewersData.data.length;
 			} else {
 				document.getElementById("widgetReviewers").textContent = 0;
 			}
@@ -123,9 +129,10 @@ function renderStudentsSection() {
 
 function renderStudentCards(students) {
 	const grid = document.getElementById("studentsGrid");
-	grid.innerHTML = '';
+	grid.innerHTML = "";
 	if (!students.length) {
-		grid.innerHTML = '<div class="no-students">No students registered yet.</div>';
+		grid.innerHTML =
+			'<div class="no-students">No students registered yet.</div>';
 		return;
 	}
 	let table = `<div style=\"overflow-x:auto;width:100%;margin-left:0.5rem;\">
@@ -140,22 +147,40 @@ function renderStudentCards(students) {
 				</tr>
 			</thead>
 			<tbody>`;
-	students.forEach(student => {
+	students.forEach((student) => {
 		table += `<tr style=\"border-bottom:1px solid #e3eafc;transition:background 0.15s;\" onmouseover=\"this.style.background='#f3f8fd'\" onmouseout=\"this.style.background=''\">
-			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${student.student_id}</td>
-			<td style=\"padding:6px 6px;vertical-align:middle;font-weight:600;color:#1976a5;text-align:left;\">${student.fname} ${student.lname}</td>
-			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${student.email}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${
+				student.student_id
+			}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;font-weight:600;color:#1976a5;text-align:left;\">${
+				student.fname
+			} ${student.lname}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${
+				student.email
+			}</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
-				<select style=\"padding:0.25rem 0.7rem;border-radius:8px;border:1px solid #b5c7d3;background:#f7faff;font-size:0.98rem;\" onchange=\"setRole('${student.student_id}', this.value)\">
-					<option value=\"student\" ${student.role === 'student' ? 'selected' : ''}>Student</option>
-					<option value=\"reviewer\" ${student.role === 'reviewer' ? 'selected' : ''}>Reviewer</option>
-					<option value=\"Faculty\" ${student.role === 'Faculty' ? 'selected' : ''}>Faculty</option>
+				<select style=\"padding:0.25rem 0.7rem;border-radius:8px;border:1px solid #b5c7d3;background:#f7faff;font-size:0.98rem;\" onchange=\"setRole('${
+					student.student_id
+				}', this.value)\">
+					<option value=\"student\" ${
+						student.role === "student" ? "selected" : ""
+					}>Student</option>
+					<option value=\"reviewer\" ${
+						student.role === "reviewer" ? "selected" : ""
+					}>Reviewer</option>
+					<option value=\"Faculty\" ${
+						student.role === "Faculty" ? "selected" : ""
+					}>Faculty</option>
 				</select>
 			</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
 				<div style=\"display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;\">
-					<button onclick=\"viewStudent('${student.student_id}')\" class=\"pill-btn pill-btn-blue\" title=\"View\" style=\"padding:0.35rem 0.6rem;font-size:1rem;min-width:32px;\"><i class=\"fas fa-eye\"></i></button>
-					<button onclick=\"deleteStudent('${student.student_id}')\" class=\"pill-btn pill-btn-red\" title=\"Delete\" style=\"padding:0.35rem 0.6rem;font-size:1rem;min-width:32px;\"><i class=\"fas fa-trash\"></i></button>
+					<button onclick=\"viewStudent('${
+						student.student_id
+					}')\" class=\"pill-btn pill-btn-blue\" title=\"View\" style=\"padding:0.35rem 0.6rem;font-size:1rem;min-width:32px;\"><i class=\"fas fa-eye\"></i></button>
+					<button onclick=\"deleteStudent('${
+						student.student_id
+					}')\" class=\"pill-btn pill-btn-red\" title=\"Delete\" style=\"padding:0.35rem 0.6rem;font-size:1rem;min-width:32px;\"><i class=\"fas fa-trash\"></i></button>
 				</div>
 			</td>
 		</tr>`;
@@ -244,7 +269,7 @@ function renderReviewersSection() {
 
 function renderReviewerTable(reviewers) {
 	const grid = document.getElementById("reviewersGrid");
-	grid.innerHTML = '';
+	grid.innerHTML = "";
 	if (!reviewers.length) {
 		grid.innerHTML = '<div class="no-students">No reviewers found.</div>';
 		return;
@@ -263,26 +288,50 @@ function renderReviewerTable(reviewers) {
 				</tr>
 			</thead>
 			<tbody>`;
-	reviewers.forEach(reviewer => {
+	reviewers.forEach((reviewer) => {
 		table += `<tr style=\"border-bottom:1px solid #e3eafc;transition:background 0.15s;\" onmouseover=\"this.style.background='#f3f8fd'\" onmouseout=\"this.style.background=''\">
-			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${reviewer.reviewer_id}</td>
-			<td style=\"padding:6px 6px;vertical-align:middle;font-weight:600;color:#1976a5;text-align:left;\">${reviewer.fname} ${reviewer.lname}</td>
-			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${reviewer.email}</td>
-			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${reviewer.last_active ? new Date(reviewer.last_active).toLocaleString() : 'Never logged in'}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${
+				reviewer.reviewer_id
+			}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;font-weight:600;color:#1976a5;text-align:left;\">${
+				reviewer.fname
+			} ${reviewer.lname}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${
+				reviewer.email
+			}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${
+				reviewer.last_active
+					? new Date(reviewer.last_active).toLocaleString()
+					: "Never logged in"
+			}</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
-				<select style=\"padding:0.25rem 0.7rem;border-radius:8px;border:1px solid #b5c7d3;background:#f7faff;font-size:0.98rem;\" onchange=\"setRole('${reviewer.reviewer_id}', this.value)\">
-					<option value=\"reviewer\" ${reviewer.role === 'reviewer' ? 'selected' : ''}>Reviewer</option>
-					<option value=\"student\" ${reviewer.role === 'student' ? 'selected' : ''}>Student</option>
-					<option value=\"Faculty\" ${reviewer.role === 'Faculty' ? 'selected' : ''}>Faculty</option>
+				<select style=\"padding:0.25rem 0.7rem;border-radius:8px;border:1px solid #b5c7d3;background:#f7faff;font-size:0.98rem;\" onchange=\"setRole('${
+					reviewer.reviewer_id
+				}', this.value)\">
+					<option value=\"reviewer\" ${
+						reviewer.role === "reviewer" ? "selected" : ""
+					}>Reviewer</option>
+					<option value=\"student\" ${
+						reviewer.role === "student" ? "selected" : ""
+					}>Student</option>
+					<option value=\"Faculty\" ${
+						reviewer.role === "Faculty" ? "selected" : ""
+					}>Faculty</option>
 				</select>
 			</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
-				<button onclick=\"openPermissionsModal('${reviewer.reviewer_id}', '${reviewer.permissions || 'view'}')\">Set</button>
+				<button onclick=\"openPermissionsModal('${reviewer.reviewer_id}', '${
+			reviewer.permissions || "view"
+		}')\">Set</button>
 			</td>
 			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
 				<div style=\"display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;\">
-					<button onclick=\"removeReviewer('${reviewer.reviewer_id}')\" class=\"pill-btn pill-btn-red\">Remove</button>
-					<button onclick=\"approveReviewer('${reviewer.reviewer_id}')\" class=\"pill-btn pill-btn-blue\">Approve</button>
+					<button onclick=\"removeReviewer('${
+						reviewer.reviewer_id
+					}')\" class=\"pill-btn pill-btn-red\">Remove</button>
+					<button onclick=\"approveReviewer('${
+						reviewer.reviewer_id
+					}')\" class=\"pill-btn pill-btn-blue\">Approve</button>
 				</div>
 			</td>
 		</tr>`;
@@ -891,10 +940,10 @@ async function approveFaculty(facultyId) {
 }
 
 // Add modal HTML to the page (if not present)
-if (!document.getElementById('permissionsModal')) {
-	const modal = document.createElement('div');
-	modal.id = 'permissionsModal';
-	modal.style.display = 'none';
+if (!document.getElementById("permissionsModal")) {
+	const modal = document.createElement("div");
+	modal.id = "permissionsModal";
+	modal.style.display = "none";
 	modal.innerHTML = `
 		<div style='position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.3);z-index:9999;display:flex;align-items:center;justify-content:center;'>
 			<form id='permissionsForm' style='background:#fff;padding:2rem 2.5rem;border-radius:16px;box-shadow:0 2px 16px #0002;display:flex;flex-direction:column;gap:1.2rem;min-width:260px;'>
@@ -913,23 +962,30 @@ if (!document.getElementById('permissionsModal')) {
 	`;
 	document.body.appendChild(modal);
 }
-window.openPermissionsModal = function(reviewerId, permissions) {
-	document.getElementById('permissionsModal').style.display = 'block';
-	document.getElementById('permReviewerId').value = reviewerId;
-	const perms = (permissions || 'view').split(',');
-	document.querySelectorAll('#permissionsForm input[type=checkbox]').forEach(cb => {
-		cb.checked = perms.includes(cb.value);
-	});
+window.openPermissionsModal = function (reviewerId, permissions) {
+	document.getElementById("permissionsModal").style.display = "block";
+	document.getElementById("permReviewerId").value = reviewerId;
+	const perms = (permissions || "view").split(",");
+	document
+		.querySelectorAll("#permissionsForm input[type=checkbox]")
+		.forEach((cb) => {
+			cb.checked = perms.includes(cb.value);
+		});
 };
-document.getElementById('permissionsForm').onsubmit = async function(e) {
+document.getElementById("permissionsForm").onsubmit = async function (e) {
 	e.preventDefault();
-	const reviewerId = document.getElementById('permReviewerId').value;
-	const perms = Array.from(document.querySelectorAll('#permissionsForm input[type=checkbox]:checked')).map(cb => cb.value);
-	await fetch('../../php/admin/set_reviewer_permissions.php', {
-		method: 'POST',
-		headers: {'Content-Type': 'application/json'},
-		body: JSON.stringify({ reviewer_id: reviewerId, permissions: perms.join(',') })
+	const reviewerId = document.getElementById("permReviewerId").value;
+	const perms = Array.from(
+		document.querySelectorAll("#permissionsForm input[type=checkbox]:checked")
+	).map((cb) => cb.value);
+	await fetch("../../php/admin/set_reviewer_permissions.php", {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({
+			reviewer_id: reviewerId,
+			permissions: perms.join(","),
+		}),
 	});
-	document.getElementById('permissionsModal').style.display = 'none';
-	showSection('reviewers');
+	document.getElementById("permissionsModal").style.display = "none";
+	showSection("reviewers");
 };
