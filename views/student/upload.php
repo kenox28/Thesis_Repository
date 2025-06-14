@@ -21,20 +21,145 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 		<link rel="stylesheet" href="../../assets/css/homepage.css" />
 		<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 		<style>
-			.checkbox-list {
-				max-height: 200px;
-				overflow-y: auto;
-				border: 1px solid #cadcfc;
-				border-radius: 8px;
-				padding: 8px;
+			body {
+				background: #f4f8ff;
+			}
+			.main-content {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				justify-content: center;
+				min-height: 90vh;
+			}
+			.upload-card {
+				background: #fff;
+				border-radius: 18px;
+				box-shadow: 0 8px 32px #1976a522, 0 1.5px 0 #cadcfc;
+				padding: 1.2rem 1.5rem 1.2rem 1.5rem;
+				max-width: 680px;
+				width: 100%;
+				margin: 2rem auto 1rem auto;
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+			}
+			.section-title {
+				font-size: 2.2rem;
+				font-weight: 800;
+				color: #0d47a1;
+				margin-bottom: 0.7rem;
+				letter-spacing: 0.5px;
+				text-align: center;
+			}
+			.modern-label {
+				font-weight: 600;
+				color: #1976a5;
+				margin-bottom: 0.1rem;
+				font-size: 1.08rem;
+				display: block;
+			}
+			.modern-helper {
+				color: #789;
+				font-size: 0.98rem;
+				margin-bottom: 0.2rem;
+				margin-top: -0.1rem;
+				display: block;
+			}
+			.modern-search {
+				width: 100%;
+				padding: 0.6rem 1.1rem;
+				border-radius: 24px;
+				border: 1.5px solid #1976a5;
+				font-size: 1.08rem;
 				background: #f7faff;
-				margin-bottom: 1em;
+				outline: none;
+				box-shadow: 0 2px 8px #cadcfc22;
+				margin-bottom: 0.3rem;
+				transition: border 0.2s;
+			}
+			.modern-search:focus {
+				border: 2px solid #2893c7;
+			}
+			.checkbox-list {
+				border: 1px solid #e3eafc;
+				border-radius: 10px;
+				padding: 6px 8px;
+				background: #f7faff;
+				margin-bottom: 0.3em;
+				width: 100%;
+				box-shadow: 0 1px 4px #1976a511;
+				transition: box-shadow 0.2s;
 			}
 			.checkbox-list label {
-				display: block;
-				margin-bottom: 4px;
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				font-size: 1.04rem;
+				padding: 6px 0;
+				border-radius: 6px;
+				transition: background 0.2s;
+				position: relative;
+			}
+			.checkbox-list label .fa-user, .checkbox-list label .fa-user-tie {
+				color: #1976a5;
+				margin-right: 6px;
+				font-size: 1.1rem;
+			}
+			.checkbox-list label .fa-check-circle {
+				color: #2893c7;
+				margin-left: auto;
+				font-size: 1.1rem;
+				display: none;
+			}
+			.checkbox-list input[type="checkbox"]:checked + .fa-check-circle {
+				display: inline-block;
+			}
+			.selected-container {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 8px;
+				margin-top: 4px;
+				margin-bottom: 0.2rem;
+				width: 100%;
+			}
+			.selected-item .avatar-chip {
+				margin-right: 7px;
+			}
+			.selected-item .fa-user, .selected-item .fa-user-tie {
+				color: #1976a5;
+				margin-right: 7px;
+				font-size: 1.1rem;
+			}
+			.selected-item .remove-btn {
+				margin-left: 8px;
+			}
+			.btn {
+				background: #1976a5;
+				color: #fff;
+				border: none;
+				border-radius: 8px;
+				padding: 0.7rem 1.5rem;
+				font-size: 1.08rem;
+				font-weight: 700;
+				margin-top: 0.7rem;
+				box-shadow: 0 2px 8px #1976a522;
 				cursor: pointer;
+				transition: background 0.2s, box-shadow 0.2s;
+			}
+			.btn:hover {
+				background: #2893c7;
+				box-shadow: 0 4px 16px #1976a555;
+			}
+			@media (max-width: 900px) {
+				.upload-card {
+					max-width: 98vw;
+					padding: 0.7rem 0.3rem;
+				}
+				.section-title {
+					font-size: 1.3rem;
+				}
 			}
 		</style>
 	</head>
@@ -47,12 +172,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				</div>
 				<div class="nav-links">
 				<a href="public_repo.php">Home</a>
-                    <a href="upload.php">Upload Thesis</a>
-					<a href="homepage.php">Pending</a>
-					<a href="approve_title.php">Thesis Progress</a>
-                    <a href="approve_thesis.php">Approved</a>
-					<a href="rejectpage.php">Rejected</a>
-					<!-- <a href="revisepage.php">Revised</a> -->
+					<a href="upload.php">Upload Documents</a>
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -64,53 +184,47 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 					<span class="avatar-name"><?php echo $_SESSION['fname'][0]; ?><?php echo $_SESSION['lname'][0]; ?></span>
 					<div class="dropdown-content">
 						<a href="#" id="profile-link">Profile</a>
+						<a href="homepage.php">Pending</a>
+						<a href="approve_title.php">Thesis Progress</a>
+						<a href="approve_thesis.php">Approved</a>
+						<a href="rejectpage.php">Rejected</a>
 						<a href="#" id="logout-link">Logout</a>
 					</div>
 				</div>
 			</nav>
 			<main class="main-content">
-				<section class="upload-card">
+				<div class="upload-card">
 					<header>
-						<h1 class="section-title">Upload Thesis</h1>
+						<h1 class="section-title"><i class="fa-solid fa-upload"></i> Upload Documents</h1>
 					</header>
-					<form action="#" id="thesisForm" enctype="multipart/form-data">
-						<input type="text" name="title" placeholder="Enter the reference title" required>
-						<!-- <textarea
-							required
-							name="description"
-							class="input"
-							id="description"
-							rows="4"
-							placeholder="Enter the reference description (e.g., author, year, source, etc.)"></textarea> -->
-						<input
-							type="hidden"
-							name="student_id"
-							value="<?php echo $_SESSION['student_id']; ?>" />
-						<input
-							type="hidden"
-							name="fname"
-							value="<?php echo $_SESSION['fname']; ?>" />
-						<input
-							type="hidden"
-							name="lname"
-							value="<?php echo $_SESSION['lname']; ?>" />
-						<input
-							type="hidden"
-							name="profileImg"
-							value="<?php echo $_SESSION['profileImg'];?>"/>
-						<div style="margin-bottom:1.2em;">
-							<label for="reviewerSearch">Search Reviewer:</label>
-							<input type="text" id="reviewerSearch" placeholder="Type to search reviewer..." autocomplete="off" style="width:100%;padding:0.7rem 1.2rem;border-radius:24px;border:1.5px solid #1976a5;font-size:1.08rem;background:#f7faff;outline:none;box-shadow:0 2px 8px #cadcfc22;">
+					<form action="#" id="thesisForm" enctype="multipart/form-data" style="width:100%;">
+						<div class="input-group">
+							<!-- <span class="input-icon"><i class="fa-solid fa-heading"></i></span> -->
+							<input type="text" name="title" placeholder="Enter Thesis Title" required class="modern-search" style="margin-bottom:1.2rem;">
+						</div>
+						<div style="margin-bottom:1.5em; width:100%;">
+							<label for="reviewerSearch" class="modern-label"><i class="fa-solid fa-users-viewfinder"></i> Search Reviewer:</label>
+							<span class="modern-helper">You can select up to 3 reviewers.</span>
+							<div class="input-group">
+								<span class="input-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+								<input type="text" id="reviewerSearch" placeholder="Type to search reviewer..." autocomplete="off" class="modern-search">
+							</div>
 							<div id="reviewerList" class="checkbox-list"></div>
+							<div id="selectedReviewersContainer" class="selected-container"></div>
 						</div>
-						<div style="margin-bottom:1.2em;">
-							<label for="memberSearch">Search Members:</label>
-							<input type="text" id="memberSearch" placeholder="Type to search members..." autocomplete="off" style="width:100%;padding:0.7rem 1.2rem;border-radius:24px;border:1.5px solid #1976a5;font-size:1.08rem;background:#f7faff;outline:none;box-shadow:0 2px 8px #cadcfc22;">
+						<div style="margin-bottom:1.5em; width:100%;">
+							<label for="memberSearch" class="modern-label"><i class="fa-solid fa-user-group"></i> Search Collaborators:</label>
+							<span class="modern-helper">You can select up to 3 collaborators.</span>
+							<div class="input-group">
+								<span class="input-icon"><i class="fa-solid fa-magnifying-glass"></i></span>
+								<input type="text" id="memberSearch" placeholder="Type to search members..." autocomplete="off" class="modern-search">
+							</div>
 							<div id="memberList" class="checkbox-list"></div>
+							<div id="selectedCollaboratorsContainer" class="selected-container"></div>
 						</div>
-						<button type="submit" id="captbtn" class="btn">Submit Proposal</button>
+						<button type="submit" id="captbtn" class="btn"><i class="fa-solid fa-paper-plane"></i> Submit Proposal</button>
 					</form>
-				</section>
+				</div>
 				<div id="apaResult" style="margin-top: 2em;"></div>
 			</main>
 		</div>

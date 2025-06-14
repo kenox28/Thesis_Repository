@@ -132,39 +132,45 @@ function renderStudentsSection() {
 
 function renderStudentCards(students) {
 	const grid = document.getElementById("studentsGrid");
-	grid.innerHTML = "";
-	students.forEach((student) => {
-		const card = document.createElement("div");
-		card.className = "student-glass-card";
-		card.style = `background:rgba(255,255,255,0.22);backdrop-filter:blur(8px);border-radius:22px;box-shadow:0 8px 32px 0 rgba(31,38,135,0.18);padding:2.2rem 2.2rem 1.5rem 2.2rem;width:100%;max-width:600px;display:flex;flex-direction:column;align-items:center;transition:box-shadow 0.2s,transform 0.2s;margin-bottom:1.2rem;position:relative;`;
-		card.onmouseover = () => {
-			card.style.boxShadow = "0 12px 32px 0 rgba(31,38,135,0.22)";
-			card.style.transform = "translateY(-4px) scale(1.03)";
-		};
-		card.onmouseout = () => {
-			card.style.boxShadow = "0 8px 32px 0 rgba(31,38,135,0.18)";
-			card.style.transform = "none";
-		};
-		const profileImg2 = "../../assets/ImageProfile/" + student.profileImg;
-		card.innerHTML = `
-			<div style="display:flex;align-items:center;gap:1.2rem;width:100%;margin-bottom:1.1rem;">
-				<img src="${profileImg2}" alt="${student.fname} ${student.lname}" style="width:64px;height:64px;border-radius:50%;object-fit:cover;border:3px solid #1976a5;box-shadow:0 2px 8px #cadcfc33;background:#f4f8ff;">
-				<div style="flex:1;">
-					<div style="font-size:1.18rem;font-weight:700;color:#1976a5;letter-spacing:0.2px;">${student.fname} ${student.lname}</div>
-					<div style="font-size:0.98rem;color:#666;margin-top:2px;">${student.student_id}</div>
-					<div style="font-size:0.98rem;color:#666;">${student.email}</div>
+	grid.innerHTML = '';
+	if (!students.length) {
+		grid.innerHTML = '<div class="no-students">No students registered yet.</div>';
+		return;
+	}
+	let table = `<div style=\"overflow-x:auto;width:100%;margin-left:0.5rem;\">
+		<table class=\"students-table\" style=\"width:100%;border-collapse:separate;border-spacing:0;background:#fff;border-radius:12px;box-shadow:0 2px 8px #cadcfc22;font-size:1rem;\">
+			<thead>
+				<tr style=\"background:#f7faff;\">
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">ID</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Name</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Email</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Role</th>
+					<th style=\"padding:8px 6px;text-align:left;font-weight:700;color:#1976a5;vertical-align:middle;\">Actions</th>
+				</tr>
+			</thead>
+			<tbody>`;
+	students.forEach(student => {
+		table += `<tr style=\"border-bottom:1px solid #e3eafc;transition:background 0.15s;\" onmouseover=\"this.style.background='#f3f8fd'\" onmouseout=\"this.style.background=''\">
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${student.student_id}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;font-weight:600;color:#1976a5;text-align:left;\">${student.fname} ${student.lname}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;color:#555;text-align:left;\">${student.email}</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
+				<select style=\"padding:0.25rem 0.7rem;border-radius:8px;border:1px solid #b5c7d3;background:#f7faff;font-size:0.98rem;\" onchange=\"setRole('${student.student_id}', this.value)\">
+					<option value=\"student\" ${student.role === 'student' ? 'selected' : ''}>Student</option>
+					<option value=\"reviewer\" ${student.role === 'reviewer' ? 'selected' : ''}>Reviewer</option>
+					<option value=\"Faculty\" ${student.role === 'Faculty' ? 'selected' : ''}>Faculty</option>
+				</select>
+			</td>
+			<td style=\"padding:6px 6px;vertical-align:middle;text-align:left;\">
+				<div style=\"display:flex;gap:0.3rem;align-items:center;flex-wrap:wrap;\">
+					<button onclick=\"viewStudent('${student.student_id}')\" class=\"pill-btn pill-btn-blue\" title=\"View\" style=\"padding:0.35rem 0.6rem;font-size:1rem;min-width:32px;\"><i class=\"fas fa-eye\"></i></button>
+					<button onclick=\"deleteStudent('${student.student_id}')\" class=\"pill-btn pill-btn-red\" title=\"Delete\" style=\"padding:0.35rem 0.6rem;font-size:1rem;min-width:32px;\"><i class=\"fas fa-trash\"></i></button>
 				</div>
-			</div>
-			<button class="btn-role-glass" onclick="setRole('${student.student_id}', 'reviewer')">Set Role to Reviewer</button>
-			<button class="btn-role-glass" onclick="setRole('${student.student_id}', 'Faculty')">Set Role to Faculty</button>
-			<div style="display:flex;gap:0.7rem;width:100%;justify-content:center;">
-				<button onclick="viewStudent('${student.student_id}')" class="pill-btn pill-btn-blue"><i class="fas fa-eye"></i> View</button>
-				<button onclick="editStudent('${student.student_id}')" class="pill-btn pill-btn-gray"><i class="fas fa-edit"></i> Edit</button>
-				<button onclick="deleteStudent('${student.student_id}')" class="pill-btn pill-btn-red"><i class="fas fa-trash"></i> Delete</button>
-			</div>
-		`;
-		grid.appendChild(card);
+			</td>
+		</tr>`;
 	});
+	table += `</tbody></table></div>`;
+	grid.innerHTML = table;
 }
 
 function setupStudentsSearch(students) {
