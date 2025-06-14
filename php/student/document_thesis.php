@@ -171,14 +171,28 @@ $stmt2 = $connect->prepare("UPDATE repoTable SET ThesisFile=?, title=?, abstract
 $stmt2->bind_param("sssssssss", $pdfName, $newtitle, $abstract, $introduction, $project_objective, $significance_of_study, $system_analysis_and_design, $student_id, $title);
 
     if ($stmt2->execute()) {
-    // Optionally, add to thesis_history here
-    //add to thesis_history
-        $stmt4 = $connect->prepare("INSERT INTO thesis_history (thesis_id, student_id, revision_num, file_name, revised_by, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt4->bind_param("iisssss", $thesis_id, $student_id, $next_revision, $newFileName, $revised_by, $status, $notes);
-        $stmt4->execute();
-        $stmt4->close();
+        // Fetch thesis_id from repoTable for thesis_history
+        $stmt3 = $connect->prepare("SELECT thesis_id FROM repoTable WHERE student_id=? AND title=?");
+        $stmt3->bind_param("ss", $student_id, $newtitle);
+        $stmt3->execute();
+        $stmt3->bind_result($thesis_id);
+        $stmt3->fetch();
+        $stmt3->close();
 
-    echo json_encode(['status' => 'success', 'message' => 'File updated and PDF generated successfully.']);
+        $next_revision = 1; // You may want to increment this based on history
+        $newFileName = $pdfName;
+        $revised_by = $studentFullName;
+        $status = 'Pending';
+        $notes = '';
+
+        if (!empty($thesis_id)) {
+            $stmt4 = $connect->prepare("INSERT INTO thesis_history (thesis_id, student_id, revision_num, file_name, revised_by, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt4->bind_param("iisssss", $thesis_id, $student_id, $next_revision, $newFileName, $revised_by, $status, $notes);
+            $stmt4->execute();
+            $stmt4->close();
+        }
+
+        echo json_encode(['status' => 'success', 'message' => 'File updated and PDF generated successfully.']);
     } else {
         echo json_encode(['status' => 'error', 'message' => 'Database update failed.']);
     }
