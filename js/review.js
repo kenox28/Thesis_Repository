@@ -20,8 +20,6 @@ let totalPageCount = 1;
 let highlightsByPage = {};
 let textAnnotationsByPage = {};
 
-window.reviewerPermissions = (window.reviewerPermissions || (typeof PERMISSIONS !== 'undefined' ? PERMISSIONS : ['view']));
-
 function capitalize(str) {
 	if (!str) return "";
 	return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
@@ -52,22 +50,10 @@ async function showupload() {
 				<i class='fas fa-arrow-right'></i> Continue
 			</button>`;
 		}
-		let actionBtns = '';
-		if (window.reviewerPermissions.includes('reject')) {
-			actionBtns += `<button onclick="updateStatus(${u.id}, 'rejected', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
-				style="flex:1; background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #e74c3c22; transition: background 0.18s; cursor: pointer;">
-				<i class='fas fa-times-circle'></i> Reject
-			</button>`;
-		}
-		if (window.reviewerPermissions.includes('revise')) {
-			actionBtns += `<button onclick="openReviseModal('${u.id}', '${u.ThesisFile}'); event.stopPropagation();"
-				style="flex:1; background: #f7b731; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #f7b73122; transition: background 0.18s; cursor: pointer;">
-				<i class='fas fa-edit'></i> Revise
-			</button>`;
-		}
-		if (window.reviewerPermissions.includes('approve')) {
-			actionBtns += `<button onclick="updateStatus(${u.id}, 'approved', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
-				style="flex:1; background: #1976a5; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #1976a522; transition: background 0.18s; cursor: pointer;">
+		let approveBtn = "";
+		if (parseInt(u.Chapter, 10) === 4 && currentRole === "reviewer") {
+			approveBtn = `<button onclick="updateStatus(${u.id}, 'approved', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
+				style="flex:1; background: #27ae60; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #27ae6022; transition: background 0.18s; cursor: pointer;">
 				<i class='fas fa-check-circle'></i> Approve
 			</button>`;
 		}
@@ -90,7 +76,22 @@ async function showupload() {
 					<embed src="${filePath}" width="600" height="400" type="application/pdf">
 					<div style="margin-top: 18px;">
 						<input type="text" name="message" placeholder="Message to student..." style="width: 98%; padding: 10px 14px; border: 1.5px solid #1976a5; border-radius: 6px; font-size: 1rem; outline: none; margin-bottom: 14px;">
-						<div style="display: flex; gap: 12px; flex-wrap: wrap;">${actionBtns}</div>
+						<div style="display: flex; gap: 12px; flex-wrap: wrap;">
+							<button onclick="updateStatus(${
+								u.id
+							}, 'rejected', this.closest('.upload-item').querySelector('input[name=message]').value); event.stopPropagation();"
+								style="flex:1; background: #e74c3c; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #e74c3c22; transition: background 0.18s; cursor: pointer;">
+								<i class='fas fa-times-circle'></i> Reject
+							</button>
+							<button onclick="openReviseModal('${u.id}', '${
+			u.ThesisFile
+		}'); event.stopPropagation();"
+								style="flex:1; background: #f39c12; color: #fff; border: none; border-radius: 6px; padding: 10px 0; font-size: 1rem; font-weight: 600; box-shadow: 0 2px 8px #f39c1222; transition: background 0.18s; cursor: pointer;">
+								<i class='fas fa-edit'></i> Revise
+							</button>
+							${continueBtn}
+							${approveBtn}
+						</div>
 					</div>
 
 					<button onclick="window.location.href='view_Revise.php?thesis_id=${
