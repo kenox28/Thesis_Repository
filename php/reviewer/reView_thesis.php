@@ -28,9 +28,23 @@ if ($result) {
         $row['profileImg'] = $profileImgRow ? $profileImgRow['profileImg'] : null;
         $uploads[] = $row;
     }
+    $permRes = mysqli_query($connect, "SELECT permissions FROM reviewer WHERE reviewer_id = '$reviewer_id'");
+    $permRow = $permRes ? mysqli_fetch_assoc($permRes) : null;
+    $permissions = [];
+    if ($permRow && $permRow['permissions']) {
+        $permVal = $permRow['permissions'];
+        $decoded = json_decode($permVal, true);
+        if (is_array($decoded)) {
+            $permissions = $decoded;
+        } else {
+            // fallback: comma-separated string
+            $permissions = array_map('trim', explode(',', $permVal));
+        }
+    }
     echo json_encode([
         "role" => $currentRole,
-        "uploads" => $uploads
+        "uploads" => $uploads,
+        "permissions" => $permissions
     ]);
 } else {
     echo json_encode(["error" => "Query failed"]);
