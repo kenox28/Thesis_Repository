@@ -446,7 +446,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         <div class="sidebar-profile-role" ><?php echo ucfirst($_SESSION['role']); ?></div>
         <nav class="sidebar-nav">
             <a href="dashboard.php"><i class="fas fa-home"></i> Dashboard</a>
-            <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>\
+            <a href="public_repo.php"><i class="fas fa-file-alt"></i>Public Repository</a>
             <a href="proposal_title.php"><i class="fas fa-file-alt"></i>Title Proposal</a>
 
             <a href="review.php"><i class="fas fa-file-alt"></i> Review</a>
