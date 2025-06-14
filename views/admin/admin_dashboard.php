@@ -194,19 +194,19 @@ $logger->logActivity(
         .sidebar-logout-btn {
             width: 100%;
             background: linear-gradient(90deg, #e74c3c 60%, #c0392b 100%);
-            color: #fff;
+            color: white;
             border: none;
             border-radius: 22px;
-            padding: 1.1rem 0;
+            padding: 0.7 rem 0;
             font-size: 1.18rem;
-            font-weight: 700;
+            font-weight: 00;
             cursor: pointer;
             transition: background 0.2s, box-shadow 0.2s;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 14px;
-            box-shadow: 0 4px 16px #e74c3c33, 0 1.5px 0 #fff2;
+            /* gap: 14px; */
+            /* box-shadow: 0 4px 16px #e74c3c33, 0 1.5px 0 #fff2; */
             position: relative;
             overflow: hidden;
         }
