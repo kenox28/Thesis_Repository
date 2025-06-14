@@ -83,53 +83,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $tableRow->addCell(1000)->addPreserveText('{PAGE}', array_merge($fontStyle, ['align' => 'right']));
 
     for ($i = 0; $i < 7; $i++) $section->addTextBreak(1);
-
-    function toTitleCase($str) {
-        return mb_convert_case($str, MB_CASE_TITLE, "UTF-8");
-    }
-    $section->addText(toTitleCase($title), array_merge($fontStyle, ['bold' => true]), array_merge($center, $paragraphStyle));
+    // Title (centered, not bold, not all caps, capitalize first letter)
+    $section->addText(ucwords($title), array_merge($fontStyle, ['size' => 14]), $center);
     $section->addTextBreak(2);
-
-    // Affiliation, Department, and Course (all centered, APA style)
-    $affiliation = 'EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS';
-    $department = 'Computer Studies';
-    $course = 'Bachelor of Science in Information Technology';
-    $section->addText($affiliation, $fontStyle, $center);
+    // University name (bold, all caps, centered)
+    $section->addText('EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS', array_merge($fontStyle, ['bold' => true, 'size' => 13]), $center);
+    $section->addTextBreak(2);
+    $section->addText('Computer Studies', $fontStyle, $center);
     $section->addTextBreak(1);
-    $section->addText($department, $fontStyle, $center);
+    $section->addText('Bachelor of Science in Information Technology', $fontStyle, $center);
     $section->addTextBreak(1);
-    $section->addText($course, $fontStyle, $center);
+    // Reviewer(s)
+    $section->addText('Reviewer:', $fontStyle, $center);
     $section->addTextBreak(1);
-
-    // Instructor (e.g., Dr. John Smith) with label
-    $instructor = $reviewerName ? $reviewerName : 'Instructor Name';
-    $section->addText('Instructor: ' . $instructor, $fontStyle, $center);
+    if (!empty($reviewer_ids)) {
+        foreach ($reviewer_ids as $rid) {
+            $rid = $connect->real_escape_string($rid);
+            $reviewerQuery = mysqli_query($connect, "SELECT fname, lname FROM reviewer WHERE reviewer_id = '$rid' LIMIT 1");
+            if ($reviewerQuery && $row = mysqli_fetch_assoc($reviewerQuery)) {
+                $section->addText($row['fname'] . ' ' . $row['lname'], $fontStyle, $center);
+            }
+        }
+    }
     $section->addTextBreak(1);
-
-    // Due Date
     $section->addText($date, $fontStyle, $center);
     $section->addTextBreak(2);
-
     $section->addText($studentFullName, $fontStyle, $center);
     $section->addTextBreak(1);
-
     // Members (if any)
-    if ($membersText) {
-        $section->addText($membersText, $fontStyle, $center);
+    if (!empty($memberNames)) {
+        $section->addText('With members:', $fontStyle, $center);
+        foreach ($memberNames as $member) {
+            $section->addText($member, $fontStyle, $center);
+        }
         $section->addTextBreak(2);
     }
-
 
     $uploadDir = '../../assets/thesisfile/';
     if (!file_exists($uploadDir)) {
         mkdir($uploadDir, 0777, true);
     }
-
-
-
-
-
-
 
     $uniqueBase = uniqid('apa_', true);
     $docxName = $uniqueBase . '.docx';
@@ -141,8 +134,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $command = "\"$libreOfficePath\" --headless --convert-to pdf --outdir \"$uploadDir\" \"$docxPath\"";
     exec($command, $output, $resultCode);
-
-
 
     $pdfName = pathinfo($docxName, PATHINFO_FILENAME) . '.pdf';
     $pdfPath = $uploadDir . $pdfName;

@@ -650,7 +650,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <div class="author-info" id="modalOwner"></div>
                 <button id="modalHistoryBtn" class="custom-download-btn" style="margin-bottom:10px;">Revision History</button>
                 <form id="updateForm" enctype="multipart/form-data" style="margin: 16px 0;">
-                    <input type="hidden" name="title" id="modalTitleInput">
+                    <input type="hidden" name="old_title" value="...">
+                    <input type="hidden" name="title" value="...">
                     <input class="custom-file-btn" type="file" name="revised_file" accept="application/pdf" required style="margin-bottom:8px;">
                     <button type="submit" class="custom-upload-btn">Update File</button>
                 </form>
@@ -668,6 +669,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             <div class="revise-modal-unique-body side-by-side">
                 <div class="editor-pane">
                     <form id="reviseModalUniqueUpdateForm" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 18px; align-items: stretch;">
+                        <input type="hidden" name="old_title" value="...">
+                        <input type="hidden" name="title" value="...">
+                        <input type="hidden" name="title" id="reviseModalUniqueTitleInput">
+                        <input type="text" name="newtitle" id="reviseModalUniqueNewTitleInput" placeholder="Title">
                         <label for="reviseModalUniqueIntroductionInput">Introduction</label>
                         <textarea name="introduction" id="reviseModalUniqueIntroductionInput" rows="3" placeholder="Write the introduction..."></textarea>
                         <label for="reviseModalUniqueProjectObjectiveInput">Project Objectives</label>
@@ -798,87 +803,125 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
                 document.getElementById('reviseModalUniqueTitle').textContent = title;
                 document.getElementById('reviseModalUnique').style.display = "flex";
-                setTimeout(function() {
-                    var previewTitle = document.getElementById('previewTitle');
-                    if (previewTitle) previewTitle.textContent = title || '';
-                    // Remove any disabled/readonly attributes from textareas
-                    [
-                        'reviseModalUniqueIntroductionInput',
-                        'reviseModalUniqueProjectObjectiveInput',
-                        'reviseModalUniqueSignificanceOfStudyInput',
-                        'reviseModalUniqueSystemAnalysisAndDesignInput'
-                    ].forEach(function(id) {
-                        var el = document.getElementById(id);
-                        if (el) {
-                            el.removeAttribute('disabled');
-                            el.removeAttribute('readonly');
-                        }
-                    });
-                    // Remove any previous TinyMCE instances
-                    if (window.tinymce) {
-                        tinymce.remove('#reviseModalUniqueIntroductionInput');
-                        tinymce.remove('#reviseModalUniqueProjectObjectiveInput');
-                        tinymce.remove('#reviseModalUniqueSignificanceOfStudyInput');
-                        tinymce.remove('#reviseModalUniqueSystemAnalysisAndDesignInput');
+                document.getElementById('reviseModalUniqueTitleInput').value = title;
+                document.getElementById('reviseModalUniqueNewTitleInput').value = title;
+                document.getElementById('reviseModalUniqueIntroductionInput').value = introduction;
+                document.getElementById('reviseModalUniqueProjectObjectiveInput').value = projectObjective;
+                document.getElementById('reviseModalUniqueSignificanceOfStudyInput').value = significanceOfStudy;
+                document.getElementById('reviseModalUniqueSystemAnalysisAndDesignInput').value = systemAnalysisAndDesign;
+
+                // Disable/enable fields based on chapter
+                const introField = document.getElementById('reviseModalUniqueIntroductionInput');
+                const projObjField = document.getElementById('reviseModalUniqueProjectObjectiveInput');
+                const signifField = document.getElementById('reviseModalUniqueSignificanceOfStudyInput');
+                const sysAnField = document.getElementById('reviseModalUniqueSystemAnalysisAndDesignInput');
+                if (chapter === "1") {
+                    introField.disabled = false;
+                    projObjField.disabled = true;
+                    signifField.disabled = true;
+                    sysAnField.disabled = true;
+                } else if (chapter === "2") {
+                    introField.disabled = false;
+                    projObjField.disabled = false;
+                    signifField.disabled = true;
+                    sysAnField.disabled = true;
+                } else if (chapter === "3") {
+                    introField.disabled = false;
+                    projObjField.disabled = false;
+                    signifField.disabled = false;
+                    sysAnField.disabled = true;
+                } else if (chapter === "4") {
+                    introField.disabled = false;
+                    projObjField.disabled = false;
+                    signifField.disabled = false;
+                    sysAnField.disabled = false;
+                } else {
+                    introField.disabled = false;
+                    projObjField.disabled = false;
+                    signifField.disabled = false;
+                    sysAnField.disabled = false;
+                }
+
+                if (window.tinymce) {
+                    tinymce.remove('#reviseModalUniqueIntroductionInput');
+                    tinymce.remove('#reviseModalUniqueProjectObjectiveInput');
+                    tinymce.remove('#reviseModalUniqueSignificanceOfStudyInput');
+                    tinymce.remove('#reviseModalUniqueSystemAnalysisAndDesignInput');
+                }
+                tinymce.init({
+                    selector: '#reviseModalUniqueIntroductionInput',
+                    menubar: false,
+                    plugins: 'lists link',
+                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                    font_size_formats: '12px 14px 16px 18px 24px 36px',
+                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                    height: 200,
+                    setup: function(editor) {
+                        editor.on('init', function() {
+                            // Introduction is always enabled, do nothing
+                        });
+                        editor.on('input change keyup', function() {
+                            document.getElementById('previewIntroduction').innerHTML = editor.getContent();
+                        });
                     }
-                    // Initialize TinyMCE on the four chapter textareas with live preview
-                    tinymce.init({
-                        selector: '#reviseModalUniqueIntroductionInput',
-                        menubar: false,
-                        plugins: 'lists link',
-                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                        font_size_formats: '12px 14px 16px 18px 24px 36px',
-                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                        height: 200,
-                        setup: function(editor) {
-                            editor.on('input change keyup', function() {
-                                document.getElementById('previewIntroduction').innerHTML = editor.getContent();
-                            });
-                        }
-                    });
-                    tinymce.init({
-                        selector: '#reviseModalUniqueProjectObjectiveInput',
-                        menubar: false,
-                        plugins: 'lists link',
-                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                        font_size_formats: '12px 14px 16px 18px 24px 36px',
-                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                        height: 200,
-                        setup: function(editor) {
-                            editor.on('input change keyup', function() {
-                                document.getElementById('previewProjectObjective').innerHTML = editor.getContent();
-                            });
-                        }
-                    });
-                    tinymce.init({
-                        selector: '#reviseModalUniqueSignificanceOfStudyInput',
-                        menubar: false,
-                        plugins: 'lists link',
-                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                        font_size_formats: '12px 14px 16px 18px 24px 36px',
-                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                        height: 200,
-                        setup: function(editor) {
-                            editor.on('input change keyup', function() {
-                                document.getElementById('previewSignificanceOfStudy').innerHTML = editor.getContent();
-                            });
-                        }
-                    });
-                    tinymce.init({
-                        selector: '#reviseModalUniqueSystemAnalysisAndDesignInput',
-                        menubar: false,
-                        plugins: 'lists link',
-                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                        font_size_formats: '12px 14px 16px 18px 24px 36px',
-                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                        height: 200,
-                        setup: function(editor) {
-                            editor.on('input change keyup', function() {
-                                document.getElementById('previewSystemAnalysisAndDesign').innerHTML = editor.getContent();
-                            });
-                        }
-                    });
-                }, 0);
+                });
+                tinymce.init({
+                    selector: '#reviseModalUniqueProjectObjectiveInput',
+                    menubar: false,
+                    plugins: 'lists link',
+                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                    font_size_formats: '12px 14px 16px 18px 24px 36px',
+                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                    height: 200,
+                    setup: function(editor) {
+                        editor.on('init', function() {
+                            if (chapter === "1") {
+                                editor.setMode('readonly');
+                            }
+                        });
+                        editor.on('input change keyup', function() {
+                            document.getElementById('previewProjectObjective').innerHTML = editor.getContent();
+                        });
+                    }
+                });
+                tinymce.init({
+                    selector: '#reviseModalUniqueSignificanceOfStudyInput',
+                    menubar: false,
+                    plugins: 'lists link',
+                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                    font_size_formats: '12px 14px 16px 18px 24px 36px',
+                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                    height: 200,
+                    setup: function(editor) {
+                        editor.on('init', function() {
+                            if (chapter === "1" || chapter === "2") {
+                                editor.setMode('readonly');
+                            }
+                        });
+                        editor.on('input change keyup', function() {
+                            document.getElementById('previewSignificanceOfStudy').innerHTML = editor.getContent();
+                        });
+                    }
+                });
+                tinymce.init({
+                    selector: '#reviseModalUniqueSystemAnalysisAndDesignInput',
+                    menubar: false,
+                    plugins: 'lists link',
+                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                    font_size_formats: '12px 14px 16px 18px 24px 36px',
+                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                    height: 200,
+                    setup: function(editor) {
+                        editor.on('init', function() {
+                            if (chapter === "1" || chapter === "2" || chapter === "3") {
+                                editor.setMode('readonly');
+                            }
+                        });
+                        editor.on('input change keyup', function() {
+                            document.getElementById('previewSystemAnalysisAndDesign').innerHTML = editor.getContent();
+                        });
+                    }
+                });
             });
         });
     }
@@ -912,6 +955,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     document.addEventListener('submit', async function(e) {
         if (e.target && e.target.id === 'reviseModalUniqueUpdateForm') {
             e.preventDefault();
+            // Ensure TinyMCE content is saved to the textareas
+            if (window.tinymce) tinymce.triggerSave();
+
             const form = e.target;
             const formData = new FormData(form);
             try {
@@ -1018,6 +1064,13 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             }
         });
     }
+
+    // When opening the modal
+    document.getElementById('reviseModalUnique').setAttribute('aria-hidden', 'false');
+    // When closing the modal
+    document.getElementById('reviseModalUnique').setAttribute('aria-hidden', 'true');
+
+    console.log(document.getElementById('reviseModalUniqueIntroductionInput').value);
 </script>
 </body>
 </html>
