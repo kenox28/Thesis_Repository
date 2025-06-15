@@ -288,7 +288,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<script src="../../js/upload.js?v=1.0.18"></script>
+		<script src="../../js/upload.js?v=1.0.19"></script>
 
 	</body>
 </html>
