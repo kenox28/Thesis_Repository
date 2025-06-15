@@ -163,6 +163,114 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             height: 35vh;
         }
     }
+    .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        margin: 0;
+        padding: 0;
+    }
+    #thesisTable {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        box-shadow: 0 2px 12px #1976a522;
+        border-radius: 0;
+        margin: 0;
+        font-size: 1rem;
+    }
+    #thesisTable th, #thesisTable td {
+        padding: 14px 10px;
+        text-align: left;
+        border-bottom: 1px solid #e3eafc;
+        vertical-align: middle;
+        max-width: none;
+        word-break: break-word;
+    }
+    #thesisTable th {
+        background: #1976a5;
+        color: #fff;
+        font-weight: 700;
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        text-align: center;
+    }
+    #thesisTable tbody tr:nth-child(even) {
+        background: #f4f8ff;
+    }
+    #thesisTable tbody tr:hover {
+        background: #e3eafc;
+        transition: background 0.18s;
+    }
+    #thesisTable td img.profile-image {
+        width: 28px;
+        height: 28px;
+        margin-right: 6px;
+        border-radius: 50%;
+        border: 1.5px solid #1976a5;
+        vertical-align: middle;
+        object-fit: cover;
+    }
+    #thesisTable td {
+        font-size: 1em;
+        color: #222;
+    }
+    .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 18px;
+        margin-top: 10px;
+        width: 100%;
+    }
+    #searchInput {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px 18px;
+        border-radius: 8px;
+        border: 1.5px solid #1976a5;
+        font-size: 1.1em;
+        background: #f7faff;
+        transition: border 0.18s;
+        margin: 0;
+        display: block;
+        box-sizing: border-box;
+    }
+    #searchInput:focus {
+        border: 2px solid #2893c7;
+        outline: none;
+    }
+    @media (max-width: 900px) {
+        #thesisTable th, #thesisTable td {
+            padding: 8px 4px;
+            font-size: 0.95em;
+        }
+        #searchInput {
+            width: 100vw;
+        }
+        .main-content {
+            padding: 0 2vw;
+        }
+        #thesisTable {
+            font-size: 0.95em;
+        }
+    }
+    .thesis-card-view-btn {
+        background: #1976a5;
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        padding: 6px 16px;
+        font-size: 0.95em;
+        font-weight: 600;
+        margin: 2px 0;
+        cursor: pointer;
+        transition: background 0.18s;
+        width: auto;
+        display: inline-block;
+    }
+    .thesis-card-view-btn:hover {
+        background: #12507b;
+    }
     </style>
 </head>
 <body>
@@ -198,7 +306,24 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <h1 class="section-title">Rejected Theses</h1>
             </header>
             <section>
-                <div id="PDFFILE"></div>
+                <div class="search-container">
+                    <input type="text" id="searchInput" placeholder="Search by title, author, etc...">
+                </div>
+                <div class="table-responsive">
+                    <table id="thesisTable">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Author</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows will be inserted here -->
+                        </tbody>
+                    </table>
+                </div>
             </section>
         </main>
     </div>
@@ -259,68 +384,51 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
         const res = await fetch("../../php/student/rejectpage.php");
         const data = await res.json();
         if (data.error) {
-            document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
+            document.querySelector("#thesisTable tbody").innerHTML = `<tr><td colspan='4'>${data.error}</td></tr>`;
             return;
         }
-        let rows = "<div class='thesis-cards'>";
+        let rows = "";
         for (const u of data) {
-            // Only show rejected theses
             if (u.status && u.status.toLowerCase() === "rejected") {
-                const filePath = "../../assets/thesisfile/" + u.ThesisFile;
                 const profileImg = "../../assets/ImageProfile/" + u.profileImg;
                 rows += `
-                    <div class="thesis-card"
-                        data-file="${filePath}"
-                        data-title="${encodeURIComponent(u.title)}"
-                        data-abstract="${encodeURIComponent(u.abstract)}"
-                        data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-                        data-status="${encodeURIComponent(u.status)}"
-                        style="cursor:pointer;"
-                    >
-                        <div class="author-info">
-                            <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
-                                <img src="${profileImg}" alt="Profile Image" class="profile-image">
-                            </a>
-                            <span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
+                    <tr>
+                        <td>${capitalize(u.title)}</td>
+                        <td>
+                            <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" target="_blank">
+                                <img src="${profileImg}" alt="Profile" class="profile-image">
                                 ${capitalize(u.lname)}, ${capitalize(u.fname)}
-                            </span>
-                        </div>
-                        <h3 class="thesis-title thesis-card-title" style="cursor:pointer;">
-							<i class='fas fa-book'></i> ${u.title}
-						</h3>
-                        <div class="thesis-card-abstract">${u.abstract}</div>
-                        <embed src="${filePath}" type="application/pdf" width="300" height="250">
-                        <div class="thesis-card-owner">${u.lname}, ${u.fname}</div>
-                        <div class="thesis-card-status">${u.status || "Rejected"}</div>
-                    </div>
+                            </a>
+                        </td>
+                        <td>${capitalize(u.status)}</td>
+                        <td>
+                            <button class="thesis-card-view-btn" onclick="viewThesis('${encodeURIComponent(u.title)}', '${encodeURIComponent(u.abstract)}', '${encodeURIComponent(u.lname + ', ' + u.fname)}', '${encodeURIComponent(u.status)}', '../../assets/thesisfile/${u.ThesisFile}')">View</button>
+                        </td>
+                    </tr>
                 `;
             }
         }
-        rows += "</div>";
-        document.getElementById("PDFFILE").innerHTML = rows;
-
-        // Add modal open logic for .thesis-card
-        document.querySelectorAll('.thesis-card').forEach(item => {
-            item.addEventListener('click', function (e) {
-                const filePath = item.getAttribute('data-file');
-                const title = decodeURIComponent(item.getAttribute('data-title'));
-                const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
-                const owner = decodeURIComponent(item.getAttribute('data-owner'));
-                const status = decodeURIComponent(item.getAttribute('data-status'));
-
-                document.getElementById('modalTitle').textContent = title;
-                document.getElementById('modalStatus').textContent = status || "Rejected";
-                document.getElementById('modalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-                document.getElementById('modalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
+        document.querySelector("#thesisTable tbody").innerHTML = rows;
+    }
+    function viewThesis(title, abstract, owner, status, filePath) {
+        document.getElementById('modalTitle').textContent = decodeURIComponent(title);
+        document.getElementById('modalStatus').textContent = decodeURIComponent(status) || "Rejected";
+        document.getElementById('modalAbstract').innerHTML = `<i class='fas fa-quote-left'></i> ${decodeURIComponent(abstract)}`;
+        document.getElementById('modalOwner').innerHTML = `<i class='fas fa-user-graduate'></i> <span>${decodeURIComponent(owner)}</span>`;
                 document.getElementById('modalPDF').src = filePath + "#toolbar=0";
                 document.getElementById('thesisModal').style.display = "flex";
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        showupload();
+        document.getElementById('searchInput').addEventListener('input', function() {
+            const filter = this.value.toLowerCase();
+            const trs = document.querySelectorAll('#thesisTable tbody tr');
+            trs.forEach(tr => {
+                const text = tr.textContent.toLowerCase();
+                tr.style.display = text.includes(filter) ? '' : 'none';
             });
         });
-    }
-    showupload();
-
     // Modal close logic
-    document.addEventListener('DOMContentLoaded', function() {
         const closeBtn = document.getElementById('closeThesisModal');
         const modal = document.getElementById('thesisModal');
         const modalPDF = document.getElementById('modalPDF');

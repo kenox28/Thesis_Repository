@@ -64,16 +64,21 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             margin: 1rem 0;
         }
         .thesis-card-public-private{
-            background-color: var(--secondary-color);
+            background: #1976a5;
             color: #fff;
             border: none;
-            height: 30px;
-            width: 300px;
-            border-radius: 4px;
+            border-radius: 6px;
+            padding: 6px 16px;
+            font-size: 0.95em;
+            font-weight: 600;
+            margin: 2px 0;
             cursor: pointer;
+            transition: background 0.18s;
+            width: auto;
+            display: inline-block;
         }
-        .thesis-card-public-private:hover{
-            background-color: var(--secondary-color);
+        .thesis-card-public-private:hover {
+            background: #12507b;
         }
         .upload-item embed {
             width: 100%;
@@ -227,6 +232,106 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 height: 35vh;
             }
         }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 0;
+            padding: 0;
+        }
+        #thesisTable {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+            box-shadow: 0 2px 12px #1976a522;
+            border-radius: 0;
+            margin: 0;
+            font-size: 1rem;
+        }
+        #thesisTable th, #thesisTable td {
+            padding: 14px 10px;
+            text-align: left;
+            border-bottom: 1px solid #e3eafc;
+            vertical-align: middle;
+            max-width: none;
+            word-break: break-word;
+        }
+        #thesisTable th {
+            text-align: center;
+            background: #1976a5;
+            color: #fff;
+            font-weight: 700;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+        #thesisTable tbody tr:nth-child(even) {
+            background: #f4f8ff;
+        }
+        #thesisTable tbody tr:hover {
+            background: #e3eafc;
+            transition: background 0.18s;
+        }
+        #thesisTable td img.profile-image {
+            width: 28px;
+            height: 28px;
+            margin-right: 6px;
+            border-radius: 50%;
+            border: 1.5px solid #1976a5;
+            vertical-align: middle;
+            object-fit: cover;
+        }
+        #thesisTable td {
+            font-size: 1em;
+            color: #222;
+        }
+        #thesisTable td:nth-child(3) { /* Abstract */
+            max-width: 400px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .search-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 18px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        #searchInput {
+            width: 100%;
+            max-width: 100%;
+            padding: 12px 18px;
+            border-radius: 8px;
+            border: 1.5px solid #1976a5;
+            font-size: 1.1em;
+            background: #f7faff;
+            transition: border 0.18s;
+            margin: 0;
+            display: block;
+            box-sizing: border-box;
+        }
+        #searchInput:focus {
+            border: 2px solid #2893c7;
+            outline: none;
+        }
+        @media (max-width: 900px) {
+            #thesisTable th, #thesisTable td {
+                padding: 8px 4px;
+                font-size: 0.95em;
+            }
+            #thesisTable td:nth-child(3) {
+                max-width: 120px;
+            }
+            #searchInput {
+                width: 100vw;
+            }
+            .main-content {
+                padding: 0 2vw;
+            }
+            #thesisTable {
+                font-size: 0.95em;
+            }
+        }
 </style>
 <body>
     <div class="main-bg">
@@ -262,8 +367,24 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                     <!-- <h3 class="section-subtitle"><?php echo $_SESSION['fname']; ?> <?php echo $_SESSION['lname']; ?></h3> -->
                 </header>
 				<section>
-
-                <div id="PDFFILE"></div>
+                    <div class="search-container">
+                        <input type="text" id="searchInput" placeholder="Search by title, author, etc...">
+                    </div>
+                    <div class="table-responsive">
+                        <table id="thesisTable">
+                            <thead>
+                                <tr>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
 				</section>
 
         </main>
@@ -322,69 +443,43 @@ function capitalize(str) {
 		return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 async function showupload() {
-    const res = await fetch("../../php/student/approve_thesis.php");
-    const data = await res.json();
+    fetch("../../php/student/approve_thesis.php")
+        .then(res => res.json())
+        .then(data => {
     if (data.error) {
-        document.getElementById("PDFFILE").innerHTML = `<p>${data.error}</p>`;
+                document.querySelector("#thesisTable tbody").innerHTML = `<tr><td colspan='6'>${data.error}</td></tr>`;
         return;
     }
-    let rows = "<div class='thesis-cards'>";
+            let rows = "";
     for (const u of data) {
-        // Only show approved theses
         if (u.status && u.status.toLowerCase() === "approved") {
-            const filePath = "../../assets/thesisfile/" + u.ThesisFile;
             const profileImg = "../../assets/ImageProfile/" + u.profileImg;
 				rows += `
-					<div class="upload-item"
-						data-file="${filePath}"
-						data-title="${encodeURIComponent(u.title)}"
-						data-abstract="${encodeURIComponent(u.abstract)}"
-						data-owner="${encodeURIComponent(u.lname + ', ' + u.fname)}"
-						data-privacy="${encodeURIComponent(u.Privacy)}"
-						style="cursor:pointer;"
-					>
-						<div class="author-info">
-							<a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">  
-								<img src="${profileImg}" alt="Profile Image" class="profile-image">
-							</a>
-							<span style="font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px;">
-								${capitalize(u.lname)}, ${capitalize(u.fname)}
-							</span>
-						</div>
-                        <h3 class="thesis-title" style="cursor:pointer;">
-							<i class='fas fa-book'></i> ${u.title}
-						</h3>
-						<p><i class='fas fa-quote-left'></i> ${u.abstract}</p>
-
-						<embed src="${filePath}" type="application/pdf" width="300" height="250">
-                        <div style="margin-top:12px;display:flex;gap:10px;">
-                            <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
-                            <button class="thesis-card-public-private" onclick="event.stopPropagation(); privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
-                        </div>
-					</div>
-				`;
-        }
-    }
-    rows += "</div>";
-    document.getElementById("PDFFILE").innerHTML = rows;
-
-    // Add modal open logic for .upload-item
-    document.querySelectorAll('.upload-item').forEach(item => {
-        item.addEventListener('click', function (e) {
-            // Prevent modal if the button was clicked
-            if (e.target.tagName === 'BUTTON') return;
-            const filePath = item.getAttribute('data-file');
-            const title = decodeURIComponent(item.getAttribute('data-title'));
-            const abstract = decodeURIComponent(item.getAttribute('data-abstract'));
-            const owner = decodeURIComponent(item.getAttribute('data-owner'));
-            const status = decodeURIComponent(item.getAttribute('data-status'));
-
-            document.getElementById('modalTitle').textContent = title;
-            document.getElementById('modalStatus').textContent = status || "Approved";
-            document.getElementById('modalAbstract').innerHTML = `<i class="fas fa-quote-left"></i> ${abstract}`;
-            document.getElementById('modalOwner').innerHTML = `<i class="fas fa-user-graduate"></i> <span>${owner}</span>`;
-            document.getElementById('modalPDF').src = filePath + "#toolbar=0";
-            document.getElementById('thesisModal').style.display = "flex";
+                        <tr>
+                            <td>${capitalize(u.title)}</td>
+                            <td>
+                                <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" target="_blank">
+                                    <img src="${profileImg}" alt="Profile" class="profile-image">
+                                    ${capitalize(u.lname)}, ${capitalize(u.fname)}
+                                </a>
+                            </td>
+                            <td>${capitalize(u.status)}</td>
+                            <td>
+                                <button class="thesis-card-public-private" onclick="privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'public')">Public</button>
+                                <button class="thesis-card-public-private" onclick="privacyfunction(${u.id}, '${u.title.replace(/'/g, "\\'")}', 'private')">Private</button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            }
+            document.querySelector("#thesisTable tbody").innerHTML = rows;
+        });
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        const trs = document.querySelectorAll('#thesisTable tbody tr');
+        trs.forEach(tr => {
+            const text = tr.textContent.toLowerCase();
+            tr.style.display = text.includes(filter) ? '' : 'none';
         });
     });
 }

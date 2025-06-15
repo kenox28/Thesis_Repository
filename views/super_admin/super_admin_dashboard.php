@@ -770,7 +770,6 @@ $uptimePercentage = "99.9%";
                         <p class="student-email">${student.email}</p>
                         <p class="student-id">${student.student_id}</p>
                         <button class="btn-role-glass" onclick="setRole('${student.student_id}', 'reviewer')">Set Role to Reviewer</button>
-                        <button class="btn-role-glass" onclick="setRole('${student.student_id}', 'Faculty')">Set Role to Faculty</button>
                     </div>
                 </div>
             `).join('');
@@ -954,7 +953,6 @@ $uptimePercentage = "99.9%";
                         <p class="student-id">Reviewer ID: ${reviewer.reviewer_id}</p>
                         <p class="last-active">Last Active: ${reviewer.last_active ? new Date(reviewer.last_active).toLocaleString() : 'Never'}</p>
                         <button class="btn-role-glass" onclick="setRole('${reviewer.reviewer_id}', 'student')">Set Role to Student</button>
-                        <button class="btn-role-glass" onclick="setRole('${reviewer.reviewer_id}', 'Faculty')">Set Role to Faculty</button>
                     </div>
                 </div>
             `).join('');

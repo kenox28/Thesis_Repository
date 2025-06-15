@@ -815,113 +815,85 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 const projObjField = document.getElementById('reviseModalUniqueProjectObjectiveInput');
                 const signifField = document.getElementById('reviseModalUniqueSignificanceOfStudyInput');
                 const sysAnField = document.getElementById('reviseModalUniqueSystemAnalysisAndDesignInput');
-                if (chapter === "1") {
-                    introField.disabled = false;
-                    projObjField.disabled = true;
-                    signifField.disabled = true;
-                    sysAnField.disabled = true;
-                } else if (chapter === "2") {
-                    introField.disabled = false;
-                    projObjField.disabled = false;
-                    signifField.disabled = true;
-                    sysAnField.disabled = true;
-                } else if (chapter === "3") {
-                    introField.disabled = false;
-                    projObjField.disabled = false;
-                    signifField.disabled = false;
-                    sysAnField.disabled = true;
-                } else if (chapter === "4") {
-                    introField.disabled = false;
-                    projObjField.disabled = false;
-                    signifField.disabled = false;
-                    sysAnField.disabled = false;
-                } else {
-                    introField.disabled = false;
-                    projObjField.disabled = false;
-                    signifField.disabled = false;
-                    sysAnField.disabled = false;
-                }
+                introField.disabled = false;
+                projObjField.disabled = false;
+                signifField.disabled = false;
+                sysAnField.disabled = false;
 
-                if (window.tinymce) {
-                    tinymce.remove('#reviseModalUniqueIntroductionInput');
-                    tinymce.remove('#reviseModalUniqueProjectObjectiveInput');
-                    tinymce.remove('#reviseModalUniqueSignificanceOfStudyInput');
-                    tinymce.remove('#reviseModalUniqueSystemAnalysisAndDesignInput');
-                }
-                tinymce.init({
-                    selector: '#reviseModalUniqueIntroductionInput',
-                    menubar: false,
-                    plugins: 'lists link',
-                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                    font_size_formats: '12px 14px 16px 18px 24px 36px',
-                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                    height: 200,
-                    setup: function(editor) {
-                        editor.on('init', function() {
-                            // Introduction is always enabled, do nothing
-                        });
-                        editor.on('input change keyup', function() {
-                            document.getElementById('previewIntroduction').innerHTML = editor.getContent();
-                        });
+                    if (window.tinymce) {
+                        tinymce.remove('#reviseModalUniqueIntroductionInput');
+                        tinymce.remove('#reviseModalUniqueProjectObjectiveInput');
+                        tinymce.remove('#reviseModalUniqueSignificanceOfStudyInput');
+                        tinymce.remove('#reviseModalUniqueSystemAnalysisAndDesignInput');
                     }
-                });
-                tinymce.init({
-                    selector: '#reviseModalUniqueProjectObjectiveInput',
-                    menubar: false,
-                    plugins: 'lists link',
-                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                    font_size_formats: '12px 14px 16px 18px 24px 36px',
-                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                    height: 200,
-                    setup: function(editor) {
+                    tinymce.init({
+                        selector: '#reviseModalUniqueIntroductionInput',
+                        menubar: false,
+                        plugins: 'lists link',
+                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                        font_size_formats: '12px 14px 16px 18px 24px 36px',
+                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                        height: 200,
+                        setup: function(editor) {
                         editor.on('init', function() {
-                            if (chapter === "1") {
-                                editor.setMode('readonly');
-                            }
+                            // Always editable
                         });
-                        editor.on('input change keyup', function() {
-                            document.getElementById('previewProjectObjective').innerHTML = editor.getContent();
-                        });
-                    }
-                });
-                tinymce.init({
-                    selector: '#reviseModalUniqueSignificanceOfStudyInput',
-                    menubar: false,
-                    plugins: 'lists link',
-                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                    font_size_formats: '12px 14px 16px 18px 24px 36px',
-                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                    height: 200,
-                    setup: function(editor) {
+                            editor.on('input change keyup', function() {
+                                document.getElementById('previewIntroduction').innerHTML = editor.getContent();
+                            });
+                        }
+                    });
+                    tinymce.init({
+                        selector: '#reviseModalUniqueProjectObjectiveInput',
+                        menubar: false,
+                        plugins: 'lists link',
+                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                        font_size_formats: '12px 14px 16px 18px 24px 36px',
+                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                        height: 200,
+                        setup: function(editor) {
                         editor.on('init', function() {
-                            if (chapter === "1" || chapter === "2") {
-                                editor.setMode('readonly');
-                            }
+                            // Always editable
                         });
-                        editor.on('input change keyup', function() {
-                            document.getElementById('previewSignificanceOfStudy').innerHTML = editor.getContent();
-                        });
-                    }
-                });
-                tinymce.init({
-                    selector: '#reviseModalUniqueSystemAnalysisAndDesignInput',
-                    menubar: false,
-                    plugins: 'lists link',
-                    toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
-                    font_size_formats: '12px 14px 16px 18px 24px 36px',
-                    font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
-                    height: 200,
-                    setup: function(editor) {
+                            editor.on('input change keyup', function() {
+                                document.getElementById('previewProjectObjective').innerHTML = editor.getContent();
+                            });
+                        }
+                    });
+                    tinymce.init({
+                        selector: '#reviseModalUniqueSignificanceOfStudyInput',
+                        menubar: false,
+                        plugins: 'lists link',
+                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                        font_size_formats: '12px 14px 16px 18px 24px 36px',
+                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                        height: 200,
+                        setup: function(editor) {
                         editor.on('init', function() {
-                            if (chapter === "1" || chapter === "2" || chapter === "3") {
-                                editor.setMode('readonly');
-                            }
+                            // Always editable
                         });
-                        editor.on('input change keyup', function() {
-                            document.getElementById('previewSystemAnalysisAndDesign').innerHTML = editor.getContent();
+                            editor.on('input change keyup', function() {
+                                document.getElementById('previewSignificanceOfStudy').innerHTML = editor.getContent();
+                            });
+                        }
+                    });
+                    tinymce.init({
+                        selector: '#reviseModalUniqueSystemAnalysisAndDesignInput',
+                        menubar: false,
+                        plugins: 'lists link',
+                        toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | fontsizeselect fontselect',
+                        font_size_formats: '12px 14px 16px 18px 24px 36px',
+                        font_family_formats: 'Times New Roman=times new roman,times;Arial=arial,helvetica,sans-serif;Aptos=aptos,sans-serif',
+                        height: 200,
+                        setup: function(editor) {
+                        editor.on('init', function() {
+                            // Always editable
                         });
-                    }
-                });
+                            editor.on('input change keyup', function() {
+                                document.getElementById('previewSystemAnalysisAndDesign').innerHTML = editor.getContent();
+                            });
+                        }
+                    });
             });
         });
     }

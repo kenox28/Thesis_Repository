@@ -40,10 +40,22 @@ async function generateAPAReference(e) {
 	const reviewerVals = formdata.getAll("reviewer_ids[]");
 	const members = formdata.getAll("member_ids[]");
 
-	if (!title || reviewerVals.length !== 3 || !members.length) {
+	// Allow 1, 2, or 3 reviewers (but not 0)
+	if (
+		!title ||
+		reviewerVals.length < 1 ||
+		reviewerVals.length > 3 ||
+		!members.length
+	) {
 		console.log("title", title);
 		console.log("reviewerVals", reviewerVals);
 		console.log("members", members);
+		Swal.fire({
+			icon: "warning",
+			title: "Incomplete Submission",
+			text: "Please select at least 1 and at most 3 reviewers, and at least 1 member.",
+			confirmButtonColor: "#1976a5",
+		});
 		return;
 	}
 	// --- End validation ---

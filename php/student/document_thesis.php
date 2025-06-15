@@ -145,6 +145,8 @@ $titleSection->addText('EASTERN VISAYAS STATE UNIVERSITY ORMOC CITY CAMPUS', arr
 $titleSection->addTextBreak(2);
 $titleSection->addText('Computer Studies', $fontStyle, $center);
 $titleSection->addTextBreak(1);
+
+
 $titleSection->addText('Bachelor of Science in Information Technology', $fontStyle, $center);
 $titleSection->addTextBreak(1);
 
