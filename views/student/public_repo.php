@@ -231,6 +231,69 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 	.nav-avatar.dropdown {
 		margin-left: 1.5rem;
 	}
+
+	/* Add new modal styles */
+	.thesis-modal {
+		display: none;
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(5px);
+		z-index: 1000;
+		justify-content: center;
+		align-items: center;
+	}
+
+	.thesis-modal-content {
+		background: #fff;
+		border-radius: 12px;
+		width: 800px;
+		max-width: 1200px;
+		height: 100vh;
+		position: relative;
+		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+		overflow: hidden;
+	}
+
+	.thesis-modal .close-button {
+		position: absolute;
+		right: 15px;
+		top: 15px;
+		font-size: 24px;
+		color: #fff;
+		cursor: pointer;
+		z-index: 1010;
+		background: #1976a5;
+		width: 32px;
+		height: 32px;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background 0.2s;
+	}
+
+	.thesis-modal .close-button:hover {
+		background: #155c82;
+	}
+
+	.thesis-modal iframe {
+		width: 100%;
+		height: 100%;
+		border: none;
+		border-radius: 12px;
+		display: block;
+	}
+
+	@media (max-width: 768px) {
+		.thesis-modal-content {
+			width: 98vw;
+			height: 95vh;
+		}
+	}
 	</style>
 	<body>
 		<div class="main-bg">
@@ -307,12 +370,10 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				<button id="cancelLogoutBtn" class="profile-modal-upload-btn">Cancel</button>
 			</div>
 		</div>
-		<div id="thesisModal" class="modal" style="display:none;">
-			<div class="modal-content enhanced-modal">
+		<div id="thesisModal" class="thesis-modal">
 				<span class="close-button" id="closeThesisModal">&times;</span>
-				<div class="modal-body" style="padding:0;display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;">
-					<iframe id="modalPDF" src="" style="width:90vw;height:90vh;border-radius:12px;border:none;box-shadow:0 2px 12px #0008;background:#222;"></iframe>
-				</div>
+			<div class="thesis-modal-content">
+				<iframe id="modalPDF" src="" allowfullscreen></iframe>
 			</div>
 		</div>
 		<script>
@@ -347,22 +408,50 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 						<span class="status-badge">${u.Privacy || 'Public'}</span>
 						<div class="thesis-title">${u.title}</div>
 						<div class="thesis-abstract">${u.abstract}</div>
-						<button class="view-btn" onclick="event.stopPropagation(); window.open('${filePath}', '_blank');">View PDF</button>
+						<button class="view-btn" onclick="openThesisModal('${filePath}')">View PDF</button>
 					</div>
 				`;
 			}
 			rows += "</div>";
 			document.getElementById("PDFFILE").innerHTML = rows;
-
-			// Add modal open logic for .upload-item
-			document.querySelectorAll('.upload-item').forEach(item => {
-				item.addEventListener('click', function (e) {
-					const filePath = item.getAttribute('data-file');
-					document.getElementById('modalPDF').src = filePath + "#toolbar=0";
-					document.getElementById('thesisModal').style.display = "flex";
-				});
-			});
 		}
+
+		// Function to open thesis modal
+		function openThesisModal(filePath) {
+			const modal = document.getElementById('thesisModal');
+			const modalPDF = document.getElementById('modalPDF');
+			modalPDF.src = filePath + "#zoom=page-fit&toolbar=0&navpanes=0&scrollbar=0";
+			modal.style.display = "flex";
+		}
+
+		// Modal close logic
+		document.addEventListener('DOMContentLoaded', function() {
+			const closeBtn = document.getElementById('closeThesisModal');
+			const modal = document.getElementById('thesisModal');
+			const modalPDF = document.getElementById('modalPDF');
+
+			if (closeBtn && modal && modalPDF) {
+				closeBtn.onclick = function() {
+					modal.style.display = "none";
+					modalPDF.src = "";
+				};
+
+				modal.onclick = function(e) {
+					if (e.target === modal) {
+						modal.style.display = "none";
+						modalPDF.src = "";
+					}
+				};
+
+				// Add escape key listener
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && modal.style.display === 'flex') {
+						modal.style.display = "none";
+						modalPDF.src = "";
+					}
+				});
+			}
+		});
 
 		// Search functionality
 		const searchInput = document.getElementById('searchInput');
@@ -436,24 +525,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 				}
 			});
 		}
-		// Modal close logic
-		document.addEventListener('DOMContentLoaded', function() {
-			const closeBtn = document.getElementById('closeThesisModal');
-			const modal = document.getElementById('thesisModal');
-			const modalPDF = document.getElementById('modalPDF');
-			if (closeBtn && modal && modalPDF) {
-				closeBtn.onclick = function () {
-					modal.style.display = "none";
-					modalPDF.src = "";
-				};
-				modal.onclick = function(e) {
-					if (e.target === modal) {
-						modal.style.display = "none";
-						modalPDF.src = "";
-					}
-				};
-			}
-		});
 		showPublicRepo();
 		</script>
 	</body>
