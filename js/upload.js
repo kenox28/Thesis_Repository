@@ -73,6 +73,8 @@ async function generateAPAReference(e) {
 			title: "Successfully Uploaded!",
 			text: result.message,
 			confirmButtonColor: "#1976a5",
+		}).then(() => {
+			window.location.href = "homepage.php";
 		});
 	} else {
 		Swal.fire({
@@ -104,12 +106,9 @@ async function loadReviewers() {
 			document.getElementById("reviewerList").innerHTML = filtered
 				.map(
 					(u) =>
-						`<label><input type="checkbox" name="reviewers[]" value="${
-							u.reviewer_id
-						}" ${
-							window.checkedReviewers.has(u.reviewer_id) ? "checked" : ""
-						}> <span class="fa-solid fa-user"></span> ${
-							u.reviewer_name
+						`<label><input type="checkbox" name="reviewers[]" value="${u.reviewer_id
+						}" ${window.checkedReviewers.has(u.reviewer_id) ? "checked" : ""
+						}> <span class="fa-solid fa-user"></span> ${u.reviewer_name
 						} <span class="fa-solid fa-check-circle"></span></label>`
 				)
 				.join("");
