@@ -18,7 +18,7 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thesis Progress</title>
-    <link rel="stylesheet" href="../../assets/css/homepage.css" />
+    <link rel="stylesheet" href="../../assets/css/homepage.css?v=1.0.1" />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tiny.cloud/1/kvjcz6i0b3m6d4rkdbdgkmondvsygi1hal3vp3zqy3sl3i8q/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <style>
@@ -562,6 +562,29 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             max-width: 1200px !important;
             width: 95vw !important;
         }
+        .main-nav {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, #1976a5 0%, #2893c7 100%) !important;
+            justify-content: space-between;
+            padding: 0 2vw;
+            background: none;
+            border-bottom: none;
+            min-height: 64px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-left: auto;
+            align-items: center;
+        }
+        .nav-avatar.dropdown {
+            margin-left: 1.5rem;
+        }
     </style>
 </head>
 <body>
@@ -574,7 +597,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
 
             <div class="nav-links">
                 <a href="public_repo.php">Home</a>
-                <a href="upload.php">Upload Thesis</a>
+                <a href="upload.php">Upload</a>
+                <a href="approve_title.php">Progress</a>
+
             </div>
             <div class="nav-avatar dropdown">
                 <?php $hasProfileImg = isset($profileImg) && $profileImg !== 'noprofile.png' && !empty($profileImg); ?>
@@ -587,7 +612,6 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <div class="dropdown-content">
                     <a href="#" id="profile-link">Profile</a>
                     <a href="homepage.php">Pending</a>
-                    <a href="approve_title.php">Thesis Progress</a>
                     <a href="approve_thesis.php">Approved</a>
                     <a href="rejectpage.php">Rejected</a>
                     <a href="#" id="logout-link">Logout</a>
@@ -758,11 +782,9 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         data-significance_of_study="${encodeURIComponent(u.significance_of_study || '')}"
                         data-system_analysis_and_design="${encodeURIComponent(u.system_analysis_and_design || '')}"
                         data-chapter="${u.chapter}"
-                        
                         style="cursor:pointer;"
                     >
                         <div class="author-info">
-                        
                             <a href="profile_timeline.php?id=${u.student_id}" class="profile-link" onclick="event.stopPropagation();">
                                 <img src="${profileImg}" alt="Profile Image" class="profile-image">
                             </a>
@@ -778,14 +800,23 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                         <embed src="${filePath}" type="application/pdf" width="300" height="250">
                         <div class="thesis-card-owner">${capitalize(u.lname)}, ${capitalize(u.fname)}</div>
                         <div class="thesis-card-status">${u.status || "Revised"}</div>
+                        <button class="revise-modal-unique-history-btn" data-title="${encodeURIComponent(u.title)}" style="margin-top:10px;">Revision History</button>
                     </div>
                 `;
             }
             const chapter = u.chapter;
-
         }
         rows += "</div>";
         document.getElementById("PDFFILE").innerHTML = rows;
+
+        // Add event listeners for revision history buttons on each card
+        document.querySelectorAll('.revise-modal-unique-history-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const title = decodeURIComponent(this.getAttribute('data-title'));
+                window.location.href = 'revise_history.php?title=' + encodeURIComponent(title);
+            });
+        });
 
         // Modal open logic for .thesis-card
         document.querySelectorAll('.thesis-card').forEach(item => {

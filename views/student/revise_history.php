@@ -122,11 +122,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
             </div>
             <div class="nav-links">
                 <a href="public_repo.php">Home</a>
-                <a href="upload.php">Upload Thesis</a>
-                <a href="homepage.php">Pending</a>
-                <a href="approve_title.php">Thesis Progress</a>
-                <a href="approve_thesis.php">Approved</a>
-                <a href="rejectpage.php">Rejected</a>
+                <a href="upload.php">Upload</a>
+                <a href="approve_title.php">Progress</a>
                 <!-- <a href="revisepage.php">Revised</a> -->
             </div>
             <div class="nav-avatar dropdown">

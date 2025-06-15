@@ -245,6 +245,29 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
                 height: 35vh;
             }
         }
+        .main-nav {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(90deg, #1976a5 0%, #2893c7 100%) !important;
+            justify-content: space-between;
+            padding: 0 2vw;
+            background: none;
+            border-bottom: none;
+            min-height: 64px;
+        }
+        .nav-logo {
+            display: flex;
+            align-items: center;
+        }
+        .nav-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-left: auto;
+            align-items: center;
+        }
+        .nav-avatar.dropdown {
+            margin-left: 1.5rem;
+        }
 </style>
 	<body>
 		<?php if ($isAdminView): ?>
@@ -263,7 +286,9 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 				</div>
 				<div class="nav-links">
 					<a href="public_repo.php">Home</a>
-					<a href="upload.php">Upload Thesis</a>
+					<a href="upload.php">Upload</a>
+                    <a href="approve_title.php">Progress</a>
+
 				</div>
 				<div class="nav-avatar dropdown">
 					<?php if (!$isAdminView): ?>
@@ -281,7 +306,7 @@ $isAdminView = isset($_SESSION['super_admin_id']) && isset($_SESSION['super_admi
 						<?php if (!$isAdminView): ?>
 							<a href="#" id="profile-link">Profile</a>
 							<a href="homepage.php">Pending</a>
-							<a href="approve_title.php">Thesis Progress</a>
+							<!-- <a href="approve_title.php">Thesis Progress</a> -->
 							<a href="approve_thesis.php">Approved</a>
 							<a href="rejectpage.php">Rejected</a>
 						<?php endif; ?>

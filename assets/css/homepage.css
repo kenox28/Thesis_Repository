@@ -132,6 +132,8 @@ html {
 	display: flex;
 }
 .dropdown-content a {
+	display: flex;
+	justify-content: center;
 	color: #1976a5;
 	padding: 10px 22px;
 	text-decoration: none;

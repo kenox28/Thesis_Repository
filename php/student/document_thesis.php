@@ -249,12 +249,7 @@ if ($stmt2->affected_rows > 0) {
     $status = 'Pending';
     $notes = '';
 
-    if (!empty($thesis_id)) {
-        $stmt4 = $connect->prepare("INSERT INTO thesis_history (thesis_id, student_id, revision_num, file_name, revised_by, status, notes) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt4->bind_param("iisssss", $thesis_id, $student_id, $next_revision, $newFileName, $revised_by, $status, $notes);
-        $stmt4->execute();
-        $stmt4->close();
-    }
+
 
     echo json_encode(['status' => 'success', 'message' => 'File updated and PDF generated successfully.']);
 } else {
