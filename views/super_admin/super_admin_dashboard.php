@@ -44,9 +44,9 @@ $uptimePercentage = "99.9%";
     <link href="../../assets/css/Admin_Page.css?v=1.0.2" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #1976a5;
-            --primary-dark: #155d84;
-            --primary-light: #2893c7;
+            --primary-color: #00246b;
+            --primary-dark: #001c54;
+            --primary-light: #002d82;
             --accent-color: #ff6b6b;
             --background-light: #f8fafc;
             --text-dark: #2d3748;
@@ -80,75 +80,45 @@ $uptimePercentage = "99.9%";
         }
 
         header {
-            background: linear-gradient(-45deg, var(--primary-color), var(--primary-dark), var(--primary-light));
-            background-size: 200% 200%;
-            animation: gradientBG 15s ease infinite;
+            background: #00246b;
             padding: 1.5rem 0;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
         }
 
         header .container {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            padding: 0 2rem;
         }
 
         header h1 {
             color: white;
             margin: 0;
             font-size: 1.8rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
         }
 
-        header h1::before {
-            content: '⚡';
-            font-size: 1.5rem;
-        }
-
-        nav {
+        header nav {
             display: flex;
             gap: 1rem;
             align-items: center;
         }
 
-        nav a {
+        header nav a {
             color: white;
             text-decoration: none;
-            padding: 0.6rem 1.2rem;
+            padding: 0.8rem 1.2rem;
             border-radius: 8px;
             transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        nav a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translateX(-100%);
-            transition: transform 0.3s ease;
-        }
-
-        nav a:hover::before {
-            transform: translateX(0);
-        }
-
-        nav a.active {
-            background: rgba(255, 255, 255, 0.2);
             font-weight: 500;
+        }
+
+        header nav a:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        header nav a.active {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .btn-danger {
@@ -159,14 +129,11 @@ $uptimePercentage = "99.9%";
             color: white;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .btn-danger:hover {
+            background: #ff5252;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.3);
         }
 
         .welcome-section {
@@ -542,6 +509,7 @@ $uptimePercentage = "99.9%";
             <h1>Super Admin Dashboard</h1>
             <nav>
                 <a href="super_admin_dashboard.php" class="active">Home</a>
+                
                 <a href="manage_admin.php">Manage Admins</a>
                 <a href="activity_logs.php">Activity Logs</a>
                 <a href="#" class="btn btn-danger" id="logoutBtn">
@@ -573,13 +541,13 @@ $uptimePercentage = "99.9%";
             </a>
             
 
-            <a href="#" class="card-link">
+            <a href="student_monitoring.php" class="card-link">
                 <div class="card">
                     <h2>
                         <i class="fas fa-cogs card-icon"></i>
-                        System Settings
+                        Student Logs
                     </h2>
-                    <p>Configure system-wide settings, backup options, and security preferences.</p>
+                    <p>Monitor and review system activities of the students.</p>
                 </div>
             </a>
 
@@ -587,9 +555,9 @@ $uptimePercentage = "99.9%";
                 <div class="card">
                     <h2>
                         <i class="fas fa-history card-icon"></i>
-                        Activity Logs
+                        Admin Logs
                     </h2>
-                    <p>Monitor and review system activities, user actions, and security events.</p>
+                    <p>Monitor and review system activities of the admins.</p>
                 </div>
             </a>
         </div>

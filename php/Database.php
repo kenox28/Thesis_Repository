@@ -5,11 +5,23 @@ $password = "";
 $database = "thesisRep_db";
 
 // Connect to database
-$connect = mysqli_connect($localhost, $username, $password, $database);
+// Disable error reporting for the client
+error_reporting(0);
+ini_set('display_errors', 0);
 
-// Check connection
-if (!$connect) {
-    die("Connection failed: " . mysqli_connect_error());
+// Set error handler to throw exceptions
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
+try {
+    $connect = mysqli_connect($localhost, $username, $password, $database);
+} catch (mysqli_sql_exception $e) {
+    // Return JSON error response
+    header('Content-Type: application/json');
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Database connection failed: ' . $e->getMessage()
+    ]);
+    exit;
 }
 
 $student = "CREATE TABLE IF NOT EXISTS student (
