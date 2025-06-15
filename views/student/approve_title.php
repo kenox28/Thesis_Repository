@@ -711,23 +711,8 @@ $profileImg = (isset($_SESSION['profileImg']) && !empty($_SESSION['profileImg'])
                 <div class="preview-pane">
                     <div class="apa-preview">
                         <div class="apa-cover">
-                            <div class="apa-title-top" id="previewTitle">New</div>
-                            <div class="apa-university">EASTERN VISAYAS STATE UNIVERSITY ORMO CITY CAMPUS</div>
-                            <div class="apa-dept">Computer Studies</div>
-                            <div class="apa-degree">Bachelor of Science in Information Technology</div>
-                            <div class="apa-instructor" id="previewInstructor">Instructor: <?php echo isset($_SESSION['instructor']) ? htmlspecialchars($_SESSION['instructor']) : 'Aki chan'; ?></div>
-                            <div class="apa-date" id="previewDate"><?php echo date('Y-m-d'); ?></div>
-                            <div class="apa-members" id="previewMembers">
-                                <?php
-                                    $members = isset($_SESSION['members']) ? htmlspecialchars($_SESSION['members']) : 'chan paul, kaye bot, chauny cha';
-                                    $membersArr = array_map('trim', explode(',', $members));
-                                    echo "With members:";
-                                    echo "<br>";
-                                    foreach ($membersArr as $member) {
-                                        echo $member . "<br>";
-                                    }
-                                ?>
-                            </div>
+
+
                         </div>
                         <div class="apa-section">
                             <div class="apa-section-title">Introduction</div>
